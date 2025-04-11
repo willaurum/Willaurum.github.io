@@ -1,4 +1,8 @@
-/* General Reset */
+/* ============================================= */
+/* ================ BASE STYLES ================ */
+/* ============================================= */
+
+/* GENERAL RESET */
 body {
     margin: 0;
     padding: 0;
@@ -10,7 +14,11 @@ body {
     overflow-x: hidden; /* Prevent horizontal scroll due to animations */
 }
 
-/* Header Styles */
+/* ============================================= */
+/* =============== LAYOUT STYLES =============== */
+/* ============================================= */
+
+/* HEADER LAYOUT */
 header {
     background-color: #1b263b;
     padding: 20px;
@@ -23,6 +31,25 @@ header {
     animation: headerSlideIn 1s ease-out;
 }
 
+/* SECTION LAYOUT */
+section {
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* PROJECTS GRID LAYOUT */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+/* ============================================= */
+/* ============== COMPONENT STYLES ============= */
+/* ============================================= */
+
+/* HEADER COMPONENTS */
 header h1 {
     color: #f4a261;
     font-size: 32px;
@@ -30,7 +57,7 @@ header h1 {
     transition: transform 0.3s ease;
 }
 
-/* Navigation Styles */
+/* NAVIGATION COMPONENTS */
 nav ul {
     list-style: none;
     display: flex;
@@ -68,14 +95,7 @@ nav ul li a:hover::after {
     transform: scaleX(1);
 }
 
-/* Section Styles */
-section {
-    padding: 40px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-/* Home Section */
+/* HOME SECTION COMPONENTS */
 #home {
     text-align: center;
     background-color: #1e344e;
@@ -96,7 +116,6 @@ section {
     margin: 20px 0;
 }
 
-/* Links Styles */
 .links a {
     background-color: #1b263b;
     color: #e0e1dd;
@@ -114,7 +133,7 @@ section {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* About Section */
+/* ABOUT SECTION COMPONENTS */
 #about {
     background-color: #1b263b;
     color: #e0e1dd;
@@ -129,7 +148,7 @@ section {
     margin-bottom: 10px;
 }
 
-/* Projects Section */
+/* PROJECTS SECTION COMPONENTS */
 #projects .project {
     background-color: #2c3e50;
     padding: 25px;
@@ -168,7 +187,7 @@ section {
     text-decoration: underline;
 }
 
-/* Contact Section */
+/* CONTACT SECTION COMPONENTS */
 #contact {
     display: flex;
     flex-direction: column;
@@ -208,7 +227,7 @@ section {
     color: #e76f51;
 }
 
-/* Resume Section */
+/* RESUME SECTION COMPONENTS */
 #resume {
     text-align: center;
     margin-top: 40px;
@@ -253,7 +272,7 @@ section {
     transform: scale(1.1);
 }
 
-/* Experience Section */
+/* EXPERIENCE SECTION COMPONENTS */
 #experience {
     background-color: #1b263b;
     color: #e0e1dd;
@@ -297,7 +316,7 @@ section {
     margin-bottom: 15px;
 }
 
-/* Portrait */
+/* PORTRAIT COMPONENT */
 .portrait {
     width: 300px;
     height: 300px;
@@ -308,7 +327,84 @@ section {
     object-fit: cover;
 }
 
-/* Animations */
+/* PROJECT BUTTON COMPONENT */
+.project-button {
+    display: inline-block;
+    background-color: #f4a261;
+    color: #1b263b;
+    font-weight: bold;
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-size: 18px;
+    text-decoration: none;
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.project-button:hover {
+    background-color: #e76f51;
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* PROJECT DESCRIPTION COMPONENTS */
+.full-description {
+    display: none;
+    margin-top: 10px;
+}
+
+.project.expanded .full-description {
+    display: block;
+}
+
+.short-description {
+    display: -webkit-box;
+    -webkit-line-clamp: 5; /* Limit to 5 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 7.5em; /* ~5 lines at 1.5em line height */
+    line-height: 1.5em;
+    transition: max-height 0.3s ease;
+}
+
+.project.expanded .short-description {
+    -webkit-line-clamp: unset;
+    max-height: none;
+    overflow: visible;
+}
+
+/* TOGGLE BUTTON COMPONENT */
+.toggle-button {
+    background-color: #1b263b;
+    color: #f4a261;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.toggle-button:hover {
+    background-color: #e76f51;
+}
+
+/* PINNED SUBTITLE COMPONENT */
+.pinned-subtitle {
+    font-size: 0.85rem;
+    color: #888; /* Subtle gray */
+    font-style: italic;
+    margin-bottom: 4px;
+    margin-top: -4px;
+    letter-spacing: 0.3px;
+}
+
+/* ============================================= */
+/* ================ ANIMATIONS ================= */
+/* ============================================= */
+
 @keyframes fadeIn {
     0% { opacity: 0; }
     100% { opacity: 1; }
@@ -344,7 +440,11 @@ section {
     100% { transform: translateX(0); opacity: 1; }
 }
 
-/* Mobile Styles */
+/* ============================================= */
+/* ============== MEDIA QUERIES ================ */
+/* ============================================= */
+
+/* TABLET AND SMALLER DESKTOP */
 @media (max-width: 768px) {
     /* Header and Navigation */
     header {
@@ -450,15 +550,9 @@ section {
     .email-link {
         font-size: 18px;
     }
-
-    /* Footer */
-    footer {
-        text-align: center;
-        padding: 15px;
-    }
 }
 
-/* Smaller Mobile Devices */
+/* MOBILE DEVICES */
 @media (max-width: 480px) {
     /* Home Section */
     .intro h2 {

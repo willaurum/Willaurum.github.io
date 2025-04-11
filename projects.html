@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href="styles.css" rel="stylesheet" />
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>All Projects | William Cook</title>
+  <link href="https://unpkg.com/aos@next/dist/aos.css" rel="stylesheet" />
+</head>
+<body>
+
+  <header>
+    <nav>
+      <h1>William Cook</h1>
+      <ul>
+        <li><a href="index.html#about">About Me</a></li>
+        <li><a href="index.html#experience">Experience</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <button id="darkModeToggle">Toggle Dark Mode</button>
+  </header>
+
+  <section data-aos="fade-up" id="projects">
+    <h2>All Projects</h2>
+    <!-- ------------------------- -->
+    <div class="projects-grid">
+    <!-- ------------------------------------------------------------------------ -->
+      <div class="project">
+        <h3>Eclipse RPG Toolkit</h3>
+        <p class="short-description">
+          Designed and developed a text-based RPG using object-oriented programming (OOP), focusing on game mechanics, file handling, and scalable code structure. The game features a turn-based combat system, procedural enemy generation, and dynamic inventory management. Players can equip weapons and armor strategically while battling dynamically generated enemies.
+        </p>
+        <div class="full-description">
+          <ul>
+            <li>Modular OOP design for Weapons, Armor, Items, and Enemies</li>
+            <li>Turn-based combat system with inventory management</li>
+            <li>Procedural enemy generation based on difficulty</li>
+            <li>Dynamic file handling for loading game assets</li>
+          </ul>
+          <p>
+            This project enhanced my problem-solving and software design skills, deepening my expertise in Python, data science, and software engineering.
+          </p>
+          <a href="https://github.com/WilliamCook0811/EclipseRPGToolkit" target="_blank">View on GitHub</a>
+        </div>
+        <button class="toggle-button">View More</button>
+      </div>
+
+    <!-- ------------------------------------------------------------------------ -->
+    <div class="project">
+      <h3>Tracker</h3>
+      <p class="short-description">
+        Tracker is a reflex-based game that challenges players to manage an increasing number of randomly placed "X" buttons on the screen. The game follows a simple yet engaging mechanic: players must click on each X before too many accumulate. The game dynamically adapts by continuously spawning new buttons every 0.25 seconds while enforcing spatial constraints on placement. Players win by successfully removing 100 Xs but lose if 10 or more remain on the screen simultaneously.
+      </p>
+      <div class="full-description">
+        <a href="https://github.com/WilliamCook0811/Tracker/tree/main" target="_blank">View on GitHub</a>
+      </div>
+      <button class="toggle-button">View More</button>
+    </div>
+
+        <!-- ------------------------------------------------------------------------ -->
+
+      <div class="project">
+        <h3>Tic-Tac-Toe with a Basic UI</h3>
+        <p class="short-description">
+          A simple Tic-Tac-Toe game with a basic user interface, developed to practice GUI development and game logic.
+        </p>
+        <div class="full-description">
+          <a href="https://github.com/WilliamCook0811/Tic-Tac-Toe-with-a-UI" target="_blank">View on GitHub</a>
+        </div>
+        <button class="toggle-button">View More</button>
+      </div>
+    <!-- ------------------------------------------------------------------------ -->
+      
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 William Cook. All rights reserved.</p>
+  </footer>
+
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>AOS.init();</script>
+  <script>
+    document.getElementById("darkModeToggle").addEventListener("click", function () {
+      document.body.classList.toggle("light-mode");
+    });
+  </script>
+  <script>
+    document.querySelectorAll('.toggle-button').forEach(button => {
+      button.addEventListener('click', () => {
+        const project = button.closest('.project');
+        project.classList.toggle('expanded');
+        button.textContent = project.classList.contains('expanded') ? 'View Less' : 'View More';
+      });
+    });
+  </script>
+
+</body>
+</html>
