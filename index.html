@@ -1,103 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="styles.css">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>William Cook | Portfolio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <!-- AOS animation CSS (optional) -->
+  <link href="https://unpkg.com/aos@next/dist/aos.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>William Cook | Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
-
 <body>
-    <header>
-        <nav>
-            <h1>William Cook</h1>
-            <ul>
-                <li><a href="#about">About Me</a></li>
-                <li><a href="#experience">Experience</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+  <header>
+    <nav>
+      <h1>William Cook</h1>
+      <ul>
+        <li><a href="#about">About Me</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
 
-    <section id="home">
-        <div class="intro">
-            <h2>Hi, I'm William Cook</h2>
-            <p>A Computer Science student passionate about coding, cybersecurity, and building innovative projects.</p>
-            
-            <!-- Portrait Image -->
-            <img src="Portrait.PNG" alt="Portrait of William Cook" class="portrait">
+  <section id="home">
+    <div class="intro">
+      <h2>Hi, I'm William Cook</h2>
+      <p>A Computer Science student passionate about coding, cybersecurity, and building innovative projects.</p>
+      <img src="Portrait.PNG" alt="Portrait of William Cook" class="portrait">
+      <div class="links">
+        <a href="https://www.linkedin.com/in/williamcook0811/" target="_blank">LinkedIn</a>
+        <a href="https://github.com/WilliamCook0811" target="_blank">GitHub</a>
+        <a href="William Cook - Resume.pdf" download>Download Resume</a>
+      </div>
+    </div>
+  </section>
 
-            <div class="links">
-                <a href="https://www.linkedin.com/in/williamcook0811/" target="_blank">LinkedIn</a>
-                <a href="https://github.com/WilliamCook0811" target="_blank">GitHub</a>
-                <a href="William Cook - Resume.pdf" download>Download Resume</a>
-            </div>
-        </div>
-    </section>
+  <section id="about">
+    <h2>About Me</h2>
+    <p>
+      I am a detail-oriented and driven computer science student with a strong foundation in programming, problem-solving, and critical thinking. My experience in competitive programming and software development has honed my ability to adapt quickly and analyze complex challenges efficiently. I am seeking to apply my technical expertise, leadership skills, and passion in a dynamic and innovative environment.
+    </p>
+  </section>
 
-    <section id="about">
-        <h2>About Me</h2>
-        <p>I am a detail-oriented and driven computer science student with a strong foundation in programming, problem-solving, and critical thinking. My experience in competitive programming and software development has honed my ability to adapt quickly and analyze complex challenges efficiently. I am seeking to apply my technical expertise, leadership skills, and passion in a dynamic and innovative environment.</p>
-    </section>
+  <section id="experience">
+    <h2>Experience</h2>
+    <div class="experience-item">
+      <h3>Software Development Club</h3>
+      <p>
+        In this club, I work on weekly projects to gain new skills. This club also provides several opportunities to work with groups that are looking for help in categories such as artificial intelligence, website development, and beta testing.
+      </p>
+    </div>
+    <div class="experience-item">
+      <h3>Cybersecurity Club</h3>
+      <p>The club’s purpose is to promote skills and capabilities for the defense of networks and computers.</p>
+    </div>
+    <div class="experience-item">
+      <h3>Liberty University's Competitive Programming Team</h3>
+      <p>
+        Led a team to 6th place out of 61 teams in the 2024 ICPC (International Collegiate Programming Contest) Mid-Atlantic Regionals.
+      </p>
+      <p>100+ solved problems on open.kattis.com</p>
+    </div>
+    <div class="experience-item">
+      <h3>Momentum Marketplace</h3>
+      <p>
+        Momentum Marketplace is a new branch of Momentum Ministry partners. I was 1 of twelve students asked to help pilot the program. The program paired us with mentors who were professionals in the marketplace and we also had the privilege of meeting industry leaders such as Willie Robertson.
+      </p>
+      <ul>
+        <li>Experience in networking, professionalism, fast learning, and situational adaptation.</li>
+      </ul>
+    </div>
+  </section>
 
-    <section id="experience">
-        <h2>Experience</h2>
-        <div class="experience-item">
-            <h3>Software Development Club</h3>
-            <p>In this club, I work on weekly projects to gain new skills. This club also provides several opportunities to work with groups that are looking for help in categories such as artificial intelligence, website development, and beta testing.</p>
-        </div>
-        <div class="experience-item">
-            <h3>Cybersecurity Club</h3>
-            <p>The club’s purpose is to promote skills and capabilities for the defense of networks and computers.</p>
-        </div>
-        <div class="experience-item">
-            <h3>Liberty University's Competitive Programming Team</h3>
-            <p>Led a team to 6th place out of 61 teams in the 2024 ICPC (International Collegiate Programming Contest) Mid-Atlantic Regionals.</p>
-            <p>100+ solved problems on open.kattis.com</p>
-        </div>
-        <div class="experience-item">
-            <h3>Momentum Marketplace</h3>
-            <p>Momentum Marketplace is a new branch of Momentum Ministry partners. I was 1 of twelve students asked to help pilot the program. The program paired us with mentors who were professionals in the marketplace and we also had the privilege of meeting industry leaders such as Willie Robertson.</p>
-            <ul>
-                <li>Experience in networking, professionalism, fast learning, and situational adaptation.</li>
-            </ul>
-        </div>
-    </section>
+  <!-- Pinned Project -->
+  <section id="projects" data-aos="fade-up">
+    <div class="project">
+      <h3>Static Website Generator with GUI</h3>
+      <p class="short-description">
+        A Tkinter-based GUI tool for effortlessly generating fully customizable, responsive static websites without writing a single line of HTML or CSS.
+      </p>
+      <div class="full-description">
+        <ul>
+          <li>Intuitive GUI interface—build pages visually with input fields and buttons.</li>
+          <li>Customizable content: titles, headings, paragraphs, embedded images & YouTube videos, footers, and optional banners.</li>
+          <li>Responsive design: outputs mobile-friendly HTML5 and CSS3 layouts.</li>
+          <li>Nine built-in themes including Light Minimalist, Dark Mode, Cyberpunk Neon, Vintage, and more.</li>
+          <li>Live preview: instantly render your site in the browser as you work.</li>
+          <li>Export options: save separate HTML and CSS files to any directory.</li>
+        </ul>
+        <p>
+          Developed during Liberty University’s Software Development Club hackathon (2nd place), this tool streamlines website creation with multimedia support and theme switching—all powered by Python and Tkinter.
+        </p>
+        <a href="https://github.com/WilliamCook0811/Static-Website-Generator" target="_blank">View on GitHub</a>
+      </div>
+      <button class="toggle-button">View More</button>
+    </div>
+    <div style="text-align: center; margin-top: 30px;">
+      <a href="projects.html" class="project-button">View All Projects</a>
+    </div>
+  </section>
 
-    <section id="projects">
-        <h2>Projects</h2>
-        <div class="project">
-            <p class="pinned-subtitle">Pinned Project</p>
-            <h3>Eclipse RPG Toolkit</h3>          
-            <p>Designed and developed a text-based RPG using object-oriented programming (OOP), focusing on game mechanics, file handling, and scalable code structure. The game features a turn-based combat system, procedural enemy generation, and dynamic inventory management. Players can equip weapons and armor strategically while battling dynamically generated enemies.</p>
-            <ul>
-                <li>Modular OOP design for Weapons, Armor, Items, and Enemies</li>
-                <li>Turn-based combat system with inventory management</li>
-                <li>Procedural enemy generation based on difficulty</li>
-                <li>Dynamic file handling for loading game assets</li>
-            </ul>
-            <p>This project enhanced my problem-solving and software design skills, deepening my expertise in Python, data science, and software engineering.</p>
-            <a href="https://github.com/WilliamCook0811/EclipseRPGToolkit" target="_blank">View on GitHub</a>
-        </div>
-        
+  <section id="contact">
+    <h2>Contact Me</h2>
+    <p>
+      Feel free to reach out to me via email: 
+      <a href="mailto:williamcook0811@gmail.com" class="email-link">williamcook0811@gmail.com</a>
+    </p>
+  </section>
 
-        <div style="text-align: center; margin-top: 30px;">
-            <a href="projects.html" class="project-button">View All Projects</a>
-        </div>
-        
-        
-        <!-- space for more projects -->
-    </section>
+  <footer>
+    <p>&copy; 2025 William Cook. All rights reserved.</p>
+  </footer>
 
-    <section id="contact">
-        <h2>Contact Me</h2>
-        <p>Feel free to reach out to me via email: <a href="mailto:williamcook0811@gmail.com" class="email-link">williamcook0811@gmail.com</a></p>
-    </section>
-
-    <footer>
-        <p>&copy; 2025 William Cook. All rights reserved.</p>
-    </footer>
+  <!-- AOS animation JS (optional) -->
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>
+    AOS.init();
+  </script>
+  <!-- Toggle “View More / View Less” script -->
+  <script>
+    document.querySelectorAll('.toggle-button').forEach(button => {
+      button.addEventListener('click', () => {
+        const project = button.closest('.project');
+        project.classList.toggle('expanded');
+        button.textContent = project.classList.contains('expanded') ? 'View Less' : 'View More';
+      });
+    });
+  </script>
 </body>
 </html>
