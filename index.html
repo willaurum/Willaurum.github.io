@@ -10,6 +10,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
+
+  <div id="leetcode-counter">LeetCode Problems Solved: <span id="leetcode-count-top">Loading...</span></div>
+
+
   <header>
     <nav>
       <h1>William Cook</h1>
@@ -46,21 +50,33 @@
     <h2>Experience</h2>
     <div class="experience-item">
       <h3>Software Development Club</h3>
-      <p>
-        In this club, I work on weekly projects to gain new skills. This club also provides several opportunities to work with groups that are looking for help in categories such as artificial intelligence, website development, and beta testing.
-      </p>
+      <ul>
+        <li>Participate in weekly hands-on projects to build and refine software development skills</li>
+        <li>Collaborate with groups needing support in areas such as artificial intelligence, web development, and beta testing</li>
+        <li>Won the club-hosted hackathon with a custom-built static website generator</li>
+        <li>Engage in real-world applications and teamwork to expand practical programming experience</li>
+      </ul>
     </div>
-    <div class="experience-item">
-      <h3>Cybersecurity Club</h3>
-      <p>The club’s purpose is to promote skills and capabilities for the defense of networks and computers.</p>
-    </div>
+
     <div class="experience-item">
       <h3>Liberty University's Competitive Programming Team</h3>
-      <p>
-        Led a team to 6th place out of 61 teams in the 2024 ICPC (International Collegiate Programming Contest) Mid-Atlantic Regionals.
-      </p>
-      <p>100+ solved problems on open.kattis.com</p>
+      <ul>
+        <li>Serving as Outreach Officer for the 2025–26 academic year</li>
+        <li>Led a team to 6th place out of 61 teams in the 2024 ICPC Mid-Atlantic Regionals</li>
+        <li>Solved 100+ problems on open.kattis.com</li>
+        <li>Learned to optimize code to solve algorithmic challenges efficiently</li>
+      </ul>
     </div>
+
+    <div class="experience-item">
+      <h3>LeetCode</h3>
+        <p>I have currently completed <span id="leetcode-count-exp">Loading...</span> LeetCode problems.</p>
+        <p>If you would like to view which problems I have completed and see their solutions, you can check out my GitHub repository!</p>
+        <p> <a href="https://github.com/WilliamCook0811/LeetCode-Solutions" target="_blank">View on GitHub</a> 
+      </p>
+    </div>
+
+
     <div class="experience-item">
       <h3>Momentum Marketplace</h3>
       <p>
@@ -75,29 +91,30 @@
   <!-- Pinned Project -->
   <section id="projects" data-aos="fade-up">
     <div class="project">
-      <h3>Static Website Generator with GUI</h3>
-      <p class="short-description">
-        A Tkinter-based GUI tool for effortlessly generating fully customizable, responsive static websites without writing a single line of HTML or CSS.
-      </p>
-      <div class="full-description">
-        <ul>
-          <li>Intuitive GUI interface—build pages visually with input fields and buttons.</li>
-          <li>Customizable content: titles, headings, paragraphs, embedded images & YouTube videos, footers, and optional banners.</li>
-          <li>Responsive design: outputs mobile-friendly HTML5 and CSS3 layouts.</li>
-          <li>Nine built-in themes including Light Minimalist, Dark Mode, Cyberpunk Neon, Vintage, and more.</li>
-          <li>Live preview: instantly render your site in the browser as you work.</li>
-          <li>Export options: save separate HTML and CSS files to any directory.</li>
-        </ul>
-        <p>
-          Developed during Liberty University’s Software Development Club hackathon (2nd place), this tool streamlines website creation with multimedia support and theme switching—all powered by Python and Tkinter.
+        <h3>Static Website Generator</h3>
+        <p class="short-description">
+          A Tkinter-based GUI tool for generating fully customizable, responsive static websites without writing a single line of HTML or CSS.
         </p>
-        <a href="https://github.com/WilliamCook0811/Static-Website-Generator" target="_blank">View on GitHub</a>
+        <div class="full-description">
+          <ul>
+            <li>Intuitive GUI interface—build pages visually with input fields and buttons.</li>
+            <li>Customizable content: titles, headings, paragraphs, embedded images & YouTube videos, footers, and optional banners.</li>
+            <li>Responsive design: outputs mobile-friendly HTML5 and CSS3 layouts.</li>
+            <li>Nine built-in themes including Light Minimalist, Dark Mode, Cyberpunk Neon, Vintage, and more.</li>
+            <li>Live preview: instantly render your site in the browser as you work.</li>
+            <li>Export options: save separate HTML and CSS files to any directory.</li>
+          </ul>
+          <p>
+            Developed during Liberty University’s Software Development Club hackathon (2nd place), this tool streamlines website creation with multimedia support and theme switching—all powered by Python and Tkinter.
+          </p>
+          <img src="gifs/websitegenGIF.gif" alt="Generator demo" style="max-width: 100%; height: auto;">
+          <p>
+
+          </p>
+          <a href="https://github.com/WilliamCook0811/Static-Website-Generator" target="_blank">View on GitHub</a>
+        </div>
+        <button class="toggle-button">View More</button>
       </div>
-      <button class="toggle-button">View More</button>
-    </div>
-    <div style="text-align: center; margin-top: 30px;">
-      <a href="projects.html" class="project-button">View All Projects</a>
-    </div>
   </section>
 
   <section id="contact">
@@ -127,5 +144,48 @@
       });
     });
   </script>
+
+ <!-- Script for checking total LeetCode problems solved -->
+<script>
+  async function countLeetCodeFolders() {
+    const owner = "WilliamCook0811";
+    const repo = "LeetCode-Solutions";
+    const url = `https://api.github.com/repos/${owner}/${repo}/contents`;
+
+    const token = "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"; 
+
+    try {
+      const response = await fetch(url, {
+        headers: {
+          Authorization: `token ${token}`
+        }
+      });
+
+      const data = await response.json();
+      console.log("GitHub API Response:", data);
+
+      if (!Array.isArray(data)) {
+        document.getElementById("leetcode-count").textContent = "N/A";
+        return;
+      }
+
+      const folderCount = data.filter(item => item.type === "dir").length;
+      document.getElementById("leetcode-count-top").textContent = folderCount;
+      document.getElementById("leetcode-count-exp").textContent = folderCount;
+
+    } catch (error) {
+      console.error("Error fetching GitHub data:", error);
+      document.getElementById("leetcode-count-top").textContent = "Error";
+      document.getElementById("leetcode-count-exp").textContent = "Error";
+    }
+  }
+
+  countLeetCodeFolders();
+</script>
+
+
+
+
+
 </body>
 </html>
