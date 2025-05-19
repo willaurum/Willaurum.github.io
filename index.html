@@ -115,6 +115,11 @@
         </div>
         <button class="toggle-button">View More</button>
       </div>
+      <!-- View All Projects Button -->
+      <div style="text-align: center; margin-top: 20px;">
+        <a href="projects.html" class="project-button">View All Projects</a>
+      </div>
+
   </section>
 
   <section id="contact">
@@ -152,27 +157,19 @@
     const repo = "LeetCode-Solutions";
     const url = `https://api.github.com/repos/${owner}/${repo}/contents`;
 
-    const token = "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"; 
-
     try {
-      const response = await fetch(url, {
-        headers: {
-          Authorization: `token ${token}`
-        }
-      });
-
+      const response = await fetch(url);
       const data = await response.json();
-      console.log("GitHub API Response:", data);
 
       if (!Array.isArray(data)) {
-        document.getElementById("leetcode-count").textContent = "N/A";
+        document.getElementById("leetcode-count-top").textContent = "N/A";
+        document.getElementById("leetcode-count-exp").textContent = "N/A";
         return;
       }
 
       const folderCount = data.filter(item => item.type === "dir").length;
       document.getElementById("leetcode-count-top").textContent = folderCount;
       document.getElementById("leetcode-count-exp").textContent = folderCount;
-
     } catch (error) {
       console.error("Error fetching GitHub data:", error);
       document.getElementById("leetcode-count-top").textContent = "Error";
@@ -182,6 +179,7 @@
 
   countLeetCodeFolders();
 </script>
+
 
 
 
