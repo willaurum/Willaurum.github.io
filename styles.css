@@ -2,6 +2,10 @@
 /* ================ BASE STYLES ================ */
 /* ============================================= */
 
+html {
+  scroll-behavior: smooth;
+}
+
 /* GENERAL RESET */
 body {
     margin: 0;
@@ -604,6 +608,11 @@ nav ul li a:hover::after {
     color: #e76f51;
     text-decoration: underline;
 }
+
+
+/* ============================================= */
+/* ============== LEETCODE COUNTER ============= */
+/* ============================================= */
 
 #leetcode-counter {
     position: fixed;
