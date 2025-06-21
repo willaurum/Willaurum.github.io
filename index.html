@@ -180,5 +180,48 @@
   countLeetCodeFolders();
 </script>
 
+<!-- Collapsible Strava Widget -->
+<div id="strava-widget" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; font-family: 'Roboto', sans-serif;">
+  <button id="strava-toggle" style="
+    background-color: #fc4c02;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  ">
+    Recent Runs
+  </button>
+  <div id="strava-content" style="
+    display: none;
+    margin-top: 10px;
+    transition: all 0.3s ease-in-out;
+  ">
+    <iframe 
+      height="454" 
+      width="300" 
+      frameborder="0" 
+      allowtransparency="true" 
+      scrolling="no"
+      src="https://www.strava.com/athletes/146222963/latest-rides/5cf10597523865ab7d01e07c770ef8d99804713e"
+      style="border-radius: 12px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+    </iframe>
+  </div>
+</div>
+
+<script>
+  const toggleBtn = document.getElementById("strava-toggle");
+  const content = document.getElementById("strava-content");
+
+  toggleBtn.addEventListener("click", () => {
+    const isVisible = content.style.display === "block";
+    content.style.display = isVisible ? "none" : "block";
+    toggleBtn.textContent = isVisible ? "Recent Runs" : "Hide";
+  });
+</script>
+
+
 </body>
 </html>
