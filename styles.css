@@ -12,7 +12,7 @@ body {
     padding: 0;
     box-sizing: border-box;
     font-family: 'Roboto', sans-serif;
-    background-color: #0d1b2a;
+    background-color: #000e1b;
     color: #e0e1dd;
     line-height: 1.6;
     overflow-x: hidden; /* Prevent horizontal scroll due to animations */
@@ -24,7 +24,7 @@ body {
 
 /* HEADER LAYOUT */
 header {
-    background-color: #1b263b;
+    background-color: #01192B;
     padding: 20px;
     display: flex;
     justify-content: space-between;
@@ -102,7 +102,7 @@ nav ul li a:hover::after {
 /* HOME SECTION COMPONENTS */
 #home {
     text-align: center;
-    background-color: #1e344e;
+    background-color: #01253F;
     padding: 60px 20px;
     position: relative;
     animation: backgroundMove 5s infinite alternate;
@@ -121,7 +121,7 @@ nav ul li a:hover::after {
 }
 
 .links a {
-    background-color: #1b263b;
+    background-color: #01192B;
     color: #e0e1dd;
     padding: 12px 24px;
     border-radius: 5px;
@@ -139,7 +139,7 @@ nav ul li a:hover::after {
 
 /* ABOUT SECTION COMPONENTS */
 #about {
-    background-color: #1b263b;
+    background-color: #01192B;
     color: #e0e1dd;
     border-left: 5px solid #e0ae3e;
     padding-left: 20px;
@@ -154,7 +154,7 @@ nav ul li a:hover::after {
 
 /* PROJECTS SECTION COMPONENTS */
 #projects .project {
-    background-color: #2c3e50;
+    background-color: #01253F;
     padding: 25px;
     margin-bottom: 20px;
     border-radius: 8px;
@@ -198,7 +198,7 @@ nav ul li a:hover::after {
     justify-content: center;
     align-items: center;
     padding: 40px;
-    background-color: #1b263b;
+    background-color: #01192B;
     text-align: center;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
@@ -235,7 +235,7 @@ nav ul li a:hover::after {
 #resume {
     text-align: center;
     margin-top: 40px;
-    background-color: #2c3e50;
+    background-color: #01253F;
     padding: 30px;
     border-radius: 15px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
@@ -261,7 +261,7 @@ nav ul li a:hover::after {
 
 #resume a button {
     background-color: #e0ae3e;
-    color: #1b263b;
+    color: #01192B;
     padding: 12px 25px;
     border: none;
     border-radius: 8px;
@@ -278,7 +278,7 @@ nav ul li a:hover::after {
 
 /* EXPERIENCE SECTION COMPONENTS */
 #experience {
-    background-color: #1b263b;
+    background-color: #01192B;
     color: #e0e1dd;
     padding: 40px;
     max-width: 1200px;
@@ -295,7 +295,7 @@ nav ul li a:hover::after {
 }
 
 .experience-item {
-    background-color: #2c3e50;
+    background-color: #01253F;
     padding: 20px;
     margin-bottom: 20px;
     border-radius: 8px;
@@ -335,7 +335,7 @@ nav ul li a:hover::after {
 .project-button {
     display: inline-block;
     background-color: #e0ae3e;
-    color: #1b263b;
+    color: #01192B;
     font-weight: bold;
     padding: 14px 28px;
     border-radius: 8px;
@@ -380,7 +380,7 @@ nav ul li a:hover::after {
 
 /* TOGGLE BUTTON COMPONENT */
 .toggle-button {
-    background-color: #1b263b;
+    background-color: #01192B;
     color: #e0ae3e;
     border: none;
     padding: 10px 20px;
@@ -619,7 +619,7 @@ nav ul li a:hover::after {
     top: 10px;
     right: 10px;
     background-color: #e0ae3e;
-    color: #1b263b;
+    color: #01192B;
     padding: 10px 16px;
     font-weight: bold;
     font-size: 16px;
