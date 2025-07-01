@@ -55,7 +55,7 @@ section {
 
 /* HEADER COMPONENTS */
 header h1 {
-    color: #f4a261;
+    color: #e0ae3e;
     font-size: 32px;
     letter-spacing: 1px;
     transition: transform 0.3s ease;
@@ -85,13 +85,13 @@ nav ul li a::after {
     left: 0;
     width: 100%;
     height: 2px;
-    background-color: #f4a261;
+    background-color: #e0ae3e;
     transform: scaleX(0);
     transition: transform 0.3s ease;
 }
 
 nav ul li a:hover {
-    color: #f4a261;
+    color: #e0ae3e;
     transform: scale(1.1);
 }
 
@@ -109,7 +109,7 @@ nav ul li a:hover::after {
 }
 
 .intro h2 {
-    color: #f4a261;
+    color: #e0ae3e;
     font-size: 50px;
     font-weight: 700;
     animation: fadeIn 1.5s ease-in-out;
@@ -132,7 +132,7 @@ nav ul li a:hover::after {
 }
 
 .links a:hover {
-    background-color: #f4a261;
+    background-color: #e0ae3e;
     transform: translateY(-5px);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
@@ -141,7 +141,7 @@ nav ul li a:hover::after {
 #about {
     background-color: #1b263b;
     color: #e0e1dd;
-    border-left: 5px solid #f4a261;
+    border-left: 5px solid #e0ae3e;
     padding-left: 20px;
     margin-bottom: 40px;
     animation: aboutMove 1s ease-out forwards;
@@ -168,7 +168,7 @@ nav ul li a:hover::after {
 }
 
 #projects .project h3 {
-    color: #f4a261;
+    color: #e0ae3e;
     font-size: 28px;
     font-weight: 700;
     margin-bottom: 10px;
@@ -180,7 +180,7 @@ nav ul li a:hover::after {
 }
 
 #projects .project a {
-    color: #f4a261;
+    color: #e0ae3e;
     font-size: 18px;
     text-decoration: none;
     font-weight: 600;
@@ -208,7 +208,7 @@ nav ul li a:hover::after {
 
 #contact h2 {
     font-size: 32px;
-    color: #f4a261;
+    color: #e0ae3e;
     margin-bottom: 30px;
     animation: fadeIn 1.5s ease-out;
 }
@@ -220,7 +220,7 @@ nav ul li a:hover::after {
 }
 
 .email-link {
-    color: #f4a261;
+    color: #e0ae3e;
     text-decoration: none;
     font-size: 20px;
     font-weight: bold;
@@ -249,7 +249,7 @@ nav ul li a:hover::after {
 
 #resume h2 {
     font-size: 24px;
-    color: #f4a261;
+    color: #e0ae3e;
     margin-bottom: 20px;
 }
 
@@ -260,7 +260,7 @@ nav ul li a:hover::after {
 }
 
 #resume a button {
-    background-color: #f4a261;
+    background-color: #e0ae3e;
     color: #1b263b;
     padding: 12px 25px;
     border: none;
@@ -288,7 +288,7 @@ nav ul li a:hover::after {
 
 #experience h2 {
     font-size: 32px;
-    color: #f4a261;
+    color: #e0ae3e;
     margin-bottom: 20px;
     text-align: center;
     animation: fadeIn 1.5s ease-out;
@@ -310,7 +310,7 @@ nav ul li a:hover::after {
 
 .experience-item h3 {
     font-size: 28px;
-    color: #f4a261;
+    color: #e0ae3e;
     margin-bottom: 10px;
 }
 
@@ -325,7 +325,7 @@ nav ul li a:hover::after {
     width: 300px;
     height: 300px;
     border-radius: 50%;
-    border: 3px solid #f4a261;
+    border: 3px solid #e0ae3e;
     margin-top: -10px;
     margin-bottom: 15px;
     object-fit: cover;
@@ -334,7 +334,7 @@ nav ul li a:hover::after {
 /* PROJECT BUTTON COMPONENT */
 .project-button {
     display: inline-block;
-    background-color: #f4a261;
+    background-color: #e0ae3e;
     color: #1b263b;
     font-weight: bold;
     padding: 14px 28px;
@@ -381,7 +381,7 @@ nav ul li a:hover::after {
 /* TOGGLE BUTTON COMPONENT */
 .toggle-button {
     background-color: #1b263b;
-    color: #f4a261;
+    color: #e0ae3e;
     border: none;
     padding: 10px 20px;
     margin-top: 10px;
@@ -598,7 +598,7 @@ nav ul li a:hover::after {
 }
 
 .experience-item a {
-    color: #f4a261;
+    color: #e0ae3e;
     font-size: 18px;
     text-decoration: none;
     font-weight: 600;
@@ -618,7 +618,7 @@ nav ul li a:hover::after {
     position: fixed;
     top: 10px;
     right: 10px;
-    background-color: #f4a261;
+    background-color: #e0ae3e;
     color: #1b263b;
     padding: 10px 16px;
     font-weight: bold;
