@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lessons - William Cook</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Marked.js for markdown parsing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <nav>
+      <h1><a>Learn Python</a></h1>
+      <ul>
+        <li><a href="index.html">Back to Main Site</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Page Layout -->
+  <div class="lessons-layout">
+
+    <!-- Sidebar -->
+    <aside id="sidebar">
+      <h2>Python Lessons</h2>
+      
+      
+      <div id="loading">Loading lessons...</div>
+      <ul id="lessons-list" style="display: none;">
+        <!-- Lessons will be dynamically loaded here -->
+      </ul>
+      
+      <!-- Search Bar -->
+      <div id="search-container" style="display: none;">
+        <input type="text" id="lesson-search" placeholder="Search lessons..." autocomplete="off">
+        <button id="clear-search" title="Clear search">×</button>
+      </div>
+      
+      <!-- No results message -->
+      <div id="no-results" style="display: none;">
+        <p>No lessons found matching your search.</p>
+      </div>
+
+        </aside>
+
+
+    <!-- Main Lessons Content -->
+    <main id="lessons-content">
+      <div id="welcome-message">
+        <h2>Welcome to Python Lessons</h2>
+        <p>Select a lesson from the sidebar to get started!</p>
+      </div>
+      <!-- Lesson content will be dynamically loaded here -->
+    </main>
+  </div>
+
+  <script>
+    class LessonManager {
+      constructor() {
+        this.lessons = [];
+        this.currentLesson = null;
+        this.init();
+      }
+
+      async init() {
+        await this.loadLessons();
+        this.setupEventListeners();
+      }
+
+      async loadLessons() {
+        try {
+          // Get list of markdown files in pythonLessons folder
+          const lessonFiles = await this.getLessonFiles();
+          
+          if (lessonFiles.length === 0) {
+            this.showError();
+            return;
+          }
+
+          // Load each lesson file
+          for (let i = 0; i < lessonFiles.length; i++) {
+            const filename = lessonFiles[i];
+            try {
+              const content = await this.loadLessonFile(filename);
+              if (content) {
+                const lesson = this.parseLessonContent(content, filename, i);
+                this.lessons.push(lesson);
+              }
+            } catch (error) {
+              console.warn(`Failed to load lesson file: ${filename}`, error);
+            }
+          }
+
+          if (this.lessons.length === 0) {
+            this.showError();
+            return;
+          }
+
+          // Sort lessons by filename (assuming numbered filenames)
+          // this.lessons.sort((a, b) => a.filename.localeCompare(b.filename));
+          
+          this.renderSidebar();
+          this.showFirstLesson();
+          
+        } catch (error) {
+          console.error('Error loading lessons:', error);
+          this.showError();
+        }
+      }
+
+      async getLessonFiles() {
+        // First, try to load a manifest file (lessons.json)
+        try {
+          const response = await fetch('pythonLessons/lessons.json');
+          if (response.ok) {
+            const manifest = await response.json();
+            return manifest.files || [];
+          }
+        } catch (error) {
+          console.log('No lessons.json found, trying directory listing...');
+        }
+
+        // If no manifest, try common filename patterns
+        const commonFilenames = [
+          '01-inputs-and-variables.md',
+          '02-dictionaries-in-python.md',
+          '03-deque-data-structure.md',
+          '01-introduction.md',
+          '02-basics.md', 
+          '03-variables.md',
+          '04-data-types.md',
+          '05-conditionals.md',
+          '06-loops.md',
+          '07-functions.md',
+          '08-classes.md',
+          '09-modules.md',
+          '10-projects.md',
+          'introduction.md',
+          'basics.md',
+          'variables.md',
+          'data-types.md',
+          'conditionals.md',
+          'loops.md',
+          'functions.md',
+          'classes.md',
+          'modules.md',
+          'projects.md'
+        ];
+
+        const existingFiles = [];
+        
+        for (const filename of commonFilenames) {
+          try {
+            const response = await fetch(`pythonLessons/${filename}`);
+            if (response.ok) {
+              existingFiles.push(filename);
+            }
+          } catch (error) {
+            // File doesn't exist, continue
+          }
+        }
+
+        return existingFiles;
+      }
+
+      async loadLessonFile(filename) {
+        try {
+          const response = await fetch(`pythonLessons/${filename}`);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return await response.text();
+        } catch (error) {
+          console.error(`Error loading ${filename}:`, error);
+          return null;
+        }
+      }
+
+      parseLessonContent(content, filename, index) {
+        const lines = content.split('\n');
+        const title = lines[0].replace(/^#+\s*/, '').trim(); // Remove markdown heading syntax
+        const bodyContent = lines.slice(1).join('\n').trim();
+        
+        // Extract keywords from content for search
+        const keywords = this.extractKeywords(title + ' ' + bodyContent);
+        
+        return {
+          id: `lesson-${index}`,
+          title,
+          content: bodyContent,
+          filename,
+          keywords: keywords.join(' ')
+        };
+      }
+
+      extractKeywords(text) {
+        const commonWords = ['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'should', 'could', 'can', 'may', 'might', 'must', 'shall', 'this', 'that', 'these', 'those', 'you', 'your', 'we', 'our', 'they', 'their', 'it', 'its', 'from', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'up', 'down', 'out', 'off', 'over', 'under', 'again', 'further', 'then', 'once'];
+        
+        // Extract both individual words and important phrases
+        const words = text.toLowerCase()
+          .replace(/[^\w\s]/g, ' ')
+          .split(/\s+/)
+          .filter(word => word.length > 2 && !commonWords.includes(word));
+        
+        // Extract programming-specific terms and phrases
+        const programmingTerms = text.match(/\b(?:python|dict|dictionary|list|tuple|set|string|int|float|bool|function|class|method|variable|loop|if|else|elif|for|while|def|return|import|from|try|except|finally|with|as|in|not|and|or|lambda|yield|async|await|deque|append|pop|input|output|print|len|range|enumerate|zip|map|filter|sorted|reverse|split|join|strip|replace|format|type|isinstance|hasattr|getattr|setattr)\b/gi);
+        
+        // Combine words and programming terms
+        const allKeywords = [...words, ...(programmingTerms || [])];
+        
+        // Remove duplicates and limit
+        return [...new Set(allKeywords)].slice(0, 30);
+      }
+
+      calculateLevenshteinDistance(str1, str2) {
+        const matrix = [];
+        
+        // Create matrix
+        for (let i = 0; i <= str2.length; i++) {
+          matrix[i] = [i];
+        }
+        
+        for (let j = 0; j <= str1.length; j++) {
+          matrix[0][j] = j;
+        }
+        
+        // Fill matrix
+        for (let i = 1; i <= str2.length; i++) {
+          for (let j = 1; j <= str1.length; j++) {
+            if (str2.charAt(i - 1) === str1.charAt(j - 1)) {
+              matrix[i][j] = matrix[i - 1][j - 1];
+            } else {
+              matrix[i][j] = Math.min(
+                matrix[i - 1][j - 1] + 1, // substitution
+                matrix[i][j - 1] + 1,     // insertion
+                matrix[i - 1][j] + 1      // deletion
+              );
+            }
+          }
+        }
+        
+        return matrix[str2.length][str1.length];
+      }
+
+      highlightSearchTerm(text, searchTerm) {
+        if (!searchTerm) return text;
+        
+        const regex = new RegExp(`(${searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+        return text.replace(regex, '<mark>$1</mark>');
+      }
+
+      renderSidebar() {
+        const lessonsList = document.getElementById('lessons-list');
+        const loading = document.getElementById('loading');
+        const searchContainer = document.getElementById('search-container');
+        
+        lessonsList.innerHTML = '';
+        
+        this.lessons.forEach(lesson => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = `#${lesson.id}`;
+          a.textContent = lesson.title;
+          a.setAttribute('data-keywords', lesson.keywords);
+          a.setAttribute('data-lesson-id', lesson.id);
+          
+          li.appendChild(a);
+          lessonsList.appendChild(li);
+        });
+
+        loading.style.display = 'none';
+        lessonsList.style.display = 'block';
+        searchContainer.style.display = 'block';
+      }
+
+      showFirstLesson() {
+        if (this.lessons.length > 0) {
+          this.showLesson(this.lessons[0].id);
+          const firstLink = document.querySelector(`a[data-lesson-id="${this.lessons[0].id}"]`);
+          if (firstLink) {
+            firstLink.classList.add('active-lesson');
+          }
+        }
+      }
+
+      showLesson(lessonId) {
+        const lesson = this.lessons.find(l => l.id === lessonId);
+        if (!lesson) return;
+
+        const contentContainer = document.getElementById('lessons-content');
+        const welcomeMessage = document.getElementById('welcome-message');
+        
+        if (welcomeMessage) {
+          welcomeMessage.style.display = 'none';
+        }
+
+        // Remove existing lesson content
+        const existingContent = contentContainer.querySelectorAll('.lesson-content');
+        existingContent.forEach(content => content.remove());
+
+        // Create new lesson content
+        const lessonDiv = document.createElement('div');
+        lessonDiv.className = 'lesson-content active';
+        lessonDiv.innerHTML = marked.parse(lesson.content);
+
+        contentContainer.appendChild(lessonDiv);
+        this.currentLesson = lessonId;
+      }
+
+      setupEventListeners() {
+        const searchInput = document.getElementById('lesson-search');
+        const clearButton = document.getElementById('clear-search');
+        const lessonsList = document.getElementById('lessons-list');
+        const noResults = document.getElementById('no-results');
+
+        // Lesson navigation
+        document.addEventListener('click', (e) => {
+          if (e.target.matches('#sidebar a[data-lesson-id]')) {
+            e.preventDefault();
+            
+            const lessonId = e.target.getAttribute('data-lesson-id');
+            this.showLesson(lessonId);
+
+            // Update active link styling
+            const links = document.querySelectorAll('#sidebar a[data-lesson-id]');
+            links.forEach(link => link.classList.remove('active-lesson'));
+            e.target.classList.add('active-lesson');
+          }
+        });
+
+        // Enhanced search functionality with fuzzy matching and relevance scoring
+        searchInput.addEventListener('input', (e) => {
+          const searchTerm = e.target.value.toLowerCase().trim();
+          const listItems = lessonsList.querySelectorAll('li');
+          
+          if (searchTerm === '') {
+            // Show all lessons when search is empty
+            listItems.forEach(item => {
+              item.style.display = 'block';
+              item.style.order = '0'; // Reset order
+              const link = item.querySelector('a');
+              link.style.fontWeight = 'normal';
+              if (!link.classList.contains('active-lesson')) {
+                link.style.color = '#e0e1dd';
+              }
+            });
+            noResults.style.display = 'none';
+            clearButton.style.display = 'none';
+            return;
+          }
+
+          const searchResults = [];
+          
+          listItems.forEach((item, index) => {
+            const link = item.querySelector('a');
+            const title = link.textContent.toLowerCase();
+            const keywords = link.getAttribute('data-keywords').toLowerCase();
+            const fullText = title + ' ' + keywords;
+            
+            // Calculate relevance score
+            let score = 0;
+            let hasMatch = false;
+            
+            // Exact phrase match in title (highest priority)
+            if (title.includes(searchTerm)) {
+              score += 100;
+              hasMatch = true;
+              
+              // Bonus for exact title match
+              if (title === searchTerm) {
+                score += 50;
+              }
+              
+              // Bonus for title starting with search term
+              if (title.startsWith(searchTerm)) {
+                score += 25;
+              }
+            }
+            
+            // Word-by-word matching
+            const searchWords = searchTerm.split(/\s+/).filter(word => word.length > 0);
+            searchWords.forEach(searchWord => {
+              // Exact word match in title
+              const titleWords = title.split(/\s+/);
+              if (titleWords.some(word => word === searchWord)) {
+                score += 50;
+                hasMatch = true;
+              }
+              
+              // Partial word match in title
+              if (titleWords.some(word => word.includes(searchWord))) {
+                score += 25;
+                hasMatch = true;
+              }
+              
+              // Match in keywords
+              if (keywords.includes(searchWord)) {
+                score += 20;
+                hasMatch = true;
+              }
+              
+              // Fuzzy matching (allowing 1-2 character differences)
+              titleWords.forEach(titleWord => {
+                const distance = this.calculateLevenshteinDistance(searchWord, titleWord);
+                if (distance <= Math.min(2, Math.floor(searchWord.length / 3)) && searchWord.length > 2) {
+                  score += Math.max(10 - distance * 3, 1);
+                  hasMatch = true;
+                }
+              });
+            });
+            
+            // Programming-specific term boosting
+            const programmingTerms = ['python', 'dict', 'dictionary', 'list', 'deque', 'function', 'variable', 'loop', 'input', 'output'];
+            programmingTerms.forEach(term => {
+              if (searchTerm.includes(term) && fullText.includes(term)) {
+                score += 15;
+                hasMatch = true;
+              }
+            });
+            
+            // Store results with relevance info
+            searchResults.push({
+              item,
+              score,
+              hasMatch,
+              originalIndex: index
+            });
+          });
+          
+          // Sort by relevance score (descending), then by original order
+          searchResults.sort((a, b) => {
+            if (a.score !== b.score) {
+              return b.score - a.score;
+            }
+            return a.originalIndex - b.originalIndex;
+          });
+          
+          let hasVisibleResults = false;
+          
+          // Apply results and reorder
+          searchResults.forEach((result, index) => {
+            if (result.hasMatch) {
+              result.item.style.display = 'block';
+              result.item.style.order = index; // Reorder by relevance
+              hasVisibleResults = true;
+              
+              // Add visual indicator for high-relevance matches
+              const link = result.item.querySelector('a');
+              if (result.score >= 75) {
+                link.style.fontWeight = 'bold';
+                link.style.color = '#e0ae3e';
+              } else {
+                link.style.fontWeight = 'normal';
+                if (!link.classList.contains('active-lesson')) {
+                  link.style.color = '#e0e1dd';
+                }
+              }
+            } else {
+              result.item.style.display = 'none';
+            }
+          });
+          
+          // Show/hide no results message
+          noResults.style.display = hasVisibleResults ? 'none' : 'block';
+          clearButton.style.display = 'block';
+        });
+
+        // Enhanced clear search functionality
+        clearButton.addEventListener('click', () => {
+          searchInput.value = '';
+          
+          // Reset all styling and order
+          const listItems = lessonsList.querySelectorAll('li');
+          listItems.forEach(item => {
+            item.style.display = 'block';
+            item.style.order = '0';
+            const link = item.querySelector('a');
+            link.style.fontWeight = 'normal';
+            if (!link.classList.contains('active-lesson')) {
+              link.style.color = '#e0e1dd';
+            }
+          });
+          
+          noResults.style.display = 'none';
+          clearButton.style.display = 'none';
+          searchInput.focus();
+        });
+
+        // Keyboard shortcut (Ctrl/Cmd + K) to focus search
+        document.addEventListener('keydown', (e) => {
+          if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            e.preventDefault();
+            searchInput.focus();
+          }
+        });
+      }
+
+      showError() {
+        const loading = document.getElementById('loading');
+        const error = document.getElementById('error');
+        
+        loading.style.display = 'none';
+        error.style.display = 'block';
+      }
+    }
+
+    // Initialize the lesson manager when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      new LessonManager();
+    });
+  </script>
+
+</body>
+</html>
