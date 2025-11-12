@@ -131,7 +131,7 @@
             height: 44px;
             background: var(--brand-gradient);
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: center;
             padding: 0 20px;
             color: var(--text-inverted);
@@ -178,6 +178,73 @@
             background: var(--brand-gradient);
             color: var(--text-inverted);
             padding: var(--space-featured-padding);
+        }
+
+        .battery-module {
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
+            padding: 22px;
+            margin-bottom: var(--space-card-gap);
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .battery-module-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .battery-label {
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin: 0 0 6px;
+        }
+
+        .battery-range {
+            margin: 0;
+            color: var(--text-deep);
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .battery-percentage {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--brand-secondary);
+        }
+
+        .battery-bar {
+            width: 100%;
+            height: 16px;
+            border-radius: var(--radius-pill);
+            background: var(--card-soft-bg);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .battery-bar-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            border-radius: inherit;
+            background: var(--brand-gradient);
+            transition: width 0.3s ease;
+        }
+
+        .battery-module-meta {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px 12px;
+            font-size: 12px;
+            color: var(--text-muted);
         }
 
         .trip-overview {
@@ -364,8 +431,6 @@
         }
 
         .quick-actions {
-            display: flex;
-            gap: 10px;
             margin-bottom: 20px;
         }
 
@@ -393,9 +458,20 @@
             color: var(--text-inverted);
         }
 
+        .quick-actions .action-btn {
+            width: 100%;
+            display: block;
+            background: var(--brand-gradient);
+            color: var(--text-inverted);
+            border: none;
+            padding: 16px;
+            font-size: 16px;
+            box-shadow: var(--shadow-action);
+        }
+
         .action-btn.active-route {
             background: var(--accent-success);
-            border-color: var(--accent-success);
+            border: 2px solid var(--accent-success);
             color: var(--text-inverted);
         }
 
@@ -976,12 +1052,185 @@
             padding: 12px 24px;
             border-radius: 25px;
             font-size: 14px;
-            animation: slideDown 0.3s, slideUp 0.3s 2.7s;
+            animation: fadeIn 0.2s ease-out, fadeOut 0.35s ease-in 2.65s forwards;
             z-index: 1001;
             box-shadow: var(--notification-shadow);
         }
 
-        @keyframes slideDown {
-            from { transform: translate(-50%, -100%); opacity: 0; }
-            to { transform: translate(-50%, 0); opacity: 1; }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        /* Map card visuals */
+        .map-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
+            padding: 18px;
+            margin-bottom: var(--space-card-gap);
+            box-shadow: var(--shadow-card);
+        }
+
+        .map-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .map-label {
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin: 0 0 4px;
+        }
+
+        .map-card h3 {
+            margin: 0;
+            font-size: 20px;
+            color: var(--text-deep);
+        }
+
+        .map-eta {
+            background: var(--card-soft-bg);
+            border-radius: var(--radius-pill);
+            padding: 6px 14px;
+            font-weight: 600;
+            color: var(--brand-secondary);
+            font-size: 14px;
+        }
+
+        .nav-map {
+            position: relative;
+            height: 190px;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--border-subtle);
+            background: linear-gradient(135deg, #c8ddff, #f4fbff);
+            margin-bottom: 12px;
+        }
+
+        .map-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(to right, rgba(255,255,255,0.35) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.35) 1px, transparent 1px);
+            background-size: 45px 45px;
+            opacity: 0.6;
+            mix-blend-mode: soft-light;
+            pointer-events: none;
+        }
+
+        .map-route {
+            position: absolute;
+            left: 28px;
+            top: 26px;
+            width: calc(100% - 70px);
+            height: 140px;
+            border-radius: 60% 40% 55% 35%;
+            border: 4px solid var(--brand-primary);
+            background: rgba(79, 163, 255, 0.15);
+            box-shadow: 0 8px 18px rgba(79, 163, 255, 0.25);
+            transform: rotate(-5deg);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .map-route::after {
+            content: '';
+            position: absolute;
+            inset: 12px;
+            border-radius: inherit;
+            border: 2px dashed rgba(255,255,255,0.8);
+        }
+
+        .map-marker {
+            position: absolute;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 13px;
+            background: var(--card-bg);
+            color: var(--brand-secondary);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+            z-index: 2;
+        }
+
+        .map-marker.start {
+            left: 18px;
+            bottom: 24px;
+            background: var(--brand-secondary);
+            color: var(--text-inverted);
+        }
+
+        .map-marker.end {
+            right: 20px;
+            top: 20px;
+            background: var(--accent-success);
+            color: var(--text-inverted);
+            font-size: 16px;
+        }
+
+        .map-poi {
+            position: absolute;
+            font-size: 20px;
+            z-index: 2;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.25));
+        }
+
+        .map-poi.poi-1 {
+            left: 110px;
+            top: 18px;
+        }
+
+        .map-poi.poi-2 {
+            left: 70px;
+            bottom: 36px;
+        }
+
+        .map-poi.poi-3 {
+            right: 60px;
+            bottom: 18px;
+        }
+
+        .map-legend {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .map-legend span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.route {
+            background: var(--brand-primary);
+            box-shadow: 0 0 0 2px rgba(79, 163, 255, 0.3);
+        }
+
+        .legend-dot.poi {
+            background: var(--accent-success);
+            box-shadow: 0 0 0 2px rgba(91, 200, 177, 0.3);
         }

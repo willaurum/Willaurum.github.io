@@ -13,8 +13,7 @@
         <div class="screen">
             <!-- Status bar mimics real device feedback -->
             <div class="status-bar">
-                <span id="statusTime">9:41</span>
-                <span id="statusBattery">Battery 100%</span>
+                <span id="statusBattery">Stroller Battery 87%</span>
             </div>
 
             <!-- Home view: live trip overview and alerts -->
@@ -49,13 +48,26 @@
                     </div>
                 </div>
 
+                <!-- Dedicated stroller battery module -->
+                <div class="battery-module" aria-live="polite">
+                    <div class="battery-module-header">
+                        <div>
+                            <p class="battery-label">Stroller Battery</p>
+                            <p class="battery-range" id="batteryRangeHint">Estimated range: 13 mi</p>
+                        </div>
+                        <div class="battery-percentage" id="batteryLargeValue">87%</div>
+                    </div>
+                    <div class="battery-bar">
+                        <div class="battery-bar-fill" id="batteryBarFill" style="width: 87%;"></div>
+                    </div>
+                    <div class="battery-module-meta">
+                        <span id="batteryHealth">Health: Optimal</span>
+                        <span id="batteryUsage">Assist level: Eco</span>
+                    </div>
+                </div>
+
                 <!-- Key trip metrics -->
                 <div class="metric-grid">
-                    <div class="metric-item">
-                        <div class="metric-label">Battery</div>
-                        <div class="metric-value" id="battery">87%</div>
-                        <div class="metric-hint">~12 mi left</div>
-                    </div>
                     <div class="metric-item">
                         <div class="metric-label">Signal</div>
                         <div class="metric-value" id="signalBars">|||||</div>
@@ -71,12 +83,16 @@
                         <div class="metric-value" id="elevation">+52 ft</div>
                         <div class="metric-hint">This trip</div>
                     </div>
+                    <div class="metric-item" id="statsBtn" role="button" tabindex="0">
+                        <div class="metric-label">Overview</div>
+                        <div class="metric-value">Quick Stats</div>
+                        <div class="metric-hint">Weekly/Monthly insights</div>
+                    </div>
                 </div>
 
                 <!-- Primary actions -->
                 <div class="quick-actions">
                     <button class="action-btn" id="routeBtn">Start Route</button>
-                    <button class="action-btn" id="statsBtn">Quick Stats</button>
                 </div>
 
                 <!-- Recent system alerts -->
@@ -336,6 +352,11 @@
         const watchStatus = document.getElementById('watchStatus');
         const meetupStatus = document.getElementById('meetupStatus');
         const cityStatus = document.getElementById('cityStatus');
+        const batteryLargeValue = document.getElementById('batteryLargeValue');
+        const batteryBarFill = document.getElementById('batteryBarFill');
+        const batteryRangeHint = document.getElementById('batteryRangeHint');
+        const batteryHealth = document.getElementById('batteryHealth');
+        const batteryUsage = document.getElementById('batteryUsage');
 
         // Updates the navigation card and header copy to match the current destination.
         function updateRouteCard() {
@@ -398,6 +419,39 @@
             setTimeout(() => notification.remove(), 3000);
         }
 
+        // Syncs the large-format battery widget with the latest charge data.
+        function updateBatteryModule(percent) {
+            const safePercent = Math.max(0, Math.min(100, percent));
+            if (batteryLargeValue) {
+                batteryLargeValue.textContent = safePercent + '%';
+            }
+            if (batteryBarFill) {
+                batteryBarFill.style.width = safePercent + '%';
+            }
+            if (batteryRangeHint) {
+                const miles = Math.max(0, Math.round(safePercent * 0.15));
+                batteryRangeHint.textContent = 'Estimated range: ' + miles + ' mi';
+            }
+            if (batteryHealth) {
+                let healthCopy = 'Health: Optimal';
+                if (safePercent < 30) {
+                    healthCopy = 'Health: Critical';
+                } else if (safePercent < 60) {
+                    healthCopy = 'Health: Monitor';
+                }
+                batteryHealth.textContent = healthCopy;
+            }
+            if (batteryUsage) {
+                let usageCopy = 'Assist level: Eco';
+                if (safePercent < 40) {
+                    usageCopy = 'Assist level: Power Save';
+                } else if (safePercent < 70) {
+                    usageCopy = 'Assist level: Balanced';
+                }
+                batteryUsage.textContent = usageCopy;
+            }
+        }
+
         // Tap-to-dismiss banner example.
         document.getElementById('airQualityAlert').addEventListener('click', () => {
             const banner = document.getElementById('airQualityAlert');
@@ -454,7 +508,7 @@
         function startTripSimulation() {
             let distance = parseFloat(document.getElementById('tripDistance').textContent);
             let elevation = parseInt(document.getElementById('elevation').textContent.replace(/[^0-9]/g, ''), 10);
-            let battery = parseInt(document.getElementById('battery').textContent, 10);
+            let battery = parseInt(batteryLargeValue ? batteryLargeValue.textContent : '0', 10);
 
             tripInterval = setInterval(() => {
                 distance += 0.1;
@@ -465,8 +519,8 @@
                 document.getElementById('tripDistance').textContent = distance.toFixed(1) + ' mi';
                 document.getElementById('avgSpeed').textContent = speed + ' mph';
                 document.getElementById('elevation').textContent = '+' + elevation + ' ft';
-                document.getElementById('battery').textContent = battery + '%';
-                statusBattery.textContent = 'Battery ' + battery + '%';
+                updateBatteryModule(battery);
+                statusBattery.textContent = 'Stroller Battery ' + battery + '%';
 
                 if (battery === 20) {
                     showNotification('Low battery: 20% remaining');
@@ -535,60 +589,77 @@
             `);
         });
 
-        // Quick stats button reveals sample analytics.
-        document.getElementById('statsBtn').addEventListener('click', () => {
-            showAlert('Quick Stats', `
-                <div class="stats-section">
-                    <div class="section-chip">This Week</div>
-                    <div class="stats-grid">
-                        <div class="stats-card">
-                            <span class="stats-label">Distance</span>
-                            <span class="stats-value">8.2 mi</span>
-                        </div>
-                        <div class="stats-card">
-                            <span class="stats-label">Active Time</span>
-                            <span class="stats-value">2h 15m</span>
-                        </div>
-                        <div class="stats-card">
-                            <span class="stats-label">Avg Speed</span>
-                            <span class="stats-value">4.1 mph</span>
+        // Quick stats card reveals sample analytics.
+        const statsBtn = document.getElementById('statsBtn');
+        if (statsBtn) {
+            const openStats = () => {
+                showAlert('Quick Stats', `
+                    <div class="stats-section">
+                        <div class="section-chip">This Week</div>
+                        <div class="stats-grid">
+                            <div class="stats-card">
+                                <span class="stats-label">Distance</span>
+                                <span class="stats-value">8.2 mi</span>
+                            </div>
+                            <div class="stats-card">
+                                <span class="stats-label">Active Time</span>
+                                <span class="stats-value">2h 15m</span>
+                            </div>
+                            <div class="stats-card">
+                                <span class="stats-label">Avg Speed</span>
+                                <span class="stats-value">4.1 mph</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="stats-section">
-                    <div class="section-chip secondary">This Month</div>
-                    <ul class="stats-list">
-                        <li>
-                            <span>Parks visited</span>
-                            <strong>7</strong>
-                        </li>
-                        <li>
-                            <span>Total distance</span>
-                            <strong>32.8 mi</strong>
-                        </li>
-                        <li>
-                            <span>Stroll streak</span>
-                            <strong>5 days</strong>
-                        </li>
-                    </ul>
-                </div>
-            `);
-        });
+                    <div class="stats-section">
+                        <div class="section-chip secondary">This Month</div>
+                        <ul class="stats-list">
+                            <li>
+                                <span>Parks visited</span>
+                                <strong>7</strong>
+                            </li>
+                            <li>
+                                <span>Total distance</span>
+                                <strong>32.8 mi</strong>
+                            </li>
+                            <li>
+                                <span>Stroll streak</span>
+                                <strong>5 days</strong>
+                            </li>
+                        </ul>
+                    </div>
+                `);
+            };
+
+            statsBtn.addEventListener('click', openStats);
+            statsBtn.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    openStats();
+                }
+            });
+        }
 
         // Primary CTA for route actions.
         routeBtn.addEventListener('click', startRoute);
 
         // Tap feedback for metric tiles.
-        document.querySelectorAll('.metric-item').forEach((item, index) => {
+        const metricMessages = [
+            'Signal strength is strong across the park.',
+            'Forecast stays clear for the next hour.',
+            'Current elevation gain for this stroll.'
+        ];
+
+        let feedbackIndex = 0;
+        document.querySelectorAll('.metric-grid .metric-item').forEach(item => {
+            if (item.id === 'statsBtn') {
+                return;
+            }
+
+            const message = metricMessages[feedbackIndex++];
             item.addEventListener('click', () => {
-                const messages = [
-                    'Battery health is optimal for today.',
-                    'Signal strength is strong across the park.',
-                    'Forecast stays clear for the next hour.',
-                    'Current elevation gain for this stroll.'
-                ];
-                if (messages[index]) {
-                    showNotification(messages[index]);
+                if (message) {
+                    showNotification(message);
                 }
             });
         });
@@ -693,18 +764,6 @@
             `);
         });
 
-        // Keeps the status bar clock current.
-        function updateTime() {
-            const now = new Date();
-            const hours = now.getHours();
-            const minutes = now.getMinutes().toString().padStart(2, '0');
-            const display = (hours % 12 || 12) + ':' + minutes;
-            document.getElementById('statusTime').textContent = display;
-        }
-
-        setInterval(updateTime, 60000);
-        updateTime();
-
         // Periodically bumps the weather tile so the demo feels alive.
         setInterval(() => {
             const temps = [70, 71, 72, 73, 74];
@@ -712,7 +771,10 @@
             document.getElementById('weather').innerHTML = temp + '&deg;F';
         }, 10000);
 
-        // Initialize route card and speed display on load.
+        // Initialize route card, battery module, and speed display on load.
+        const initialBatteryValue = parseInt(batteryLargeValue ? batteryLargeValue.textContent : '0', 10);
+        updateBatteryModule(initialBatteryValue);
+        statusBattery.textContent = 'Stroller Battery ' + initialBatteryValue + '%';
         updateRouteCard();
         speedDisplay.textContent = Number(speedSlider.value).toFixed(1) + ' mph';
     </script>
