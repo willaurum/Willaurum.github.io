@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StrideSync - Smart Stroller App</title>
+    <link rel="stylesheet" href="stylessss.css">
+</head>
+<body>
+    <!-- App shell: simulated phone frame for the HCI demo -->
+    <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="screen">
+            <!-- Status bar mimics real device feedback -->
+            <div class="status-bar">
+                <span id="statusTime">9:41</span>
+                <span id="statusBattery">Battery 100%</span>
+            </div>
+
+            <!-- Home view: live trip overview and alerts -->
+            <div id="homeView" class="app-content">
+                <!-- Branding and connection status -->
+                <div class="header">
+                    <h1>StrideSync</h1>
+                    <p id="connectionStatus">Connected to Stroller #4821</p>
+                </div>
+
+                <!-- Dismissible warning for demo -->
+                <div class="alert-banner" id="airQualityAlert">
+                    &#9888; Air quality alert: moderate AQI (78) in your area &mdash; tap to dismiss
+                </div>
+
+                <!-- Current trip summary card -->
+                <div class="metric-card featured">
+                    <div class="metric-label">Current Trip</div>
+                    <div class="trip-overview">
+                        <div>
+                            <div class="metric-label">Distance</div>
+                            <div class="metric-value" id="tripDistance">2.4 mi</div>
+                        </div>
+                        <div>
+                            <div class="metric-label">Avg Speed</div>
+                            <div class="metric-value" id="avgSpeed">4.2 mph</div>
+                        </div>
+                    </div>
+                    <div class="status-indicator">
+                        <div class="status-dot"></div>
+                        <span id="babyStatus">Baby on board &mdash; Weight detected</span>
+                    </div>
+                </div>
+
+                <!-- Key trip metrics -->
+                <div class="metric-grid">
+                    <div class="metric-item">
+                        <div class="metric-label">Battery</div>
+                        <div class="metric-value" id="battery">87%</div>
+                        <div class="metric-hint">~12 mi left</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Signal</div>
+                        <div class="metric-value" id="signalBars">|||||</div>
+                        <div class="metric-hint">Strong</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Weather</div>
+                        <div class="metric-value" id="weather">72&deg;F</div>
+                        <div class="metric-hint">Partly cloudy</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Elevation</div>
+                        <div class="metric-value" id="elevation">+52 ft</div>
+                        <div class="metric-hint">This trip</div>
+                    </div>
+                </div>
+
+                <!-- Primary actions -->
+                <div class="quick-actions">
+                    <button class="action-btn" id="routeBtn">Start Route</button>
+                    <button class="action-btn" id="statsBtn">Quick Stats</button>
+                </div>
+
+                <!-- Recent system alerts -->
+                <div class="section-title">Recent Alerts</div>
+                <div class="feature-list">
+                    <div class="feature-item" id="noiseAlert">
+                        <div class="feature-icon">&#128266;</div>
+                        <div class="feature-text">
+                            <h3>Noise level warning</h3>
+                            <p>85 dB detected &mdash; 2 min ago</p>
+                        </div>
+                    </div>
+                    <div class="feature-item" id="weatherAlert">
+                        <div class="feature-icon">&#9925;</div>
+                        <div class="feature-text">
+                            <h3>Weather update</h3>
+                            <p>Rain expected in 45 minutes</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation view: choose destinations and review history -->
+            <div id="navView" class="app-content hidden">
+                <div class="header">
+                    <h1>Navigation</h1>
+                    <p>Plan your route</p>
+                </div>
+
+                <!-- Active route summary card -->
+                <div class="metric-card route-card" style="background: var(--brand-gradient); color: white;">
+                    <div class="route-summary">
+                        <div>
+                            <div class="metric-label" id="navDestination">To Central Park</div>
+                            <div class="metric-value" id="navSummary">1.2 mi - 18 min</div>
+                            <div class="route-detail" id="navDetails">Elevation gain: +32 ft</div>
+                        </div>
+                        <div class="route-icon" aria-hidden="true">&#128690;</div>
+                    </div>
+                </div>
+
+                <!-- Demo map canvas -->
+                <div class="map-card">
+                    <div class="map-header">
+                        <div>
+                            <p class="map-label">Route to</p>
+                            <h3 id="navMapDestination">Central Park</h3>
+                        </div>
+                        <div class="map-eta" id="navMapEta">18 min</div>
+                    </div>
+                    <div class="nav-map">
+                        <div class="map-grid"></div>
+                        <div class="map-route"></div>
+                        <div class="map-marker start" aria-label="Starting point">S</div>
+                        <div class="map-marker end" aria-label="Destination">★</div>
+                        <div class="map-poi poi-1">🌳</div>
+                        <div class="map-poi poi-2">🛝</div>
+                        <div class="map-poi poi-3">☕</div>
+                    </div>
+                    <div class="map-legend">
+                        <span><span class="legend-dot route"></span> Live stroller path</span>
+                        <span><span class="legend-dot poi"></span> Points of interest</span>
+                    </div>
+                </div>
+
+                <!-- Destination quick picks -->
+                <div class="section-title">Nearby Parks</div>
+                <div id="parksList">
+                    <div class="park-item selected" data-park="Central Park" data-distance="1.2 mi" data-time="18 min" data-detail="Elevation gain: +32 ft">
+                        <div class="feature-icon">&#127796;</div>
+                        <div class="feature-text">
+                            <h3>Central Park</h3>
+                            <p>Saved favorite &mdash; Smooth lake loop</p>
+                        </div>
+                    </div>
+                    <div class="park-item" data-park="Riverside Park" data-distance="0.8 mi" data-time="12 min" data-detail="Playground stop &mdash; Riverside trail">
+                        <div class="feature-icon">&#127795;</div>
+                        <div class="feature-text">
+                            <h3>Riverside Park</h3>
+                            <p>0.8 mi away &mdash; Playground and river views</p>
+                        </div>
+                    </div>
+                    <div class="park-item" data-park="Memorial Gardens" data-distance="1.5 mi" data-time="24 min" data-detail="Shaded paths &mdash; Picnic areas">
+                        <div class="feature-icon">&#127807;</div>
+                        <div class="feature-text">
+                            <h3>Memorial Gardens</h3>
+                            <p>1.5 mi away &mdash; Shaded paths and monuments</p>
+                        </div>
+                    </div>
+                    <div class="park-item" data-park="Oak Park Event" data-distance="2.3 mi" data-time="32 min" data-detail="Family fun day &mdash; Starts at 10 AM">
+                        <div class="feature-icon">&#127880;</div>
+                        <div class="feature-text">
+                            <h3>Community Event Today</h3>
+                            <p>Family fun day at Oak Park</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recap of recent distances -->
+                <div class="section-title">Trip History</div>
+                <div class="metric-grid">
+                    <div class="metric-item">
+                        <div class="metric-label">This Week</div>
+                        <div class="metric-value">8.2 mi</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Avg Trip</div>
+                        <div class="metric-value">2.1 mi</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings view: configurable demo toggles -->
+            <div id="settingsView" class="app-content hidden">
+                <div class="header">
+                    <h1>Settings</h1>
+                    <p>Customize your experience</p>
+                </div>
+
+                <!-- Assisted speed limit control -->
+                <div class="speed-control">
+                    <div class="section-title" style="margin: 0 0 10px 0;">Speed Limit</div>
+                    <div class="speed-value" id="speedDisplay">6.0 mph</div>
+                    <input type="range" min="2" max="7" step="0.5" value="6" id="speedSlider" class="speed-slider">
+                    <div class="speed-scale">
+                        <span>2 mph</span>
+                        <span>7 mph (max)</span>
+                    </div>
+                </div>
+
+                <!-- Device integrations -->
+                <div class="section-title">Features</div>
+                <div class="feature-list">
+                    <div class="feature-item" id="monitorFeature">
+                        <div class="feature-icon">&#128247;</div>
+                        <div class="feature-text">
+                            <h3>Baby Monitor</h3>
+                            <p id="monitorStatus">Connect compatible monitors</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="monitorToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="feature-item" id="watchFeature">
+                        <div class="feature-icon">&#8986;</div>
+                        <div class="feature-text">
+                            <h3>Smartwatch Sync</h3>
+                            <p id="watchStatus">Connected - Tracking metrics</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="watchToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="feature-item" id="alertPrefs">
+                        <div class="feature-icon">&#9881;</div>
+                        <div class="feature-text">
+                            <h3>Alert Preferences</h3>
+                            <p>Air quality, weather, noise</p>
+                        </div>
+                    </div>
+                    <div class="feature-item" id="displayMetrics">
+                        <div class="feature-icon">&#128200;</div>
+                        <div class="feature-text">
+                            <h3>Display Metrics</h3>
+                            <p>Customize home screen data</p>
+                        </div>
+                    </div>
+                    <div class="feature-item" id="meetupFeature">
+                        <div class="feature-icon">&#128101;</div>
+                        <div class="feature-text">
+                            <h3>Park Meetups</h3>
+                            <p id="meetupStatus">Visible to trusted friends</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="meetupToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="feature-item" id="cityFeature">
+                        <div class="feature-icon">&#127963;</div>
+                        <div class="feature-text">
+                            <h3>City Event Alerts</h3>
+                            <p id="cityStatus">Enabled for nearby parks</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="cityToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Upsell callout -->
+                <div class="metric-card premium-card">
+                    <div class="premium-header">
+                        <div class="premium-icon">★</div>
+                        <div>
+                            <p class="premium-label">StrideSync Plus</p>
+                            <p class="premium-subtitle">Make every stroll smarter</p>
+                        </div>
+                    </div>
+                    <ul class="premium-benefits">
+                        <li>Advanced ride analytics &amp; insights</li>
+                        <li>30-day trip history with highlights</li>
+                        <li>Priority support + exclusive park perks</li>
+                    </ul>
+                    <button class="action-btn premium-btn" id="premiumBtn">Explore Plans</button>
+                </div>
+            </div>
+
+            <!-- Bottom navigation tabs -->
+            <div class="nav-bar">
+                <div class="nav-item active" data-view="homeView">
+                    <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                    </svg>
+                    <span class="nav-label">Home</span>
+                </div>
+                <div class="nav-item" data-view="navView">
+                    <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="nav-label">Navigate</span>
+                </div>
+                <div class="nav-item" data-view="settingsView">
+                    <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="nav-label">Settings</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Demo logic: simulates product behavior without a backend -->
+    <script>
+        // ---------- Demo state ----------
+        let isRouteActive = false;
+        let tripInterval = null;
+        let selectedPark = {
+            name: 'Central Park',
+            distance: '1.2 mi',
+            time: '18 min',
+            detail: 'Elevation gain: +32 ft'
+        };
+
+        const navItems = document.querySelectorAll('.nav-item');
+        const routeBtn = document.getElementById('routeBtn');
+        const navButton = document.querySelector('.nav-item[data-view="navView"]');
+        const homeButton = document.querySelector('.nav-item[data-view="homeView"]');
+        const statusBattery = document.getElementById('statusBattery');
+        const connectionStatus = document.getElementById('connectionStatus');
+        const speedSlider = document.getElementById('speedSlider');
+        const speedDisplay = document.getElementById('speedDisplay');
+        const monitorStatus = document.getElementById('monitorStatus');
+        const watchStatus = document.getElementById('watchStatus');
+        const meetupStatus = document.getElementById('meetupStatus');
+        const cityStatus = document.getElementById('cityStatus');
+
+        // Updates the navigation card and header copy to match the current destination.
+        function updateRouteCard() {
+            const destinationField = document.getElementById('navDestination');
+            const summaryField = document.getElementById('navSummary');
+            const detailField = document.getElementById('navDetails');
+            const mapDestination = document.getElementById('navMapDestination');
+            const mapEta = document.getElementById('navMapEta');
+
+            destinationField.textContent = 'To ' + selectedPark.name;
+            summaryField.textContent = selectedPark.distance + ' - ' + selectedPark.time;
+            detailField.textContent = selectedPark.detail;
+            connectionStatus.textContent = 'Connected to Stroller #4821 - Ready for ' + selectedPark.name;
+            if (mapDestination) {
+                mapDestination.textContent = selectedPark.name;
+            }
+            if (mapEta) {
+                mapEta.textContent = selectedPark.time;
+            }
+        }
+
+        // Switches between the app's tabbed views.
+        function switchView(viewId, navItem) {
+            document.querySelectorAll('.app-content').forEach(view => view.classList.add('hidden'));
+            navItems.forEach(item => item.classList.remove('active'));
+            document.getElementById(viewId).classList.remove('hidden');
+            if (navItem) {
+                navItem.classList.add('active');
+            }
+        }
+
+        // Bottom navigation simulates tabbed navigation on mobile.
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const viewId = item.getAttribute('data-view');
+                switchView(viewId, item);
+            });
+        });
+
+        // Range slider demo for assisted speed limit.
+        speedSlider.addEventListener('input', () => {
+            speedDisplay.textContent = Number(speedSlider.value).toFixed(1) + ' mph';
+            speedDisplay.classList.add('changed');
+            setTimeout(() => speedDisplay.classList.remove('changed'), 300);
+            showNotification('Speed limit set to ' + Number(speedSlider.value).toFixed(1) + ' mph');
+        });
+
+        // Lightweight toast notifications used across the demo.
+        function showNotification(message) {
+            const existing = document.querySelector('.notification');
+            if (existing) {
+                existing.remove();
+            }
+
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        // Tap-to-dismiss banner example.
+        document.getElementById('airQualityAlert').addEventListener('click', () => {
+            const banner = document.getElementById('airQualityAlert');
+            banner.classList.add('dismissed');
+            setTimeout(() => banner.remove(), 300);
+            showNotification('Alert dismissed');
+        });
+
+        // Generic modal helper for drill-down information.
+        function showAlert(title, message) {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">${title}</div>
+                    <div class="modal-body">${message}</div>
+                    <button class="modal-close">Got it</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            modal.querySelector('.modal-close').addEventListener('click', () => modal.remove());
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
+
+        // Handles starting/stopping the simulated route experience.
+        function startRoute() {
+            isRouteActive = !isRouteActive;
+
+            if (isRouteActive) {
+                if (navButton) {
+                    switchView('navView', navButton);
+                }
+                routeBtn.textContent = 'Stop Route';
+                routeBtn.classList.add('active-route');
+                showNotification('Routing to ' + selectedPark.name);
+                startTripSimulation();
+            } else {
+                if (homeButton) {
+                    switchView('homeView', homeButton);
+                }
+                routeBtn.textContent = 'Start Route';
+                routeBtn.classList.remove('active-route');
+                showNotification('Route ended. Great job!');
+                stopTripSimulation();
+            }
+        }
+
+        // Generates demo telemetry while a route is active.
+        function startTripSimulation() {
+            let distance = parseFloat(document.getElementById('tripDistance').textContent);
+            let elevation = parseInt(document.getElementById('elevation').textContent.replace(/[^0-9]/g, ''), 10);
+            let battery = parseInt(document.getElementById('battery').textContent, 10);
+
+            tripInterval = setInterval(() => {
+                distance += 0.1;
+                const speed = (4 + Math.random() * 0.8).toFixed(1);
+                elevation += Math.floor(Math.random() * 5);
+                battery = Math.max(0, battery - 1);
+
+                document.getElementById('tripDistance').textContent = distance.toFixed(1) + ' mi';
+                document.getElementById('avgSpeed').textContent = speed + ' mph';
+                document.getElementById('elevation').textContent = '+' + elevation + ' ft';
+                document.getElementById('battery').textContent = battery + '%';
+                statusBattery.textContent = 'Battery ' + battery + '%';
+
+                if (battery === 20) {
+                    showNotification('Low battery: 20% remaining');
+                }
+
+                if (battery <= 0) {
+                    stopTripSimulation();
+                    showAlert('Trip Complete', 'Battery depleted. Recharge before your next outing.');
+                    startRoute();
+                }
+            }, 3000);
+        }
+
+        // Clears the simulated telemetry loop.
+        function stopTripSimulation() {
+            if (tripInterval) {
+                clearInterval(tripInterval);
+                tripInterval = null;
+            }
+        }
+
+        // Drill-down for the hero card.
+        document.querySelector('.metric-card.featured').addEventListener('click', () => {
+            const distance = document.getElementById('tripDistance').textContent;
+            const speed = document.getElementById('avgSpeed').textContent;
+            const elevation = document.getElementById('elevation').textContent;
+
+            showAlert('Trip Details', `
+                <div class="detail-cards">
+                    <div class="detail-card">
+                        <span class="detail-label">Distance</span>
+                        <span class="detail-value">${distance}</span>
+                    </div>
+                    <div class="detail-card">
+                        <span class="detail-label">Avg Speed</span>
+                        <span class="detail-value">${speed}</span>
+                    </div>
+                    <div class="detail-card">
+                        <span class="detail-label">Elevation Gain</span>
+                        <span class="detail-value">${elevation}</span>
+                    </div>
+                </div>
+                <div class="detail-destination">
+                    <div>
+                        <p class="detail-hint">Heading to</p>
+                        <p class="detail-destination-name">${selectedPark.name}</p>
+                    </div>
+                    <div class="arrival-pill">${selectedPark.time} ETA</div>
+                </div>
+                <div class="detail-timeline">
+                    <div class="timeline-item">
+                        <span class="timeline-dot live"></span>
+                        <div>
+                            <p class="timeline-title">Now</p>
+                            <p class="timeline-subtitle">Smooth path with light incline</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-dot"></span>
+                        <div>
+                            <p class="timeline-title">Next stop</p>
+                            <p class="timeline-subtitle">Water break in 0.4 mi</p>
+                        </div>
+                    </div>
+                </div>
+            `);
+        });
+
+        // Quick stats button reveals sample analytics.
+        document.getElementById('statsBtn').addEventListener('click', () => {
+            showAlert('Quick Stats', `
+                <div class="stats-section">
+                    <div class="section-chip">This Week</div>
+                    <div class="stats-grid">
+                        <div class="stats-card">
+                            <span class="stats-label">Distance</span>
+                            <span class="stats-value">8.2 mi</span>
+                        </div>
+                        <div class="stats-card">
+                            <span class="stats-label">Active Time</span>
+                            <span class="stats-value">2h 15m</span>
+                        </div>
+                        <div class="stats-card">
+                            <span class="stats-label">Avg Speed</span>
+                            <span class="stats-value">4.1 mph</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="stats-section">
+                    <div class="section-chip secondary">This Month</div>
+                    <ul class="stats-list">
+                        <li>
+                            <span>Parks visited</span>
+                            <strong>7</strong>
+                        </li>
+                        <li>
+                            <span>Total distance</span>
+                            <strong>32.8 mi</strong>
+                        </li>
+                        <li>
+                            <span>Stroll streak</span>
+                            <strong>5 days</strong>
+                        </li>
+                    </ul>
+                </div>
+            `);
+        });
+
+        // Primary CTA for route actions.
+        routeBtn.addEventListener('click', startRoute);
+
+        // Tap feedback for metric tiles.
+        document.querySelectorAll('.metric-item').forEach((item, index) => {
+            item.addEventListener('click', () => {
+                const messages = [
+                    'Battery health is optimal for today.',
+                    'Signal strength is strong across the park.',
+                    'Forecast stays clear for the next hour.',
+                    'Current elevation gain for this stroll.'
+                ];
+                if (messages[index]) {
+                    showNotification(messages[index]);
+                }
+            });
+        });
+
+        // Destination picker updates selectedPark and route card.
+        document.querySelectorAll('.park-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.park-item').forEach(park => park.classList.remove('selected'));
+                item.classList.add('selected');
+
+                selectedPark = {
+                    name: item.dataset.park,
+                    distance: item.dataset.distance,
+                    time: item.dataset.time,
+                    detail: item.dataset.detail
+                };
+
+                updateRouteCard();
+                showNotification('Selected: ' + selectedPark.name);
+            });
+        });
+
+        // Additional alerts make use of the modal helper.
+        document.getElementById('noiseAlert').addEventListener('click', () => {
+            showAlert('Noise Level', 'Loud noise detected at 85 dB. Consider protective measures for the baby.');
+        });
+
+        document.getElementById('weatherAlert').addEventListener('click', () => {
+            showAlert('Weather Update', 'Rain expected in 45 minutes. Plan your route accordingly.');
+        });
+
+        // Device toggle demos.
+        document.getElementById('monitorToggle').addEventListener('change', (event) => {
+            if (event.target.checked) {
+                monitorStatus.textContent = 'Connected - Monitoring active';
+                showNotification('Baby monitor connected');
+            } else {
+                monitorStatus.textContent = 'Connect compatible monitors';
+                showNotification('Baby monitor disconnected');
+            }
+        });
+
+        document.getElementById('watchToggle').addEventListener('change', (event) => {
+            if (event.target.checked) {
+                watchStatus.textContent = 'Connected - Tracking metrics';
+                showNotification('Smartwatch synced');
+            } else {
+                watchStatus.textContent = 'Not connected';
+                showNotification('Smartwatch disconnected');
+            }
+        });
+
+        document.getElementById('meetupToggle').addEventListener('change', (event) => {
+            if (event.target.checked) {
+                meetupStatus.textContent = 'Visible to trusted friends';
+                showNotification('Meetups visible to friends');
+            } else {
+                meetupStatus.textContent = 'Hidden from others';
+                showNotification('Meetups hidden for privacy');
+            }
+        });
+
+        document.getElementById('cityToggle').addEventListener('change', (event) => {
+            if (event.target.checked) {
+                cityStatus.textContent = 'Enabled for nearby parks';
+                showNotification('City event alerts enabled');
+            } else {
+                cityStatus.textContent = 'Muted';
+                showNotification('City event alerts muted');
+            }
+        });
+
+        // Settings list items leverage the same modal helper.
+        document.getElementById('alertPrefs').addEventListener('click', () => {
+            showAlert('Alert Preferences', 'Customize which alerts you receive: air quality, weather, noise levels, and more.');
+        });
+
+        document.getElementById('displayMetrics').addEventListener('click', () => {
+            showAlert('Display Metrics', 'Choose which metrics appear on your home screen and customize their layout.');
+        });
+
+        document.getElementById('premiumBtn').addEventListener('click', () => {
+            showAlert('Premium Plans', `
+                <div class="plan-options">
+                    <div class="plan-card">
+                        <p class="plan-name">Monthly</p>
+                        <p class="plan-price">$9.99</p>
+                        <p class="plan-note">Pause anytime</p>
+                    </div>
+                    <div class="plan-card highlight">
+                        <p class="plan-badge">Best value</p>
+                        <p class="plan-name">Annual</p>
+                        <p class="plan-price">$89.99</p>
+                        <p class="plan-note">Save 25%</p>
+                    </div>
+                </div>
+                <ul class="plan-perks">
+                    <li>Unlimited routes + downloadable GPS</li>
+                    <li>Advanced baby comfort analytics</li>
+                    <li>In-app live support</li>
+                </ul>
+            `);
+        });
+
+        // Keeps the status bar clock current.
+        function updateTime() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const display = (hours % 12 || 12) + ':' + minutes;
+            document.getElementById('statusTime').textContent = display;
+        }
+
+        setInterval(updateTime, 60000);
+        updateTime();
+
+        // Periodically bumps the weather tile so the demo feels alive.
+        setInterval(() => {
+            const temps = [70, 71, 72, 73, 74];
+            const temp = temps[Math.floor(Math.random() * temps.length)];
+            document.getElementById('weather').innerHTML = temp + '&deg;F';
+        }, 10000);
+
+        // Initialize route card and speed display on load.
+        updateRouteCard();
+        speedDisplay.textContent = Number(speedSlider.value).toFixed(1) + ' mph';
+    </script>
+</body>
+</html>
