@@ -216,10 +216,10 @@
                 <div class="speed-control">
                     <div class="section-title" style="margin: 0 0 10px 0;">Speed Limit</div>
                     <div class="speed-value" id="speedDisplay">6.0 mph</div>
-                    <input type="range" min="2" max="7" step="0.5" value="6" id="speedSlider" class="speed-slider">
+                    <input type="range" min="2" max="6" step="0.5" value="4" id="speedSlider" class="speed-slider">
                     <div class="speed-scale">
                         <span>2 mph</span>
-                        <span>7 mph (max)</span>
+                        <span>6 mph (max)</span>
                     </div>
                 </div>
 
@@ -397,12 +397,14 @@
         });
 
         // Range slider demo for assisted speed limit.
+        
         speedSlider.addEventListener('input', () => {
             speedDisplay.textContent = Number(speedSlider.value).toFixed(1) + ' mph';
             speedDisplay.classList.add('changed');
             setTimeout(() => speedDisplay.classList.remove('changed'), 300);
-            showNotification('Speed limit set to ' + Number(speedSlider.value).toFixed(1) + ' mph');
+            //showNotification('Speed limit set to ' + Number(speedSlider.value).toFixed(1) + ' mph');
         });
+        
 
         // Lightweight toast notifications used across the demo.
         function showNotification(message) {
