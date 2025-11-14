@@ -6,9 +6,6 @@ Custom Use Text
 
 # "flare"
 Custom Use Text
-# "camouflage cloak"
-
-# "ration pack"
 
 # "throwing knife"
 Custom Use Text
@@ -19,6 +16,23 @@ Custom Use Text
 
 # "herb bundle"
 Custom Loot Text
+
+# Bow
+Custom Use Text
+
+# Stick
+Custom use text
+
+# poetry anthology
+Custom use text 
+custom loot text 
+
+### GENERIC ITEMS
+# "camouflage cloak"
+# "ration pack"
+# dagger
+# steel bar
+# cheese wheel
 
 ---
 

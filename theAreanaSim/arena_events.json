@@ -16,7 +16,12 @@
         "throwing knife",
         "Taco Bell Meal Deal",
         "herb bundle",
-        "bow"
+        "bow",
+        "stick",
+        "Dagger",
+        "Steel bar",
+        "Cheese wheel",
+        "poetry anthology"
     ],
     "non_lethal_events": [
         "{person} scouts the cornucopia from afar.",
@@ -31,9 +36,12 @@
     ],
     "lethal_events": [
         "{killer} strangles {victim} to death.",
-        "{killer} traps {victim} in a ravine.",
+        "{killer} pushes {victim} into a lethal ravine.",
         "{killer} outmatches {victim} after a tense duel.",
-        "{killer} sabotages {victim}'s shelter overnight.",
+        "{killer} overwhelms {victim} during a close-quarters fight.",
+        "{killer} crushes {victim} with a boulder from above.",
+        "{killer} unleashes a swarm of tracker jackers on {victim}, killing them.",
+        "{killer} pushes {victim} into a pit of spike traps.",
         {
             "text": "{killer} launches explosives that wipe out {victim} and {victim2}.",
             "victim_count": 2
@@ -59,6 +67,9 @@
         ],
         "Taco Bell Meal Deal": [
             "{person} finds a pristine Taco Bell Meal Deal still warm from the sponsors."
+        ],
+        "poetry anthology": [
+            "{person} is gifted a poetry anthology from their sponsor."
         ]
     },
     "special_item_events": [
@@ -138,6 +149,34 @@
             ]
         },
         {
+            "item": "stick",
+            "consumes": false,
+            "events": [
+                "{person} readies their {item}.",
+                "{person} chews their {item}",
+                {
+                    "text": "{person} attempts to murder {victim} with their {item} and fails.",
+                    "lethal": false,
+                    "consumes": false
+                },
+                {
+                    "text": "{person} attempts to murder {victim} with their {item} and fails.",
+                    "lethal": false,
+                    "consumes": false
+                },
+                {
+                    "text": "{person} attempts to murder {victim} with their {item} and fails.",
+                    "lethal": false,
+                    "consumes": false
+                },
+                {
+                    "text": "{person} attempts to murder {victim} with their {item} and succedes.",
+                    "lethal": true,
+                    "consumes": true
+                }
+            ]
+        },
+        {
             "item": "bow",
             "consumes": false,
             "events": [
@@ -154,6 +193,23 @@
                     "text": "{person} rains arrows until {victim} and {victim2} both drop.",
                     "lethal": true,
                     "victim_count": 2,
+                    "consumes": true
+                }
+            ]
+        },
+        {
+            "item": "poetry anthology",
+            "consumes": false,
+            "events": [
+                "{person} reads an excerpt from their {item}",
+                {
+                    "text": "{person} overwhelms {victim} with the power of poetry, killing them.",
+                    "lethal": true,
+                    "consumes": true
+                },
+                {
+                    "text": "{person} drops their anthology in the mud, ruining it",
+                    "lethal": false,
                     "consumes": true
                 }
             ]
