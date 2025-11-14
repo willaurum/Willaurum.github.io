@@ -1,0 +1,96 @@
+{
+    "tributes": [
+        {
+            "name": "Alice",
+            "alive": false,
+            "kills": 2
+        },
+        {
+            "name": "Bob",
+            "alive": false,
+            "kills": 1
+        },
+        {
+            "name": "Charlie",
+            "alive": false,
+            "kills": 1
+        },
+        {
+            "name": "Diana",
+            "alive": false,
+            "kills": 0
+        },
+        {
+            "name": "Evelyn",
+            "alive": false,
+            "kills": 0
+        },
+        {
+            "name": "Frank",
+            "alive": false,
+            "kills": 0
+        },
+        {
+            "name": "George",
+            "alive": true,
+            "kills": 1
+        },
+        {
+            "name": "Hannah",
+            "alive": false,
+            "kills": 2
+        }
+    ],
+    "events": [
+        {
+            "day": 1,
+            "text": "Evelyn forages for food."
+        },
+        {
+            "day": 2,
+            "text": "Hannah eliminated Evelyn."
+        },
+        {
+            "day": 3,
+            "text": "Hannah eliminated Frank."
+        },
+        {
+            "day": 4,
+            "text": "Charlie eliminated Diana."
+        },
+        {
+            "day": 5,
+            "text": "George hides in the bushes."
+        },
+        {
+            "day": 6,
+            "text": "Bob builds a shelter."
+        },
+        {
+            "day": 7,
+            "text": "Bob eliminated Hannah."
+        },
+        {
+            "day": 8,
+            "text": "Alice eliminated Bob."
+        },
+        {
+            "day": 9,
+            "text": "Alice eliminated Charlie."
+        },
+        {
+            "day": 10,
+            "text": "George finds water."
+        },
+        {
+            "day": 11,
+            "text": "George eliminated Alice."
+        },
+        {
+            "day": 11,
+            "text": "\ud83c\udfc6 George wins with 1 kills!"
+        }
+    ],
+    "days": 11,
+    "winner": "George"
+}

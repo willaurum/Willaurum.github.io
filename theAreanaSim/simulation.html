@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Arena Simulation</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 600px; 
+            margin: auto; 
+            padding: 20px;
+        }
+        .event {
+            padding: 6px 0;
+            border-bottom: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Arena Simulation</h1>
+
+<div id="events">Loading...</div>
+
+<script>
+    fetch("simulation.json")
+        .then(res => res.json())
+        .then(data => {
+            const container = document.getElementById("events");
+            container.innerHTML = ""; // clear "Loading..."
+
+            data.events.forEach(ev => {
+                const div = document.createElement("div");
+                div.className = "event";
+                div.textContent = `Day ${ev.day}: ${ev.text}`;
+                container.appendChild(div);
+            });
+
+            const winner = document.createElement("h2");
+            winner.textContent = "Winner: " + data.winner;
+            container.appendChild(winner);
+        });
+</script>
+
+</body>
+</html>
