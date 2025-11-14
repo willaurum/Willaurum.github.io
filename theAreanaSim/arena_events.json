@@ -1,0 +1,34 @@
+{
+    "lethal_event_chance": 0.55,
+    "inventory_event_chance": 0.35,
+    "min_events_per_day": 2,
+    "max_events_per_day": 4,
+    "inventory_items": [
+        "medkit",
+        "snare trap",
+        "flare",
+        "camouflage cloak",
+        "ration pack",
+        "throwing knife"
+    ],
+    "non_lethal_events": [
+        "{person} scouts the cornucopia from afar.",
+        "{person} gathers herbs and hopes they are edible.",
+        "{person} reinforces a hidden bunker.",
+        "{person} shares stories with the breeze—silence answers back.",
+        "{person} stalks distant footsteps but loses the trail."
+    ],
+    "lethal_events": [
+        "{killer} ambushes {victim} near the river.",
+        "{killer} traps {victim} in a ravine.",
+        "{killer} outmatches {victim} after a tense duel.",
+        "{killer} sabotages {victim}'s shelter overnight."
+    ],
+    "inventory_events": [
+        "{person} sets a {item} and waits patiently.",
+        "{person} patches wounds with a trusty {item}.",
+        "{person} flashes a {item} to ward off pursuers.",
+        "{person} retools a {item} into something even more dangerous."
+    ],
+    "victory_template": "{name} emerges victorious with {kills} elimination(s)!"
+}

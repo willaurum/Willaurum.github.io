@@ -1,45 +1,547 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Arena Simulation</title>
+    <link rel="stylesheet" href="../styles.css" />
     <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            max-width: 600px; 
-            margin: auto; 
-            padding: 20px;
+        :root {
+            --arena-panel: rgba(1, 25, 43, 0.9);
+            --arena-border: rgba(224, 174, 62, 0.35);
+            --arena-accent: #e0ae3e;
+            --arena-muted: rgba(224, 225, 221, 0.8);
         }
-        .event {
-            padding: 6px 0;
-            border-bottom: 1px solid #eee;
+
+        body {
+            background-color: #000e1b;
+            min-height: 100vh;
+        }
+
+        .arena-container {
+            margin: 0 auto;
+            max-width: 960px;
+            padding: 40px 24px 100px;
+        }
+
+        .panel {
+            background: var(--arena-panel);
+            border: 1px solid var(--arena-border);
+            border-radius: 18px;
+            padding: 32px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35);
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: var(--arena-accent);
+            margin-top: 0;
+        }
+
+        p {
+            color: var(--arena-muted);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .form-grid {
+            display: grid;
+            gap: 18px;
+        }
+
+        input[type="number"],
+        input[type="text"] {
+            width: 100%;
+            border-radius: 10px;
+            border: 1px solid var(--arena-border);
+            background: rgba(1, 37, 63, 0.85);
+            color: #e0e1dd;
+            padding: 12px 14px;
+            font-size: 1rem;
+        }
+
+        .name-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        button {
+            border: none;
+            border-radius: 999px;
+            padding: 12px 20px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #e0ae3e, #f6d06f);
+            color: #01192b;
+            box-shadow: 0 18px 30px rgba(224, 174, 62, 0.35);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid var(--arena-border);
+            color: var(--arena-accent);
+        }
+
+        .events-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .event-card {
+            border-radius: 12px;
+            border: 1px solid rgba(224, 174, 62, 0.15);
+            background: rgba(0, 0, 0, 0.35);
+            padding: 14px 16px;
+        }
+
+        .event-card h4 {
+            margin: 0 0 6px;
+            font-size: 0.85rem;
+            letter-spacing: 0.12em;
+            color: var(--arena-accent);
+        }
+
+        .summary-block {
+            margin-top: 18px;
+            border-radius: 12px;
+            border: 1px solid rgba(224, 174, 62, 0.15);
+            padding: 14px 18px;
+            background: rgba(1, 37, 63, 0.75);
+        }
+
+        .summary-block ul {
+            margin: 8px 0 0;
+            padding-left: 18px;
+            color: #e0e1dd;
         }
     </style>
 </head>
 <body>
+    <main class="arena-container">
+        <section id="setupScreen" class="panel">
+            <h1>Arena Simulation</h1>
+            <p>
+                Start by choosing how many tributes enter the arena and name each competitor. After that,
+                you’ll step through the story one day at a time, revealing daily events first and then
+                the fallen tributes.
+            </p>
 
-<h1>Arena Simulation</h1>
+            <form id="setupForm" class="form-grid">
+                <label>
+                    Number of tributes (2-24)
+                    <input type="number" id="countInput" min="2" max="24" value="6" required />
+                </label>
 
-<div id="events">Loading...</div>
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px;">
+                        <label>Tribute names</label>
+                        <button type="button" id="autofillBtn" class="btn-ghost">Autofill</button>
+                    </div>
+                    <div id="namesGrid" class="name-grid"></div>
+                </div>
 
-<script>
-    fetch("simulation.json")
-        .then(res => res.json())
-        .then(data => {
-            const container = document.getElementById("events");
-            container.innerHTML = ""; // clear "Loading..."
+                <div id="setupMessage" style="color: var(--arena-muted); font-size: 0.9rem;">
+                    Names are only shown during setup. Inventories stay behind the curtain.
+                </div>
 
-            data.events.forEach(ev => {
-                const div = document.createElement("div");
-                div.className = "event";
-                div.textContent = `Day ${ev.day}: ${ev.text}`;
-                container.appendChild(div);
-            });
+                <button type="submit" class="btn-primary">Continue to simulation</button>
+            </form>
+        </section>
 
-            const winner = document.createElement("h2");
-            winner.textContent = "Winner: " + data.winner;
-            container.appendChild(winner);
-        });
-</script>
+        <section id="simulationScreen" class="panel hidden">
+            <h2 id="dayHeading">Day 1</h2>
+            <p id="instructionText">
+                Use the buttons below to reveal events for each day, then review the fallen tributes before moving on.
+            </p>
 
+            <div class="controls">
+                <button id="showEventsBtn" class="btn-primary">Reveal events</button>
+                <button id="showSummaryBtn" class="btn-ghost" disabled>Show fallen & remaining</button>
+                <button id="nextDayBtn" class="btn-ghost" disabled>Next day</button>
+                <button id="restartBtn" class="btn-ghost">Start over</button>
+            </div>
+
+            <div id="eventsList" class="events-list"></div>
+            <div id="summaryPanel" class="summary-block hidden"></div>
+        </section>
+    </main>
+
+    <script>
+        (() => {
+            const DEFAULT_CONFIG = {
+                lethal_event_chance: 0.55,
+                inventory_event_chance: 0.35,
+                min_events_per_day: 2,
+                max_events_per_day: 4,
+                inventory_items: ["medkit", "snare trap", "flare", "camouflage cloak", "ration pack", "throwing knife"],
+                non_lethal_events: [
+                    "{person} scouts the cornucopia from afar.",
+                    "{person} gathers herbs and hopes they are edible.",
+                    "{person} reinforces a hidden bunker.",
+                    "{person} shares stories with the breeze—silence answers back.",
+                    "{person} stalks distant footsteps but loses the trail."
+                ],
+                lethal_events: [
+                    "{killer} ambushes {victim} near the river.",
+                    "{killer} traps {victim} in a ravine.",
+                    "{killer} outmatches {victim} after a tense duel.",
+                    "{killer} sabotages {victim}'s shelter overnight."
+                ],
+                inventory_events: [
+                    "{person} sets a {item} and waits patiently.",
+                    "{person} patches wounds with a trusty {item}.",
+                    "{person} flashes a {item} to ward off pursuers.",
+                    "{person} retools a {item} into something even more dangerous."
+                ],
+                victory_template: "{name} emerges victorious with {kills} elimination(s)!"
+            };
+
+            const setupScreen = document.getElementById("setupScreen");
+            const simulationScreen = document.getElementById("simulationScreen");
+            const setupForm = document.getElementById("setupForm");
+            const countInput = document.getElementById("countInput");
+            const namesGrid = document.getElementById("namesGrid");
+            const autofillBtn = document.getElementById("autofillBtn");
+            const setupMessage = document.getElementById("setupMessage");
+
+            const dayHeading = document.getElementById("dayHeading");
+            const instructionText = document.getElementById("instructionText");
+            const showEventsBtn = document.getElementById("showEventsBtn");
+            const showSummaryBtn = document.getElementById("showSummaryBtn");
+            const nextDayBtn = document.getElementById("nextDayBtn");
+            const restartBtn = document.getElementById("restartBtn");
+            const eventsList = document.getElementById("eventsList");
+            const summaryPanel = document.getElementById("summaryPanel");
+
+            const DEFAULT_NAMES = [
+                "Alice", "Bob", "Charlie", "Diana", "Evelyn", "Frank",
+                "George", "Hannah", "Isaac", "Juno", "Kai", "Lena",
+                "Milo", "Nora", "Omar", "Piper", "Quinn", "Rhea",
+                "Silas", "Tess", "Uri", "Vera", "Wade", "Yara"
+            ];
+
+            const state = {
+                config: DEFAULT_CONFIG,
+                simulation: null,
+                dayIndex: 0,
+                eventsRevealed: false,
+                summaryRevealed: false
+            };
+
+            init();
+
+            function init() {
+                renderNameInputs(Number(countInput.value));
+                fetchConfig();
+
+                countInput.addEventListener("change", () => {
+                    const clamped = clampCount(Number(countInput.value));
+                    countInput.value = clamped;
+                    renderNameInputs(clamped);
+                });
+
+                autofillBtn.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    autofillNames();
+                    setupMessage.textContent = "Autofilled sample names. Edit any of them before continuing.";
+                });
+
+                setupForm.addEventListener("submit", handleSetupSubmit);
+                showEventsBtn.addEventListener("click", revealEvents);
+                showSummaryBtn.addEventListener("click", revealSummary);
+                nextDayBtn.addEventListener("click", advanceDay);
+                restartBtn.addEventListener("click", resetToSetup);
+            }
+
+            async function fetchConfig() {
+                try {
+                    const response = await fetch("./arena_events.json", { cache: "no-store" });
+                    if (response.ok) {
+                        const data = await response.json();
+                        state.config = { ...DEFAULT_CONFIG, ...data };
+                    }
+                } catch (error) {
+                    console.warn("Falling back to default config", error);
+                }
+            }
+
+            function clampCount(value) {
+                if (Number.isNaN(value)) return 2;
+                return Math.max(2, Math.min(24, value));
+            }
+
+            function renderNameInputs(count) {
+                const existing = Array.from(namesGrid.querySelectorAll("input")).map((el) => el.value);
+                namesGrid.innerHTML = "";
+                for (let i = 0; i < count; i += 1) {
+                    const wrapper = document.createElement("label");
+                    wrapper.innerHTML = `Tribute ${i + 1}<input type="text" maxlength="32" placeholder="Tribute ${i + 1}" value="${existing[i] || DEFAULT_NAMES[i] || ""}" required />`;
+                    namesGrid.appendChild(wrapper);
+                }
+            }
+
+            function autofillNames() {
+                namesGrid.querySelectorAll("input").forEach((input, index) => {
+                    input.value = DEFAULT_NAMES[index] || `Tribute ${index + 1}`;
+                });
+            }
+
+            function handleSetupSubmit(event) {
+                event.preventDefault();
+                const names = Array.from(namesGrid.querySelectorAll("input"))
+                    .map((input) => input.value.trim())
+                    .filter(Boolean);
+                const required = clampCount(Number(countInput.value));
+
+                if (names.length < required) {
+                    setupMessage.textContent = `Please enter ${required} names before starting.`;
+                    setupMessage.style.color = "#ff6b6b";
+                    return;
+                }
+
+                setupMessage.style.color = "var(--arena-muted)";
+                setupMessage.textContent = "Generating simulation…";
+
+                state.simulation = simulateArena(names.slice(0, required), state.config);
+                state.dayIndex = 0;
+                state.eventsRevealed = false;
+                state.summaryRevealed = false;
+
+                setupScreen.classList.add("hidden");
+                simulationScreen.classList.remove("hidden");
+                updateDayUI();
+            }
+
+            function simulateArena(names, config) {
+                const tributes = names.map((name) => ({
+                    name,
+                    alive: true,
+                    kills: 0,
+                    inventory: assignInventory(config)
+                }));
+
+                const days = [];
+                let dayCounter = 0;
+
+                const alive = () => tributes.filter((t) => t.alive);
+
+                while (alive().length > 1) {
+                    dayCounter += 1;
+                    const events = [];
+                    const fallen = [];
+                    const target = randomInt(config.min_events_per_day, config.max_events_per_day);
+
+                    for (let i = 0; i < target; i += 1) {
+                        const living = alive();
+                        if (!living.length) break;
+                        const actor = pickRandom(living);
+                        const event = generateEvent(actor, tributes, config);
+                        if (!event) continue;
+                        events.push(event);
+                        if (event.type === "lethal" && event.meta?.victim && !fallen.includes(event.meta.victim)) {
+                            fallen.push(event.meta.victim);
+                        }
+                        if (alive().length <= 1) break;
+                    }
+
+                    days.push({
+                        number: dayCounter,
+                        events,
+                        fallen,
+                        survivors: alive().map((t) => t.name)
+                    });
+                }
+
+                const winner = tributes.find((t) => t.alive) || null;
+                if (winner && days.length) {
+                    days[days.length - 1].events.push({
+                        type: "victory",
+                        text: config.victory_template.replace("{name}", winner.name).replace("{kills}", winner.kills),
+                        meta: { winner: winner.name, kills: winner.kills }
+                    });
+                }
+
+                return { tributes, days, winner: winner ? winner.name : null };
+            }
+
+            function assignInventory(config) {
+                if (!config.inventory_items || !config.inventory_items.length) return [];
+                const count = randomInt(0, 2);
+                const inventory = [];
+                for (let i = 0; i < count; i += 1) {
+                    inventory.push(pickRandom(config.inventory_items));
+                }
+                return inventory;
+            }
+
+            function generateEvent(actor, tributes, config) {
+                const living = tributes.filter((t) => t.alive);
+                const canAttemptLethal = living.length > 1;
+
+                if (actor.inventory.length && config.inventory_events?.length) {
+                    if (Math.random() < config.inventory_event_chance) {
+                        const item = pickRandom(actor.inventory);
+                        const template = pickRandom(config.inventory_events);
+                        return {
+                            type: "inventory",
+                            text: formatTemplate(template, { person: actor.name, item }),
+                            meta: { person: actor.name, item }
+                        };
+                    }
+                }
+
+                if (canAttemptLethal && Math.random() < config.lethal_event_chance) {
+                    const victimChoices = living.filter((t) => t !== actor);
+                    if (victimChoices.length) {
+                        const victim = pickRandom(victimChoices);
+                        victim.alive = false;
+                        actor.kills += 1;
+                        const template = pickRandom(config.lethal_events);
+                        return {
+                            type: "lethal",
+                            text: formatTemplate(template, { killer: actor.name, victim: victim.name }),
+                            meta: { killer: actor.name, victim: victim.name }
+                        };
+                    }
+                }
+
+                const template = pickRandom(config.non_lethal_events);
+                return {
+                    type: "non-lethal",
+                    text: formatTemplate(template, { person: actor.name }),
+                    meta: { person: actor.name }
+                };
+            }
+
+            function formatTemplate(template, replacements) {
+                return template.replace(/\{(\w+)\}/g, (_, key) => replacements[key] ?? `{${key}}`);
+            }
+
+            function pickRandom(list) {
+                return list[Math.floor(Math.random() * list.length)];
+            }
+
+            function randomInt(min, max) {
+                const low = Math.ceil(min);
+                const high = Math.floor(max);
+                return Math.floor(Math.random() * (high - low + 1)) + low;
+            }
+
+            function updateDayUI() {
+                const day = state.simulation.days[state.dayIndex];
+                dayHeading.textContent = `Day ${day.number} of ${state.simulation.days.length}`;
+                instructionText.textContent = "Reveal today's events, then review fallen tributes before advancing.";
+                eventsList.innerHTML = "";
+                summaryPanel.classList.add("hidden");
+                summaryPanel.innerHTML = "";
+                state.eventsRevealed = false;
+                state.summaryRevealed = false;
+                showEventsBtn.disabled = false;
+                showSummaryBtn.disabled = true;
+                nextDayBtn.disabled = true;
+                nextDayBtn.textContent = state.dayIndex === state.simulation.days.length - 1 ? "View finale" : "Next day";
+            }
+
+            function revealEvents() {
+                if (state.eventsRevealed) return;
+                const day = state.simulation.days[state.dayIndex];
+                if (!day) return;
+
+                eventsList.innerHTML = day.events.length
+                    ? day.events
+                          .map(
+                              (event, index) => `
+                            <article class="event-card">
+                                <h4>EVENT ${index + 1}</h4>
+                                <p>${event.text}</p>
+                            </article>
+                        `
+                          )
+                          .join("")
+                    : '<p class="event-card">A quiet day passes without incident.</p>';
+
+                state.eventsRevealed = true;
+                showEventsBtn.disabled = true;
+                showSummaryBtn.disabled = false;
+            }
+
+            function revealSummary() {
+                if (!state.eventsRevealed || state.summaryRevealed) return;
+
+                const day = state.simulation.days[state.dayIndex];
+                const fallenList = day.fallen.length
+                    ? `<ul>${day.fallen.map((name) => `<li>${name}</li>`).join("")}</ul>`
+                    : "<p>No fallen tributes today.</p>";
+                const survivorList = day.survivors.length
+                    ? `<ul>${day.survivors.map((name) => `<li>${name}</li>`).join("")}</ul>`
+                    : "<p>No survivors remain.</p>";
+
+                summaryPanel.innerHTML = `
+                    <div>
+                        <h3>Fallen Tributes</h3>
+                        ${fallenList}
+                    </div>
+                    <div style="margin-top: 18px;">
+                        <h3>Remaining</h3>
+                        ${survivorList}
+                    </div>
+                `;
+
+                if (state.dayIndex === state.simulation.days.length - 1 && state.simulation.winner) {
+                    summaryPanel.innerHTML += `<div style="margin-top: 18px; border-top: 1px solid rgba(224,174,62,0.2); padding-top: 12px;">
+                        <h3>Champion</h3>
+                        <p>${state.simulation.winner}</p>
+                    </div>`;
+                }
+
+                summaryPanel.classList.remove("hidden");
+                state.summaryRevealed = true;
+                showSummaryBtn.disabled = true;
+                nextDayBtn.disabled = false;
+            }
+
+            function advanceDay() {
+                if (!state.summaryRevealed) return;
+                if (state.dayIndex < state.simulation.days.length - 1) {
+                    state.dayIndex += 1;
+                    updateDayUI();
+                } else {
+                    resetToSetup();
+                }
+            }
+
+            function resetToSetup() {
+                simulationScreen.classList.add("hidden");
+                setupScreen.classList.remove("hidden");
+                setupMessage.style.color = "var(--arena-muted)";
+                setupMessage.textContent = "Names are only shown during setup. Inventories stay behind the curtain.";
+            }
+        })();
+    </script>
 </body>
 </html>
