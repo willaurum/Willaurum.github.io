@@ -6,10 +6,10 @@
     "min_events_per_day": 1,
     "max_events_per_day": 8,
     "bloodbath_event_range": [6, 9],
-    "bloodbath_lethal_bonus": 0.25,
+    "bloodbath_lethal_bonus": 0.1,
     "inventory_items": [
         "medkit",
-        "snare trap",
+        "snare trap", 
         "flare",
         "camouflage cloak",
         "ration pack",
@@ -31,7 +31,7 @@
     ],
     "inventory_events": [
         "{person} sets a {item} and waits patiently.",
-        "{person} patches wounds with a trusty {item}.",
+        "{person} patches wounds with their trusty {item}.",
         "{person} flashes a {item} to ward off pursuers.",
         "{person} retools a {item} into something even more dangerous."
     ],

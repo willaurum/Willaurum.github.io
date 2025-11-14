@@ -18,6 +18,7 @@ ROOT = Path(__file__).resolve().parent
 CONFIG_FILE = ROOT / "arena_events.json"
 NAMES_FILE = ROOT / "tribute_names.txt"
 MAX_INVENTORY_SIZE = 4
+MAX_START_ITEMS = 1
 
 
 @dataclass
@@ -259,7 +260,7 @@ def assign_inventory(rng: random.Random, items: Sequence[str]) -> List[str]:
 
     if not items:
         return []
-    count = rng.randint(0, 2)
+    count = rng.randint(0, MAX_START_ITEMS)
     return [rng.choice(items) for _ in range(count)]
 
 
