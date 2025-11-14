@@ -15,7 +15,8 @@
         "ration pack",
         "throwing knife",
         "Taco Bell Meal Deal",
-        "herb bundle"
+        "herb bundle",
+        "bow"
     ],
     "non_lethal_events": [
         "{person} scouts the cornucopia from afar.",
@@ -25,7 +26,7 @@
         "{person} stalks distant footsteps but loses the trail."
     ],
     "lethal_events": [
-        "{killer} ambushes {victim} near the river.",
+        "{killer} strangles {victim} to death.",
         "{killer} traps {victim} in a ravine.",
         "{killer} outmatches {victim} after a tense duel.",
         "{killer} sabotages {victim}'s shelter overnight."
@@ -40,7 +41,8 @@
         "{person} scavenges a {item} from the Cornucopia wreckage.",
         "{person} digs up a buried stash and pockets a {item}.",
         "{person} barters quietly for a {item}.",
-        "{person} slips a {item} into their pack unnoticed."
+        "{person} slips a {item} into their pack unnoticed.",
+        "{person} opens a package from a sponser and recieves a {item}"
     ],
     "item_loot_text": {
         "herb bundle": [
@@ -106,6 +108,17 @@
                 {
                     "text": "{person} shares their {item} with {victim}.",
                     "lethal": false
+                }
+            ]
+        },
+        {
+            "item": "bow",
+            "consumes": true,
+            "events": [
+                "{person} tends to their {item}.",
+                {
+                    "text": "{person} shoots {victim} with their {item}.",
+                    "lethal": true
                 }
             ]
         }
