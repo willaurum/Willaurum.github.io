@@ -1,12 +1,12 @@
 {
     "lethal_event_chance": 0.35,
     "inventory_event_chance": 0.45,
-    "loot_event_chance": 0.20,
-    "special_item_event_chance": 0.40,
+    "loot_event_chance": 0.25,
+    "special_item_event_chance": 0.45,
     "min_events_per_day": 1,
     "max_events_per_day": 8,
     "bloodbath_event_range": [6, 9],
-    "bloodbath_lethal_bonus": 0.1,
+    "bloodbath_lethal_bonus": 0.15,
     "inventory_items": [
         "medkit",
         "snare trap", 
@@ -36,11 +36,12 @@
     ],
     "non_lethal_events": [
         "{person} scouts the cornucopia from afar.",
-        "{person} gathers herbs and hopes they are edible.",
+        "{person} eats dirt.",
         "{person} reinforces a hidden bunker.",
-        "{person} shares stories with the breeze\u2014silence answers back.",
         "{person} stalks distant footsteps but loses the trail.",
         "{person} hides beneath branches as distant screams echo.",
+        "{person} drinks from a muddy stream and hopes it’s safe.",
+        "{person} accidentally gives away their position and quickly relocates.",
         {
             "text": "{person} plots quietly with {ally} and {rival} deep into the night.",
             "extra_roles": ["ally", "rival"]
@@ -48,6 +49,10 @@
         {
             "text": "{person} negotiates an uneasy truce with {ally} while keeping an eye on {traitor}.",
             "extra_roles": ["ally", "traitor"]
+        },
+        {
+            "text": "{person} follows {rival}.",
+            "extra_roles": ["rival"]
         }
     ],
     "lethal_events": [
@@ -71,7 +76,8 @@
         "{person} flashes a {item} to ward off pursuers.",
         "{person} retools a {item} into something even more dangerous.",
         "{person} fortifies a shelter using their {item}.",
-        "{person} cleans and maintains their {item}, preparing for nightfall."
+        "{person} cleans and maintains their {item}, preparing for nightfall.",
+        "{person} decorates their shelter using their {item}."
     ],
     "loot_events": [
         "{person} scavenges a {item} from the Cornucopia wreckage.",
@@ -91,6 +97,9 @@
         ],
         "Taco Bell Meal Deal": [
             "{person} finds a pristine Taco Bell Meal Deal still warm from the sponsors."
+        ],
+        "rubber chicken": [
+            "{person} finds a rubber chicken and questions their luck."
         ],
         "poetry anthology": [
             "{person} is gifted a poetry anthology from their sponsor."
