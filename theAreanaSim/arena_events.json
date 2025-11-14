@@ -1,8 +1,11 @@
 {
     "lethal_event_chance": 0.55,
     "inventory_event_chance": 0.35,
+    "loot_event_chance": 0.25,
     "min_events_per_day": 2,
     "max_events_per_day": 4,
+    "bloodbath_event_range": [6, 9],
+    "bloodbath_lethal_bonus": 0.25,
     "inventory_items": [
         "medkit",
         "snare trap",
@@ -29,6 +32,12 @@
         "{person} patches wounds with a trusty {item}.",
         "{person} flashes a {item} to ward off pursuers.",
         "{person} retools a {item} into something even more dangerous."
+    ],
+    "loot_events": [
+        "{person} scavenges a {item} from the Cornucopia wreckage.",
+        "{person} digs up a buried stash and pockets a {item}.",
+        "{person} barters quietly for a {item}.",
+        "{person} slips a {item} into their pack unnoticed."
     ],
     "victory_template": "{name} emerges victorious with {kills} elimination(s)!"
 }

@@ -17,6 +17,7 @@ from typing import Dict, Iterable, List, Optional, Sequence
 ROOT = Path(__file__).resolve().parent
 CONFIG_FILE = ROOT / "arena_events.json"
 NAMES_FILE = ROOT / "tribute_names.txt"
+MAX_INVENTORY_SIZE = 4
 
 
 @dataclass
@@ -46,12 +47,18 @@ class SimulationConfig:
         Probability (0-1) that a tribute with gear triggers an
         inventory-related event before the lethal roll is considered.
     min_events_per_day / max_events_per_day:
-        Random range for how many events happen on a given day.
+        Baseline range for how many events happen on a typical day.
+    bloodbath_event_range:
+        Range of events that fires on Day 1 before everyone scatters.
+    bloodbath_lethal_bonus:
+        Extra lethal chance added on Day 1 to emulate a Cornucopia rush.
     inventory_items:
         Pool of strings assigned to tributes at the start.
-    lethal_events / non_lethal_events / inventory_events:
+    lethal_events / non_lethal_events / inventory_events / loot_events:
         Template pools. ``{person}``, ``{killer}``, ``{victim}``, and
         ``{item}`` placeholders are supported.
+    loot_event_chance:
+        Chance that an event lets a tribute discover new gear.
     victory_template:
         Message appended once a single tribute remains.
     seed:
@@ -60,8 +67,11 @@ class SimulationConfig:
 
     lethal_event_chance: float = 0.55
     inventory_event_chance: float = 0.35
+    loot_event_chance: float = 0.25
     min_events_per_day: int = 2
     max_events_per_day: int = 4
+    bloodbath_event_range: Sequence[int] = (6, 9)
+    bloodbath_lethal_bonus: float = 0.25
     inventory_items: Sequence[str] = field(
         default_factory=lambda: [
             "medkit",
@@ -97,6 +107,14 @@ class SimulationConfig:
             "{person} retools a {item} into something even more dangerous.",
         ]
     )
+    loot_events: Sequence[str] = field(
+        default_factory=lambda: [
+            "{person} scavenges a {item} from the Cornucopia wreckage.",
+            "{person} digs up a buried stash and pockets a {item}.",
+            "{person} barters quietly for a {item}.",
+            "{person} slips a {item} into their pack unnoticed.",
+        ]
+    )
     victory_template: str = "{name} emerges victorious with {kills} elimination(s)!"
     seed: Optional[int] = None
 
@@ -113,12 +131,20 @@ class SimulationConfig:
             inventory_event_chance=float(
                 data.get("inventory_event_chance", default.inventory_event_chance)
             ),
+            loot_event_chance=float(data.get("loot_event_chance", default.loot_event_chance)),
             min_events_per_day=int(data.get("min_events_per_day", default.min_events_per_day)),
             max_events_per_day=int(data.get("max_events_per_day", default.max_events_per_day)),
+            bloodbath_event_range=tuple(
+                data.get("bloodbath_event_range", list(default.bloodbath_event_range))
+            ),
+            bloodbath_lethal_bonus=float(
+                data.get("bloodbath_lethal_bonus", default.bloodbath_lethal_bonus)
+            ),
             inventory_items=data.get("inventory_items", list(default.inventory_items)),
             lethal_events=data.get("lethal_events", list(default.lethal_events)),
             non_lethal_events=data.get("non_lethal_events", list(default.non_lethal_events)),
             inventory_events=data.get("inventory_events", list(default.inventory_events)),
+            loot_events=data.get("loot_events", list(default.loot_events)),
             victory_template=data.get("victory_template", default.victory_template),
             seed=data.get("seed"),
         )
@@ -181,6 +207,38 @@ def assign_inventory(rng: random.Random, items: Sequence[str]) -> List[str]:
     return [rng.choice(items) for _ in range(count)]
 
 
+def determine_event_count(
+    day_number: int,
+    alive_count: int,
+    total_tributes: int,
+    config: SimulationConfig,
+    rng: random.Random,
+) -> int:
+    """
+    Decide how many events should run during the current day.
+
+    Day 1 (the bloodbath) uses its own, higher range. Afterwards the
+    count scales with how many tributes remain so the action tapers off
+    organically instead of relying on a fixed min/max.
+    """
+
+    if day_number == 1 and config.bloodbath_event_range:
+        values = list(config.bloodbath_event_range)
+        if len(values) == 1:
+            values *= 2
+        low, high = values[0], values[1]
+        low = max(config.min_events_per_day, int(low))
+        high = max(low, int(high))
+        return rng.randint(low, high)
+
+    span = max(0, config.max_events_per_day - config.min_events_per_day)
+    density = alive_count / max(1, total_tributes)
+    base = config.min_events_per_day + max(0, round(span * density))
+    jitter = rng.choice([-1, 0, 0, 1]) if span else 0
+    target = base + jitter
+    return max(config.min_events_per_day, min(config.max_events_per_day, target))
+
+
 def run_simulation(
     names: Sequence[str],
     config: Optional[SimulationConfig] = None,
@@ -198,6 +256,7 @@ def run_simulation(
     tributes = [
         Tribute(name=n, inventory=assign_inventory(rng, config.inventory_items)) for n in names
     ]
+    total_tributes = len(tributes)
 
     days: List[Dict[str, object]] = []
     day_counter = 0
@@ -209,14 +268,20 @@ def run_simulation(
         day_counter += 1
         events_today: List[Dict[str, object]] = []
         fallen_today: List[str] = []
-        daily_target = rng.randint(config.min_events_per_day, config.max_events_per_day)
+        daily_target = determine_event_count(
+            day_counter,
+            len(alive()),
+            total_tributes,
+            config,
+            rng,
+        )
 
         for _ in range(daily_target):
             living = alive()
             if not living:
                 break
             actor = rng.choice(living)
-            event = generate_event(actor, tributes, config, rng)
+            event = generate_event(actor, tributes, config, day_counter, rng)
             if not event:
                 continue
             events_today.append(event)
@@ -230,6 +295,7 @@ def run_simulation(
         days.append(
             {
                 "number": day_counter,
+                "bloodbath": day_counter == 1,
                 "events": events_today,
                 "fallen": fallen_today,
                 "survivors": [t.name for t in alive()],
@@ -257,12 +323,28 @@ def generate_event(
     actor: Tribute,
     tributes: Sequence[Tribute],
     config: SimulationConfig,
+    day_number: int,
     rng: random.Random,
 ) -> Optional[Dict[str, object]]:
     """Produce one event entry and mutate tribute state when needed."""
 
     living = [t for t in tributes if t.alive]
     can_attempt_lethal = len(living) > 1
+
+    can_loot = (
+        bool(config.loot_events)
+        and bool(config.inventory_items)
+        and len(actor.inventory) < MAX_INVENTORY_SIZE
+    )
+    if can_loot and rng.random() < config.loot_event_chance:
+        item = rng.choice(config.inventory_items)
+        actor.inventory.append(item)
+        template = rng.choice(config.loot_events)
+        return {
+            "type": "loot",
+            "text": template.format(person=actor.name, item=item),
+            "meta": {"person": actor.name, "item": item},
+        }
 
     if actor.inventory and config.inventory_events:
         if rng.random() < config.inventory_event_chance:
@@ -274,7 +356,11 @@ def generate_event(
                 "meta": {"person": actor.name, "item": item},
             }
 
-    lethal_roll = can_attempt_lethal and rng.random() < config.lethal_event_chance
+    lethal_chance = config.lethal_event_chance
+    if day_number == 1:
+        lethal_chance = min(1.0, lethal_chance + config.bloodbath_lethal_bonus)
+
+    lethal_roll = can_attempt_lethal and rng.random() < lethal_chance
     if lethal_roll and len(living) > 1:
         victim = rng.choice([t for t in living if t is not actor])
         victim.alive = False
