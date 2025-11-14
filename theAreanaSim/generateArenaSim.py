@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import random
 import re
+import math
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Sequence
@@ -218,6 +219,8 @@ class SimulationConfig:
         one of those bespoke events before any other inventory logic.
     loot_event_chance:
         Chance that an event lets a tribute discover new gear.
+    target_min_days / target_max_days:
+        Desired duration bounds (in days) for a full simulation run.
     victory_template:
         Message appended once a single tribute remains.
     seed:
@@ -277,6 +280,8 @@ class SimulationConfig:
     item_loot_text: Dict[str, Sequence[str]] = field(default_factory=dict)
     special_item_events: Sequence[Dict[str, object]] = field(default_factory=list)
     special_item_event_chance: float = 0.4
+    target_min_days: int = 7
+    target_max_days: int = 12
     victory_template: str = "{name} emerges victorious with {kills} elimination(s)!"
     seed: Optional[int] = None
 
@@ -314,6 +319,8 @@ class SimulationConfig:
             special_item_event_chance=float(
                 data.get("special_item_event_chance", default.special_item_event_chance)
             ),
+            target_min_days=int(data.get("target_min_days", default.target_min_days)),
+            target_max_days=int(data.get("target_max_days", default.target_max_days)),
             victory_template=data.get("victory_template", default.victory_template),
             seed=data.get("seed"),
         )
@@ -329,6 +336,68 @@ DEFAULT_TRIBUTE_NAMES = [
     "George",
     "Hannah",
 ]
+
+
+def clamp(value: float, low: float, high: float) -> float:
+    """Return ``value`` constrained between ``low`` and ``high``."""
+
+    return max(low, min(high, value))
+
+
+def determine_desired_total_days(total_tributes: int, config: SimulationConfig) -> int:
+    """Scale the intended campaign length to remain within the configured window."""
+
+    min_days = max(1, config.target_min_days)
+    max_days = max(min_days, config.target_max_days)
+    if total_tributes <= 1 or min_days == max_days:
+        return min_days
+    ratio = (total_tributes - 2) / 22 if total_tributes > 2 else 0.0
+    ratio = clamp(ratio, 0.0, 1.0)
+    span = max_days - min_days
+    return int(round(min_days + span * ratio))
+
+
+def required_events_for_progress(
+    day_number: int,
+    alive_count: int,
+    desired_days: int,
+    config: SimulationConfig,
+) -> int:
+    """Approximate how many events are needed to stay on pace for the target day count."""
+
+    if alive_count <= 1:
+        return 0
+    remaining_days = max(1, desired_days - (day_number - 1))
+    needed_eliminations = max(0, alive_count - 1)
+    target_kills = max(1, math.ceil(needed_eliminations / remaining_days))
+    base_chance = config.lethal_event_chance
+    if day_number == 1:
+        base_chance = min(1.0, base_chance + config.bloodbath_lethal_bonus)
+    effective_chance = clamp(base_chance, 0.1, 0.95)
+    return math.ceil(target_kills / effective_chance)
+
+
+def compute_death_pressure(
+    alive_count: int,
+    day_number: int,
+    daily_events: int,
+    desired_days: int,
+    config: SimulationConfig,
+) -> float:
+    """Return a multiplier applied to lethal odds to keep runs within 7-12 days."""
+
+    if alive_count <= 1 or daily_events <= 0:
+        return 1.0
+    remaining_days = max(1, desired_days - (day_number - 1))
+    needed_eliminations = max(0, alive_count - 1)
+    target_kills = needed_eliminations / remaining_days
+    base_chance = config.lethal_event_chance
+    if day_number == 1:
+        base_chance = min(1.0, base_chance + config.bloodbath_lethal_bonus)
+    expected_kills = daily_events * clamp(base_chance, 0.05, 0.95)
+    pressure = target_kills / max(expected_kills, 0.1)
+    late_game_bonus = 1.0 + max(0, day_number - 10) * 0.5
+    return clamp(pressure * late_game_bonus, 0.6, 4.0)
 
 
 def build_special_item_map(config: SimulationConfig) -> Dict[str, Dict[str, object]]:
@@ -407,6 +476,7 @@ def determine_event_count(
     alive_count: int,
     total_tributes: int,
     config: SimulationConfig,
+    desired_days: int,
     rng: random.Random,
 ) -> int:
     """
@@ -416,6 +486,13 @@ def determine_event_count(
     count scales with how many tributes remain so the action tapers off
     organically instead of relying on a fixed min/max.
     """
+
+    kill_pressure_events = required_events_for_progress(
+        day_number,
+        alive_count,
+        desired_days,
+        config,
+    )
 
     if day_number == 1 and config.bloodbath_event_range:
         values = list(config.bloodbath_event_range)
@@ -431,7 +508,8 @@ def determine_event_count(
     base = config.min_events_per_day + max(0, round(span * density))
     jitter = rng.choice([-1, 0, 0, 1]) if span else 0
     target = base + jitter
-    soft_cap = min(8, alive_count)
+    target = max(target, kill_pressure_events)
+    soft_cap = max(min(8, alive_count), kill_pressure_events)
     target = min(target, soft_cap)
     return max(config.min_events_per_day, min(target, alive_count))
 
@@ -455,6 +533,7 @@ def run_simulation(
     ]
     total_tributes = len(tributes)
     special_item_map = build_special_item_map(config)
+    desired_days = determine_desired_total_days(total_tributes, config)
 
     days: List[Dict[str, object]] = []
     day_counter = 0
@@ -466,12 +545,21 @@ def run_simulation(
         day_counter += 1
         events_today: List[Dict[str, object]] = []
         fallen_today: List[str] = []
+        current_alive = len(alive())
         daily_target = determine_event_count(
             day_counter,
-            len(alive()),
+            current_alive,
             total_tributes,
             config,
+            desired_days,
             rng,
+        )
+        death_pressure = compute_death_pressure(
+            current_alive,
+            day_counter,
+            daily_target,
+            desired_days,
+            config,
         )
 
         for _ in range(daily_target):
@@ -485,6 +573,7 @@ def run_simulation(
                 config,
                 day_counter,
                 special_item_map,
+                death_pressure,
                 rng,
             )
             if not event:
@@ -537,6 +626,7 @@ def generate_event(
     config: SimulationConfig,
     day_number: int,
     special_item_map: Dict[str, Dict[str, object]],
+    death_pressure: float,
     rng: random.Random,
 ) -> Optional[Dict[str, object]]:
     """Produce one event entry and mutate tribute state when needed."""
@@ -620,6 +710,7 @@ def generate_event(
     lethal_chance = config.lethal_event_chance
     if day_number == 1:
         lethal_chance = min(1.0, lethal_chance + config.bloodbath_lethal_bonus)
+    lethal_chance = clamp(lethal_chance * death_pressure, 0.05, 0.95)
 
     lethal_roll = can_attempt_lethal and rng.random() < lethal_chance
     if lethal_roll and len(living) > 1:
