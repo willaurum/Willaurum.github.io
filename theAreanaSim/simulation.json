@@ -9,7 +9,7 @@
                 "Taco Bell Meal Deal"
             ]
         },
-        {
+        { 
             "name": "Bob",
             "alive": false,
             "kills": 0,
