@@ -16,15 +16,15 @@
         body {
             background-color: #000e1b;
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 16px;
         }
 
         .arena-container {
-            margin: 0 auto;
-            max-width: 820px;
-            padding: 40px 18px 100px;
-            display: flex;
-            flex-direction: column;
-            gap: 28px;
+            width: 100%;
+            max-width: 640px;
         }
 
         .panel {
@@ -119,55 +119,54 @@
         }
 
         .events-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 16px;
-        }
-
-        .event-card {
+            margin-top: 12px;
             border-radius: 12px;
             border: 1px solid rgba(224, 174, 62, 0.18);
             background: rgba(0, 0, 0, 0.35);
             padding: 14px 16px;
-            display: flex;
-            gap: 12px;
-            align-items: flex-start;
         }
 
-        .event-bullet {
-            height: 12px;
-            width: 12px;
+        .event-line {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            font-size: 0.95rem;
+            color: #e0e1dd;
+            margin: 0 0 6px;
+        }
+
+        .event-line:last-child {
+            margin-bottom: 0;
+        }
+
+        .event-dot {
+            height: 8px;
+            width: 8px;
             border-radius: 999px;
-            margin-top: 4px;
+            margin-top: 6px;
             flex-shrink: 0;
             background: var(--arena-accent);
-            box-shadow: 0 0 12px rgba(224, 174, 62, 0.6);
+            box-shadow: 0 0 10px rgba(224, 174, 62, 0.6);
         }
 
-        .event-card.lethal .event-bullet {
+        .event-line.lethal .event-dot {
             background: #ff6b6b;
-            box-shadow: 0 0 12px rgba(255, 107, 107, 0.6);
+            box-shadow: 0 0 10px rgba(255, 107, 107, 0.6);
         }
 
-        .event-card.inventory .event-bullet {
+        .event-line.inventory .event-dot {
             background: #5dfdcb;
-            box-shadow: 0 0 12px rgba(93, 253, 203, 0.6);
+            box-shadow: 0 0 10px rgba(93, 253, 203, 0.6);
         }
 
-        .event-card.loot .event-bullet {
+        .event-line.loot .event-dot {
             background: #73ff87;
-            box-shadow: 0 0 12px rgba(115, 255, 135, 0.6);
+            box-shadow: 0 0 10px rgba(115, 255, 135, 0.6);
         }
 
-        .event-card.victory .event-bullet {
+        .event-line.victory .event-dot {
             background: #f4f48b;
-            box-shadow: 0 0 12px rgba(244, 244, 139, 0.6);
-        }
-
-        .event-body p {
-            margin: 0;
-            color: #e0e1dd;
+            box-shadow: 0 0 10px rgba(244, 244, 139, 0.6);
         }
 
         .summary-block {
@@ -182,6 +181,49 @@
             margin: 8px 0 0;
             padding-left: 18px;
             color: #e0e1dd;
+        }
+
+        .status-board {
+            margin-top: 18px;
+            border-top: 1px solid rgba(224, 174, 62, 0.2);
+            padding-top: 12px;
+        }
+
+        .status-board ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 0;
+            display: grid;
+            gap: 6px;
+        }
+
+        .status-entry {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            color: #e0e1dd;
+        }
+
+        .status-entry .icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .status-entry.alive .icon {
+            background: rgba(93, 253, 203, 0.15);
+            color: #5dfdcb;
+        }
+
+        .status-entry.dead .icon {
+            background: rgba(255, 107, 107, 0.15);
+            color: #ff6b6b;
         }
     </style>
 </head>
@@ -446,12 +488,10 @@
 
                 if (!day.events.length) {
                     eventsList.innerHTML = `
-                        <article class="event-card">
-                            <span class="event-bullet"></span>
-                            <div class="event-body">
-                                <p>A quiet day passes without incident.</p>
-                            </div>
-                        </article>
+                        <p class="event-line">
+                            <span class="event-dot"></span>
+                            <span>A quiet day passes without incident.</span>
+                        </p>
                     `;
                     return;
                 }
@@ -460,12 +500,10 @@
                     .map((event) => {
                         const typeClass = event.type ? ` ${event.type}` : "";
                         return `
-                            <article class="event-card${typeClass}">
-                                <span class="event-bullet"></span>
-                                <div class="event-body">
-                                    <p>${event.text}</p>
-                                </div>
-                            </article>
+                            <p class="event-line${typeClass}">
+                                <span class="event-dot"></span>
+                                <span>${event.text}</span>
+                            </p>
                         `;
                     })
                     .join("");
@@ -478,9 +516,23 @@
                 const fallen = day.fallen.length
                     ? `<ul>${day.fallen.map((name) => `<li>${name}</li>`).join("")}</ul>`
                     : "<p>No fallen tributes today.</p>";
-                const survivors = day.survivors.length
-                    ? `<ul>${day.survivors.map((name) => `<li>${name}</li>`).join("")}</ul>`
-                    : "<p>No survivors remain.</p>";
+
+                const roster = (state.simulation.tributes ?? []).map((tribute) => tribute.name);
+                const survivorsSet = new Set(day.survivors);
+                const statusList = roster
+                    .map((name) => {
+                        const alive = survivorsSet.has(name);
+                        const icon = alive ? "✓" : "✕";
+                        const cls = alive ? "alive" : "dead";
+                        return `<li class="status-entry ${cls}"><span class="icon">${icon}</span><span>${name}</span></li>`;
+                    })
+                    .join("");
+                const statusBoard = roster.length
+                    ? `<div class="status-board">
+                            <h3>Status board</h3>
+                            <ul>${statusList}</ul>
+                       </div>`
+                    : "";
 
                 let champion = "";
                 if (state.dayIndex === state.simulation.days.length - 1 && state.simulation.winner) {
@@ -495,10 +547,7 @@
                         <h3>${day.bloodbath ? "Bloodbath casualties" : "Fallen tributes"}</h3>
                         ${fallen}
                     </div>
-                    <div style="margin-top: 18px;">
-                        <h3>Remaining</h3>
-                        ${survivors}
-                    </div>
+                    ${statusBoard}
                     ${champion}
                 `;
 
