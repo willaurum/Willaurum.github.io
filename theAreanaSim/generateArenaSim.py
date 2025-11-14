@@ -191,12 +191,22 @@ def build_special_item_map(config: SimulationConfig) -> Dict[str, Dict[str, obje
         parsed_events: List[Dict[str, object]] = []
         for event in events:
             if isinstance(event, str):
-                parsed_events.append({"text": event, "lethal": False})
-            elif isinstance(event, dict) and "text" in event:
                 parsed_events.append(
                     {
-                        "text": str(event["text"]),
+                        "text": str(event),
+                        "lethal": False,
+                        "requires_victim": "{victim}" in event,
+                    }
+                )
+            elif isinstance(event, dict) and "text" in event:
+                text = str(event["text"])
+                parsed_events.append(
+                    {
+                        "text": text,
                         "lethal": bool(event.get("lethal", False)),
+                        "requires_victim": bool(
+                            event.get("requires_victim", "{victim}" in text)
+                        ),
                     }
                 )
         if not parsed_events:
@@ -399,29 +409,32 @@ def generate_event(
             if consumes:
                 actor.inventory.remove(chosen)
             lethal_event = bool(template.get("lethal"))
-            victim_name: Optional[str] = None
-            if lethal_event:
+            requires_victim = bool(template.get("requires_victim"))
+            victim_obj: Optional[Tribute] = None
+            if lethal_event or requires_victim:
                 candidates = [t for t in living if t is not actor]
-                if candidates:
-                    victim = rng.choice(candidates)
-                    victim.alive = False
+                if not candidates:
+                    return None
+                victim_obj = rng.choice(candidates)
+                if lethal_event:
+                    victim_obj.alive = False
                     actor.kills += 1
-                    victim_name = victim.name
-                else:
-                    lethal_event = False
             replacements = {"person": actor.name, "item": chosen}
-            if victim_name:
-                replacements["victim"] = victim_name
+            if victim_obj:
+                replacements["victim"] = victim_obj.name
             text = template["text"].format(**replacements)
             meta = {
                 "person": actor.name,
                 "item": chosen,
                 "consumed": consumes,
             }
-            if victim_name:
-                meta["victim"] = victim_name
+            if victim_obj:
+                meta["victim"] = victim_obj.name
+            event_type = (
+                "item-special lethal" if lethal_event and victim_obj else "item-special"
+            )
             return {
-                "type": "item-special lethal" if victim_name else "item-special",
+                "type": event_type,
                 "text": text,
                 "meta": meta,
             }

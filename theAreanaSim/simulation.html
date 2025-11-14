@@ -714,10 +714,39 @@
                             removeItemOnce(actor.inventory, item);
                         }
                         const template = pickRandom(events);
+                        const requiresVictim = Boolean(
+                            template.requiresVictim ??
+                                (template.text && template.text.includes("{victim}"))
+                        );
+                        const victimChoices = living.filter((t) => t !== actor);
+                        if ((requiresVictim || template.lethal) && !victimChoices.length) {
+                            return null;
+                        }
+                        let victim = null;
+                        if ((requiresVictim || template.lethal) && victimChoices.length) {
+                            victim = pickRandom(victimChoices);
+                            if (template.lethal) {
+                                victim.alive = false;
+                                actor.kills += 1;
+                            }
+                        }
+                        const replacements = { person: actor.name, item };
+                        if (victim) {
+                            replacements.victim = victim.name;
+                        }
+                        const text = formatTemplate(template.text, replacements);
+                        const meta = {
+                            person: actor.name,
+                            item,
+                            consumed: Boolean(payload?.consumes)
+                        };
+                        if (victim) {
+                            meta.victim = victim.name;
+                        }
                         return {
-                            type: "item-special",
-                            text: formatTemplate(template, { person: actor.name, item }),
-                            meta: { person: actor.name, item, consumed: Boolean(payload?.consumes) }
+                            type: template.lethal && victim ? "item-special lethal" : "item-special",
+                            text,
+                            meta
                         };
                     }
                 }
@@ -807,8 +836,34 @@
                     if (!entry?.item || !(entry.events?.length)) {
                         return;
                     }
+                    const normalized = entry.events
+                        .map((evt) => {
+                            if (typeof evt === "string") {
+                                return {
+                                    text: evt,
+                                    lethal: false,
+                                    requiresVictim: evt.includes("{victim}")
+                                };
+                            }
+                            if (evt && typeof evt === "object" && "text" in evt) {
+                                const text = String(evt.text);
+                                return {
+                                    text,
+                                    lethal: Boolean(evt.lethal),
+                                    requiresVictim:
+                                        evt.requires_victim ??
+                                        evt.requiresVictim ??
+                                        text.includes("{victim}")
+                                };
+                            }
+                            return null;
+                        })
+                        .filter(Boolean);
+                    if (!normalized.length) {
+                        return;
+                    }
                     map[entry.item] = {
-                        events: [...entry.events],
+                        events: normalized,
                         consumes: Boolean(entry.consumes)
                     };
                 });
