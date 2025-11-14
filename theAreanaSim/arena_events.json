@@ -21,7 +21,18 @@
         "Dagger",
         "Steel bar",
         "Cheese wheel",
-        "poetry anthology"
+        "poetry anthology",
+        "grappling hook",
+        "duct tape roll",
+        "rusty pan",
+        "night-vision goggles",
+        "slingshot",
+        "hand mirror",
+        "sugar cube",
+        "fire starter kit",
+        "ancient coin",
+        "radio transmitter",
+        "rubber chicken"
     ],
     "non_lethal_events": [
         "{person} scouts the cornucopia from afar.",
@@ -29,9 +40,14 @@
         "{person} reinforces a hidden bunker.",
         "{person} shares stories with the breeze\u2014silence answers back.",
         "{person} stalks distant footsteps but loses the trail.",
+        "{person} hides beneath branches as distant screams echo.",
         {
             "text": "{person} plots quietly with {ally} and {rival} deep into the night.",
             "extra_roles": ["ally", "rival"]
+        },
+        {
+            "text": "{person} negotiates an uneasy truce with {ally} while keeping an eye on {traitor}.",
+            "extra_roles": ["ally", "traitor"]
         }
     ],
     "lethal_events": [
@@ -42,6 +58,8 @@
         "{killer} crushes {victim} with a boulder from above.",
         "{killer} unleashes a swarm of tracker jackers on {victim}, killing them.",
         "{killer} pushes {victim} into a pit of spike traps.",
+        "{killer} chloroforms {victim} with improvised chemicals.",
+        "{killer} slams {victim} into a tree until the forest goes quiet.",
         {
             "text": "{killer} launches explosives that wipe out {victim} and {victim2}.",
             "victim_count": 2
@@ -51,14 +69,20 @@
         "{person} sets a {item} and waits patiently.",
         "{person} patches wounds with their trusty {item}.",
         "{person} flashes a {item} to ward off pursuers.",
-        "{person} retools a {item} into something even more dangerous."
+        "{person} retools a {item} into something even more dangerous.",
+        "{person} fortifies a shelter using their {item}.",
+        "{person} cleans and maintains their {item}, preparing for nightfall."
     ],
     "loot_events": [
         "{person} scavenges a {item} from the Cornucopia wreckage.",
         "{person} digs up a buried stash and pockets a {item}.",
         "{person} barters quietly for a {item}.",
         "{person} slips a {item} into their pack unnoticed.",
-        "{person} opens a package from a sponser and recieves a {item}"
+        "{person} opens a package from a sponser and recieves a {item}",
+        "{person} discovers a supply crate snagged in a treetop and retrieves a {item}.",
+        "{person} lifts a {item} from a careless tribute’s camp.",
+        "{person} follows a sponsor drone and steals a dropped {item}.",
+        "{person} finds a waterproof box with a {item} inside."
     ],
     "item_loot_text": {
         "herb bundle": [
@@ -211,6 +235,43 @@
                     "text": "{person} drops their anthology in the mud, ruining it",
                     "lethal": false,
                     "consumes": true
+                }
+            ]
+        },
+        {
+            "item": "grappling hook",
+            "consumes": false,
+            "events": [
+                "{person} scales a cliff using their {item}.",
+                "{person} escapes danger by swinging away with their {item}.",
+                {
+                "text": "{person} drops onto {victim} from above using the {item}, killing them instantly.",
+                "lethal": true,
+                "consumes": false
+                }
+            ]
+        },
+        {
+            "item": "duct tape roll",
+            "consumes": true,
+            "events": [
+                "{person} patches broken gear with the {item}.",
+                "{person} wraps their wounds tightly with the {item}.",
+                {
+                "text": "{person} restrains {victim} with the {item} and finishes them off.",
+                "lethal": true,
+                "consumes": true
+                }
+            ]
+        },
+        {
+            "item": "fire starter kit",
+            "consumes": false,
+            "events": [
+                "{person} starts a controlled fire with the {item}.",
+                {
+                "text": "{person} sets a trap by lighting foliage, burning {victim} alive.",
+                "lethal": true
                 }
             ]
         }
