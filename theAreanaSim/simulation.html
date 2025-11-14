@@ -164,6 +164,11 @@
             box-shadow: 0 0 10px rgba(115, 255, 135, 0.6);
         }
 
+        .event-line.item-special .event-dot {
+            background: #ffd166;
+            box-shadow: 0 0 10px rgba(255, 209, 102, 0.6);
+        }
+
         .event-line.victory .event-dot {
             background: #f4f48b;
             box-shadow: 0 0 10px rgba(244, 244, 139, 0.6);
@@ -280,11 +285,12 @@
         (() => {
             const MAX_INVENTORY_SIZE = 4;
             const DEFAULT_CONFIG = {
-                lethal_event_chance: 0.55,
-                inventory_event_chance: 0.35,
-                loot_event_chance: 0.25,
-                min_events_per_day: 2,
-                max_events_per_day: 4,
+                lethal_event_chance: 0.35,
+                inventory_event_chance: 0.45,
+                loot_event_chance: 0.2,
+                special_item_event_chance: 0.4,
+                min_events_per_day: 1,
+                max_events_per_day: 8,
                 bloodbath_event_range: [6, 9],
                 bloodbath_lethal_bonus: 0.25,
                 inventory_items: ["medkit", "snare trap", "flare", "camouflage cloak", "ration pack", "throwing knife"],
@@ -292,7 +298,7 @@
                     "{person} scouts the cornucopia from afar.",
                     "{person} gathers herbs and hopes they are edible.",
                     "{person} reinforces a hidden bunker.",
-                    "{person} shares stories with the breeze--silence answers back.",
+                    "{person} shares stories with the breeze—silence answers back.",
                     "{person} stalks distant footsteps but loses the trail."
                 ],
                 lethal_events: [
@@ -312,6 +318,54 @@
                     "{person} digs up a buried stash and pockets a {item}.",
                     "{person} barters quietly for a {item}.",
                     "{person} slips a {item} into their pack unnoticed."
+                ],
+                special_item_events: [
+                    {
+                        item: "flare",
+                        consumes: true,
+                        events: [
+                            "{person} fires a {item}, flooding the sky with light and drawing watchers.",
+                            "{person} pops a {item} to blind anyone nearby and sprints for cover."
+                        ]
+                    },
+                    {
+                        item: "medkit",
+                        consumes: true,
+                        events: [
+                            "{person} spends the afternoon patching wounds with their {item}.",
+                            "{person} sacrifices a {item} to stabilize an ally—grateful whispers follow."
+                        ]
+                    },
+                    {
+                        item: "snare trap",
+                        consumes: false,
+                        events: [
+                            "{person} rigs a {item} near the riverbank and waits for footsteps.",
+                            "{person} repositions their {item}, tightening the perimeter.",
+                            {
+                                text: "{person}'s {item} snaps shut on {victim}, ending their run.",
+                                lethal: true
+                            },
+                            {
+                                text: "{victim} never sees the {item} that {person} left behind.",
+                                lethal: true
+                            }
+                        ]
+                    },
+                    {
+                        item: "throwing knife",
+                        consumes: true,
+                        events: [
+                            {
+                                text: "{person} hurls a {item} straight into {victim}.",
+                                lethal: true
+                            },
+                            {
+                                text: "{person} stalks {victim} with a {item} and doesn't miss.",
+                                lethal: true
+                            }
+                        ]
+                    }
                 ],
                 victory_template: "{name} emerges victorious with {kills} elimination(s)!"
             };
@@ -577,6 +631,7 @@
                 const total = tributes.length;
                 const days = [];
                 let dayCounter = 0;
+                const specialItemMap = buildSpecialItemMap(config);
 
                 const alive = () => tributes.filter((t) => t.alive);
 
@@ -590,7 +645,7 @@
                         const living = alive();
                         if (!living.length) break;
                         const actor = pickRandom(living);
-                        const event = generateEvent(actor, tributes, config, dayCounter);
+                        const event = generateEvent(actor, tributes, config, dayCounter, specialItemMap);
                         if (!event) continue;
                         events.push(event);
                         if (event.type === "lethal" && event.meta?.victim && !fallen.includes(event.meta.victim)) {
@@ -642,9 +697,30 @@
                 );
             }
 
-            function generateEvent(actor, tributes, config, dayNumber) {
+            function generateEvent(actor, tributes, config, dayNumber, specialItemMap) {
                 const living = tributes.filter((t) => t.alive);
                 const canAttemptLethal = living.length > 1;
+
+                const specialItems = actor.inventory.filter((item) => specialItemMap[item]);
+                if (
+                    specialItems.length &&
+                    Math.random() < (config.special_item_event_chance ?? 0.4)
+                ) {
+                    const item = pickRandom(specialItems);
+                    const payload = specialItemMap[item];
+                    const events = payload?.events ?? [];
+                    if (events.length) {
+                        if (payload?.consumes) {
+                            removeItemOnce(actor.inventory, item);
+                        }
+                        const template = pickRandom(events);
+                        return {
+                            type: "item-special",
+                            text: formatTemplate(template, { person: actor.name, item }),
+                            meta: { person: actor.name, item, consumed: Boolean(payload?.consumes) }
+                        };
+                    }
+                }
 
                 const lootPool = config.loot_events && config.loot_events.length ? config.loot_events : null;
                 if (
@@ -722,6 +798,28 @@
                     items.push(pickRandom(pool));
                 }
                 return items;
+            }
+
+            function buildSpecialItemMap(config) {
+                const entries = config.special_item_events ?? [];
+                const map = {};
+                entries.forEach((entry) => {
+                    if (!entry?.item || !(entry.events?.length)) {
+                        return;
+                    }
+                    map[entry.item] = {
+                        events: [...entry.events],
+                        consumes: Boolean(entry.consumes)
+                    };
+                });
+                return map;
+            }
+
+            function removeItemOnce(inventory, item) {
+                const index = inventory.indexOf(item);
+                if (index !== -1) {
+                    inventory.splice(index, 1);
+                }
             }
 
             function pickRandom(list) {

@@ -2,6 +2,7 @@
     "lethal_event_chance": 0.35,
     "inventory_event_chance": 0.45,
     "loot_event_chance": 0.20,
+    "special_item_event_chance": 0.40,
     "min_events_per_day": 1,
     "max_events_per_day": 8,
     "bloodbath_event_range": [6, 9],
@@ -12,7 +13,8 @@
         "flare",
         "camouflage cloak",
         "ration pack",
-        "throwing knife"
+        "throwing knife",
+        "Taco Bell Meal Deal"
     ],
     "non_lethal_events": [
         "{person} scouts the cornucopia from afar.",
@@ -38,6 +40,65 @@
         "{person} digs up a buried stash and pockets a {item}.",
         "{person} barters quietly for a {item}.",
         "{person} slips a {item} into their pack unnoticed."
+    ],
+    "special_item_events": [
+        {
+            "item": "flare",
+            "consumes": true,
+            "events": [
+                "{person} fires a {item}, flooding the sky with light and drawing watchers.",
+                "{person} pops a {item} to blind anyone nearby and sprints for cover."
+            ]
+        },
+        {
+            "item": "medkit",
+            "consumes": true,
+            "events": [
+                "{person} spends the afternoon patching wounds with their {item}.",
+                "{person} sacrifices a {item} to stabilize an ally—grateful whispers follow."
+            ]
+        },
+        {
+            "item": "snare trap",
+            "consumes": false,
+            "events": [
+                "{person} rigs a {item} near the riverbank and waits for footsteps.",
+                "{person} repositions their {item}, tightening the perimeter.",
+                {
+                    "text": "{person}'s {item} snaps shut on {victim}, ending their run.",
+                    "lethal": true
+                },
+                {
+                    "text": "{victim} never sees the {item} that {person} left behind.",
+                    "lethal": true
+                }
+            ]
+        },
+        {
+            "item": "throwing knife",
+            "consumes": true,
+            "events": [
+                {
+                    "text": "{person} hurls a {item} straight into {victim}.",
+                    "lethal": true
+                },
+                {
+                    "text": "{person} stalks {victim} with a {item} and doesn't miss.",
+                    "lethal": true
+                }
+            ]
+        },
+        {
+            "item": "Taco Bell Meal Deal",
+            "consumes": true,
+            "events": [
+                "{person} eats their {item}.",
+                {
+                    "text": "{person} shares their {item} with {victim}.",
+                    "lethal": false
+                }
+            ]
+        }
     ],
     "victory_template": "{name} emerges victorious with {kills} elimination(s)!"
 }

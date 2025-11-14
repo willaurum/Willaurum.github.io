@@ -57,6 +57,13 @@ class SimulationConfig:
     lethal_events / non_lethal_events / inventory_events / loot_events:
         Template pools. ``{person}``, ``{killer}``, ``{victim}``, and
         ``{item}`` placeholders are supported.
+    special_item_events:
+        Optional list of custom item hooks where a specific piece of
+        gear unlocks custom flavor text (and can optionally be consumed)
+        when chosen.
+    special_item_event_chance:
+        Probability (0-1) that a tribute with a qualifying item triggers
+        one of those bespoke events before any other inventory logic.
     loot_event_chance:
         Chance that an event lets a tribute discover new gear.
     victory_template:
@@ -115,6 +122,8 @@ class SimulationConfig:
             "{person} slips a {item} into their pack unnoticed.",
         ]
     )
+    special_item_events: Sequence[Dict[str, object]] = field(default_factory=list)
+    special_item_event_chance: float = 0.4
     victory_template: str = "{name} emerges victorious with {kills} elimination(s)!"
     seed: Optional[int] = None
 
@@ -145,6 +154,12 @@ class SimulationConfig:
             non_lethal_events=data.get("non_lethal_events", list(default.non_lethal_events)),
             inventory_events=data.get("inventory_events", list(default.inventory_events)),
             loot_events=data.get("loot_events", list(default.loot_events)),
+            special_item_events=data.get(
+                "special_item_events", list(default.special_item_events)
+            ),
+            special_item_event_chance=float(
+                data.get("special_item_event_chance", default.special_item_event_chance)
+            ),
             victory_template=data.get("victory_template", default.victory_template),
             seed=data.get("seed"),
         )
@@ -160,6 +175,37 @@ DEFAULT_TRIBUTE_NAMES = [
     "George",
     "Hannah",
 ]
+
+
+def build_special_item_map(config: SimulationConfig) -> Dict[str, Dict[str, object]]:
+    """Normalize the configured special item events for quick lookups."""
+
+    mapping: Dict[str, Dict[str, object]] = {}
+    for entry in config.special_item_events:
+        if not isinstance(entry, dict):
+            continue
+        item = entry.get("item")
+        events = entry.get("events") or []
+        if not item or not events:
+            continue
+        parsed_events: List[Dict[str, object]] = []
+        for event in events:
+            if isinstance(event, str):
+                parsed_events.append({"text": event, "lethal": False})
+            elif isinstance(event, dict) and "text" in event:
+                parsed_events.append(
+                    {
+                        "text": str(event["text"]),
+                        "lethal": bool(event.get("lethal", False)),
+                    }
+                )
+        if not parsed_events:
+            continue
+        mapping[str(item)] = {
+            "events": parsed_events,
+            "consumes": bool(entry.get("consumes", False)),
+        }
+    return mapping
 
 
 def load_names(source: Optional[Path] = None) -> List[str]:
@@ -259,6 +305,7 @@ def run_simulation(
         Tribute(name=n, inventory=assign_inventory(rng, config.inventory_items)) for n in names
     ]
     total_tributes = len(tributes)
+    special_item_map = build_special_item_map(config)
 
     days: List[Dict[str, object]] = []
     day_counter = 0
@@ -283,7 +330,14 @@ def run_simulation(
             if not living:
                 break
             actor = rng.choice(living)
-            event = generate_event(actor, tributes, config, day_counter, rng)
+            event = generate_event(
+                actor,
+                tributes,
+                config,
+                day_counter,
+                special_item_map,
+                rng,
+            )
             if not event:
                 continue
             events_today.append(event)
@@ -326,12 +380,51 @@ def generate_event(
     tributes: Sequence[Tribute],
     config: SimulationConfig,
     day_number: int,
+    special_item_map: Dict[str, Dict[str, object]],
     rng: random.Random,
 ) -> Optional[Dict[str, object]]:
     """Produce one event entry and mutate tribute state when needed."""
 
     living = [t for t in tributes if t.alive]
     can_attempt_lethal = len(living) > 1
+
+    special_candidates = [item for item in actor.inventory if item in special_item_map]
+    if special_candidates and rng.random() < config.special_item_event_chance:
+        chosen = rng.choice(special_candidates)
+        payload = special_item_map[chosen]
+        templates = payload.get("events", [])
+        if templates:
+            template = rng.choice(templates)
+            consumes = payload.get("consumes", False)
+            if consumes:
+                actor.inventory.remove(chosen)
+            lethal_event = bool(template.get("lethal"))
+            victim_name: Optional[str] = None
+            if lethal_event:
+                candidates = [t for t in living if t is not actor]
+                if candidates:
+                    victim = rng.choice(candidates)
+                    victim.alive = False
+                    actor.kills += 1
+                    victim_name = victim.name
+                else:
+                    lethal_event = False
+            replacements = {"person": actor.name, "item": chosen}
+            if victim_name:
+                replacements["victim"] = victim_name
+            text = template["text"].format(**replacements)
+            meta = {
+                "person": actor.name,
+                "item": chosen,
+                "consumed": consumes,
+            }
+            if victim_name:
+                meta["victim"] = victim_name
+            return {
+                "type": "item-special lethal" if victim_name else "item-special",
+                "text": text,
+                "meta": meta,
+            }
 
     can_loot = (
         bool(config.loot_events)

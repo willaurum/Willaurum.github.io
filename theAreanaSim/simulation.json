@@ -2,8 +2,8 @@
     "tributes": [
         {
             "name": "Alice",
-            "alive": false,
-            "kills": 0,
+            "alive": true,
+            "kills": 2,
             "inventory": [
                 "snare trap"
             ]
@@ -11,62 +11,52 @@
         {
             "name": "Bob",
             "alive": false,
-            "kills": 0,
+            "kills": 2,
             "inventory": [
-                "throwing knife"
+                "camouflage cloak",
+                "camouflage cloak"
             ]
         },
         {
             "name": "Charlie",
-            "alive": true,
-            "kills": 3,
+            "alive": false,
+            "kills": 2,
             "inventory": [
-                "throwing knife",
-                "flare",
-                "flare",
-                "snare trap"
+                "camouflage cloak"
             ]
         },
         {
             "name": "Diana",
             "alive": false,
-            "kills": 2,
+            "kills": 0,
             "inventory": [
-                "camouflage cloak",
-                "medkit",
-                "snare trap",
-                "ration pack"
+                "camouflage cloak"
             ]
         },
         {
             "name": "Evelyn",
             "alive": false,
-            "kills": 1,
+            "kills": 0,
             "inventory": [
-                "throwing knife",
-                "medkit",
-                "medkit",
-                "throwing knife"
+                "medkit"
             ]
         },
         {
             "name": "Frank",
             "alive": false,
-            "kills": 1,
+            "kills": 0,
             "inventory": [
                 "flare",
-                "ration pack",
-                "medkit"
+                "ration pack"
             ]
         },
         {
             "name": "George",
             "alive": false,
-            "kills": 0,
+            "kills": 1,
             "inventory": [
-                "ration pack",
-                "throwing knife",
-                "throwing knife"
+                "medkit",
+                "snare trap"
             ]
         },
         {
@@ -74,7 +64,8 @@
             "alive": false,
             "kills": 0,
             "inventory": [
-                "snare trap"
+                "medkit",
+                "flare"
             ]
         }
     ],
@@ -84,51 +75,119 @@
             "bloodbath": true,
             "events": [
                 {
-                    "type": "loot",
-                    "text": "Frank barters quietly for a medkit.",
+                    "type": "item-special lethal",
+                    "text": "Bob hurls a throwing knife straight into Frank.",
                     "meta": {
-                        "person": "Frank",
-                        "item": "medkit"
+                        "person": "Bob",
+                        "item": "throwing knife",
+                        "consumed": true,
+                        "victim": "Frank"
                     }
                 },
                 {
                     "type": "loot",
-                    "text": "Charlie digs up a buried stash and pockets a flare.",
+                    "text": "Evelyn barters quietly for a medkit.",
                     "meta": {
-                        "person": "Charlie",
-                        "item": "flare"
+                        "person": "Evelyn",
+                        "item": "medkit"
                     }
                 },
                 {
                     "type": "lethal",
-                    "text": "Charlie sabotages Hannah's shelter overnight.",
+                    "text": "George ambushes Hannah near the river.",
                     "meta": {
-                        "killer": "Charlie",
+                        "killer": "George",
                         "victim": "Hannah"
                     }
                 },
                 {
+                    "type": "lethal",
+                    "text": "Charlie traps Evelyn in a ravine.",
+                    "meta": {
+                        "killer": "Charlie",
+                        "victim": "Evelyn"
+                    }
+                },
+                {
+                    "type": "loot",
+                    "text": "Charlie barters quietly for a camouflage cloak.",
+                    "meta": {
+                        "person": "Charlie",
+                        "item": "camouflage cloak"
+                    }
+                },
+                {
+                    "type": "item-special lethal",
+                    "text": "Charlie stalks George with a throwing knife and doesn't miss.",
+                    "meta": {
+                        "person": "Charlie",
+                        "item": "throwing knife",
+                        "consumed": true,
+                        "victim": "George"
+                    }
+                },
+                {
+                    "type": "non-lethal",
+                    "text": "Charlie stalks distant footsteps but loses the trail.",
+                    "meta": {
+                        "person": "Charlie"
+                    }
+                },
+                {
                     "type": "inventory",
-                    "text": "George flashes a ration pack to ward off pursuers.",
+                    "text": "Alice flashes a flare to ward off pursuers.",
                     "meta": {
-                        "person": "George",
-                        "item": "ration pack"
+                        "person": "Alice",
+                        "item": "flare"
                     }
                 },
                 {
-                    "type": "loot",
-                    "text": "Evelyn digs up a buried stash and pockets a throwing knife.",
+                    "type": "inventory",
+                    "text": "Alice sets a flare and waits patiently.",
                     "meta": {
-                        "person": "Evelyn",
-                        "item": "throwing knife"
+                        "person": "Alice",
+                        "item": "flare"
+                    }
+                }
+            ],
+            "fallen": [
+                "Hannah",
+                "Evelyn"
+            ],
+            "survivors": [
+                "Alice",
+                "Bob",
+                "Charlie",
+                "Diana"
+            ]
+        },
+        {
+            "number": 2,
+            "bloodbath": false,
+            "events": [
+                {
+                    "type": "inventory",
+                    "text": "Bob patches wounds with a trusty camouflage cloak.",
+                    "meta": {
+                        "person": "Bob",
+                        "item": "camouflage cloak"
                     }
                 },
                 {
-                    "type": "loot",
-                    "text": "Evelyn slips a medkit into their pack unnoticed.",
+                    "type": "item-special",
+                    "text": "Alice pops a flare to blind anyone nearby and sprints for cover.",
                     "meta": {
-                        "person": "Evelyn",
-                        "item": "medkit"
+                        "person": "Alice",
+                        "item": "flare",
+                        "consumed": true
+                    }
+                },
+                {
+                    "type": "lethal",
+                    "text": "Alice traps Diana in a ravine.",
+                    "meta": {
+                        "killer": "Alice",
+                        "victim": "Diana"
                     }
                 },
                 {
@@ -140,20 +199,131 @@
                 }
             ],
             "fallen": [
-                "Hannah"
+                "Diana"
             ],
             "survivors": [
                 "Alice",
                 "Bob",
-                "Charlie",
-                "Diana",
-                "Evelyn",
-                "Frank",
-                "George"
+                "Charlie"
             ]
         },
         {
-            "number": 2,
+            "number": 3,
+            "bloodbath": false,
+            "events": [
+                {
+                    "type": "loot",
+                    "text": "Bob barters quietly for a throwing knife.",
+                    "meta": {
+                        "person": "Bob",
+                        "item": "throwing knife"
+                    }
+                },
+                {
+                    "type": "non-lethal",
+                    "text": "Alice scouts the cornucopia from afar.",
+                    "meta": {
+                        "person": "Alice"
+                    }
+                },
+                {
+                    "type": "item-special lethal",
+                    "text": "Bob hurls a throwing knife straight into Charlie.",
+                    "meta": {
+                        "person": "Bob",
+                        "item": "throwing knife",
+                        "consumed": true,
+                        "victim": "Charlie"
+                    }
+                }
+            ],
+            "fallen": [],
+            "survivors": [
+                "Alice",
+                "Bob"
+            ]
+        },
+        {
+            "number": 4,
+            "bloodbath": false,
+            "events": [
+                {
+                    "type": "inventory",
+                    "text": "Bob sets a camouflage cloak and waits patiently.",
+                    "meta": {
+                        "person": "Bob",
+                        "item": "camouflage cloak"
+                    }
+                },
+                {
+                    "type": "loot",
+                    "text": "Bob slips a medkit into their pack unnoticed.",
+                    "meta": {
+                        "person": "Bob",
+                        "item": "medkit"
+                    }
+                }
+            ],
+            "fallen": [],
+            "survivors": [
+                "Alice",
+                "Bob"
+            ]
+        },
+        {
+            "number": 5,
+            "bloodbath": false,
+            "events": [
+                {
+                    "type": "item-special",
+                    "text": "Bob sacrifices a medkit to stabilize an ally\u2014grateful whispers follow.",
+                    "meta": {
+                        "person": "Bob",
+                        "item": "medkit",
+                        "consumed": true
+                    }
+                },
+                {
+                    "type": "non-lethal",
+                    "text": "Alice gathers herbs and hopes they are edible.",
+                    "meta": {
+                        "person": "Alice"
+                    }
+                }
+            ],
+            "fallen": [],
+            "survivors": [
+                "Alice",
+                "Bob"
+            ]
+        },
+        {
+            "number": 6,
+            "bloodbath": false,
+            "events": [
+                {
+                    "type": "non-lethal",
+                    "text": "Bob gathers herbs and hopes they are edible.",
+                    "meta": {
+                        "person": "Bob"
+                    }
+                },
+                {
+                    "type": "non-lethal",
+                    "text": "Alice stalks distant footsteps but loses the trail.",
+                    "meta": {
+                        "person": "Alice"
+                    }
+                }
+            ],
+            "fallen": [],
+            "survivors": [
+                "Alice",
+                "Bob"
+            ]
+        },
+        {
+            "number": 7,
             "bloodbath": false,
             "events": [
                 {
@@ -165,224 +335,18 @@
                     }
                 },
                 {
-                    "type": "lethal",
-                    "text": "Diana traps Bob in a ravine.",
+                    "type": "loot",
+                    "text": "Bob slips a camouflage cloak into their pack unnoticed.",
                     "meta": {
-                        "killer": "Diana",
-                        "victim": "Bob"
-                    }
-                },
-                {
-                    "type": "inventory",
-                    "text": "Charlie flashes a throwing knife to ward off pursuers.",
-                    "meta": {
-                        "person": "Charlie",
-                        "item": "throwing knife"
-                    }
-                },
-                {
-                    "type": "inventory",
-                    "text": "George retools a ration pack into something even more dangerous.",
-                    "meta": {
-                        "person": "George",
-                        "item": "ration pack"
+                        "person": "Bob",
+                        "item": "camouflage cloak"
                     }
                 }
             ],
-            "fallen": [
+            "fallen": [],
+            "survivors": [
+                "Alice",
                 "Bob"
-            ],
-            "survivors": [
-                "Alice",
-                "Charlie",
-                "Diana",
-                "Evelyn",
-                "Frank",
-                "George"
-            ]
-        },
-        {
-            "number": 3,
-            "bloodbath": false,
-            "events": [
-                {
-                    "type": "loot",
-                    "text": "George barters quietly for a throwing knife.",
-                    "meta": {
-                        "person": "George",
-                        "item": "throwing knife"
-                    }
-                },
-                {
-                    "type": "lethal",
-                    "text": "Frank traps Alice in a ravine.",
-                    "meta": {
-                        "killer": "Frank",
-                        "victim": "Alice"
-                    }
-                },
-                {
-                    "type": "loot",
-                    "text": "Evelyn scavenges a medkit from the Cornucopia wreckage.",
-                    "meta": {
-                        "person": "Evelyn",
-                        "item": "medkit"
-                    }
-                },
-                {
-                    "type": "lethal",
-                    "text": "Evelyn outmatches George after a tense duel.",
-                    "meta": {
-                        "killer": "Evelyn",
-                        "victim": "George"
-                    }
-                }
-            ],
-            "fallen": [
-                "Alice",
-                "George"
-            ],
-            "survivors": [
-                "Charlie",
-                "Diana",
-                "Evelyn",
-                "Frank"
-            ]
-        },
-        {
-            "number": 4,
-            "bloodbath": false,
-            "events": [
-                {
-                    "type": "loot",
-                    "text": "Diana digs up a buried stash and pockets a snare trap.",
-                    "meta": {
-                        "person": "Diana",
-                        "item": "snare trap"
-                    }
-                },
-                {
-                    "type": "lethal",
-                    "text": "Diana traps Frank in a ravine.",
-                    "meta": {
-                        "killer": "Diana",
-                        "victim": "Frank"
-                    }
-                },
-                {
-                    "type": "loot",
-                    "text": "Diana digs up a buried stash and pockets a ration pack.",
-                    "meta": {
-                        "person": "Diana",
-                        "item": "ration pack"
-                    }
-                }
-            ],
-            "fallen": [
-                "Frank"
-            ],
-            "survivors": [
-                "Charlie",
-                "Diana",
-                "Evelyn"
-            ]
-        },
-        {
-            "number": 5,
-            "bloodbath": false,
-            "events": [
-                {
-                    "type": "loot",
-                    "text": "Charlie barters quietly for a flare.",
-                    "meta": {
-                        "person": "Charlie",
-                        "item": "flare"
-                    }
-                },
-                {
-                    "type": "non-lethal",
-                    "text": "Diana reinforces a hidden bunker.",
-                    "meta": {
-                        "person": "Diana"
-                    }
-                },
-                {
-                    "type": "inventory",
-                    "text": "Charlie sets a throwing knife and waits patiently.",
-                    "meta": {
-                        "person": "Charlie",
-                        "item": "throwing knife"
-                    }
-                },
-                {
-                    "type": "lethal",
-                    "text": "Charlie ambushes Diana near the river.",
-                    "meta": {
-                        "killer": "Charlie",
-                        "victim": "Diana"
-                    }
-                }
-            ],
-            "fallen": [
-                "Diana"
-            ],
-            "survivors": [
-                "Charlie",
-                "Evelyn"
-            ]
-        },
-        {
-            "number": 6,
-            "bloodbath": false,
-            "events": [
-                {
-                    "type": "loot",
-                    "text": "Charlie slips a snare trap into their pack unnoticed.",
-                    "meta": {
-                        "person": "Charlie",
-                        "item": "snare trap"
-                    }
-                },
-                {
-                    "type": "inventory",
-                    "text": "Evelyn retools a medkit into something even more dangerous.",
-                    "meta": {
-                        "person": "Evelyn",
-                        "item": "medkit"
-                    }
-                }
-            ],
-            "fallen": [],
-            "survivors": [
-                "Charlie",
-                "Evelyn"
-            ]
-        },
-        {
-            "number": 7,
-            "bloodbath": false,
-            "events": [
-                {
-                    "type": "inventory",
-                    "text": "Charlie sets a flare and waits patiently.",
-                    "meta": {
-                        "person": "Charlie",
-                        "item": "flare"
-                    }
-                },
-                {
-                    "type": "inventory",
-                    "text": "Charlie flashes a throwing knife to ward off pursuers.",
-                    "meta": {
-                        "person": "Charlie",
-                        "item": "throwing knife"
-                    }
-                }
-            ],
-            "fallen": [],
-            "survivors": [
-                "Charlie",
-                "Evelyn"
             ]
         },
         {
@@ -391,25 +355,25 @@
             "events": [
                 {
                     "type": "inventory",
-                    "text": "Evelyn patches wounds with a trusty medkit.",
+                    "text": "Bob sets a camouflage cloak and waits patiently.",
                     "meta": {
-                        "person": "Evelyn",
-                        "item": "medkit"
+                        "person": "Bob",
+                        "item": "camouflage cloak"
                     }
                 },
                 {
                     "type": "inventory",
-                    "text": "Evelyn patches wounds with a trusty medkit.",
+                    "text": "Bob flashes a camouflage cloak to ward off pursuers.",
                     "meta": {
-                        "person": "Evelyn",
-                        "item": "medkit"
+                        "person": "Bob",
+                        "item": "camouflage cloak"
                     }
                 }
             ],
             "fallen": [],
             "survivors": [
-                "Charlie",
-                "Evelyn"
+                "Alice",
+                "Bob"
             ]
         },
         {
@@ -417,33 +381,25 @@
             "bloodbath": false,
             "events": [
                 {
-                    "type": "inventory",
-                    "text": "Charlie sets a throwing knife and waits patiently.",
-                    "meta": {
-                        "person": "Charlie",
-                        "item": "throwing knife"
-                    }
-                },
-                {
-                    "type": "loot",
-                    "text": "Evelyn digs up a buried stash and pockets a throwing knife.",
-                    "meta": {
-                        "person": "Evelyn",
-                        "item": "throwing knife"
-                    }
-                },
-                {
                     "type": "non-lethal",
-                    "text": "Evelyn shares stories with the breeze\u2014silence answers back.",
+                    "text": "Bob gathers herbs and hopes they are edible.",
                     "meta": {
-                        "person": "Evelyn"
+                        "person": "Bob"
+                    }
+                },
+                {
+                    "type": "inventory",
+                    "text": "Bob sets a camouflage cloak and waits patiently.",
+                    "meta": {
+                        "person": "Bob",
+                        "item": "camouflage cloak"
                     }
                 }
             ],
             "fallen": [],
             "survivors": [
-                "Charlie",
-                "Evelyn"
+                "Alice",
+                "Bob"
             ]
         },
         {
@@ -451,29 +407,62 @@
             "bloodbath": false,
             "events": [
                 {
-                    "type": "lethal",
-                    "text": "Charlie traps Evelyn in a ravine.",
+                    "type": "non-lethal",
+                    "text": "Bob reinforces a hidden bunker.",
                     "meta": {
-                        "killer": "Charlie",
-                        "victim": "Evelyn"
+                        "person": "Bob"
+                    }
+                },
+                {
+                    "type": "non-lethal",
+                    "text": "Bob shares stories with the breeze\u2014silence answers back.",
+                    "meta": {
+                        "person": "Bob"
+                    }
+                }
+            ],
+            "fallen": [],
+            "survivors": [
+                "Alice",
+                "Bob"
+            ]
+        },
+        {
+            "number": 11,
+            "bloodbath": false,
+            "events": [
+                {
+                    "type": "inventory",
+                    "text": "Bob patches wounds with a trusty camouflage cloak.",
+                    "meta": {
+                        "person": "Bob",
+                        "item": "camouflage cloak"
+                    }
+                },
+                {
+                    "type": "lethal",
+                    "text": "Alice ambushes Bob near the river.",
+                    "meta": {
+                        "killer": "Alice",
+                        "victim": "Bob"
                     }
                 },
                 {
                     "type": "victory",
-                    "text": "Charlie emerges victorious with 3 elimination(s)!",
+                    "text": "Alice emerges victorious with 2 elimination(s)!",
                     "meta": {
-                        "winner": "Charlie",
-                        "kills": 3
+                        "winner": "Alice",
+                        "kills": 2
                     }
                 }
             ],
             "fallen": [
-                "Evelyn"
+                "Bob"
             ],
             "survivors": [
-                "Charlie"
+                "Alice"
             ]
         }
     ],
-    "winner": "Charlie"
+    "winner": "Alice"
 }
