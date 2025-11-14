@@ -283,6 +283,7 @@
     <script>
         (() => {
             const MAX_INVENTORY_SIZE = 4;
+            const PLACEHOLDER_REGEX = /\{(\w+)\}/g;
             const DEFAULT_CONFIG = {
                 lethal_event_chance: 0.35,
                 inventory_event_chance: 0.45,
@@ -300,20 +301,29 @@
                     "ration pack",
                     "throwing knife",
                     "Taco Bell Meal Deal",
-                    "herb bundle"
+                    "herb bundle",
+                    "bow"
                 ],
                 non_lethal_events: [
                     "{person} scouts the cornucopia from afar.",
                     "{person} gathers herbs and hopes they are edible.",
                     "{person} reinforces a hidden bunker.",
-                    "{person} shares stories with the breeze—silence answers back.",
-                    "{person} stalks distant footsteps but loses the trail."
+                    "{person} shares stories with the breeze\u2014silence answers back.",
+                    "{person} stalks distant footsteps but loses the trail.",
+                    {
+                        text: "{person} plots quietly with {ally} and {rival} deep into the night.",
+                        extra_roles: ["ally", "rival"]
+                    }
                 ],
                 lethal_events: [
                     "{killer} ambushes {victim} near the river.",
                     "{killer} traps {victim} in a ravine.",
                     "{killer} outmatches {victim} after a tense duel.",
-                    "{killer} sabotages {victim}'s shelter overnight."
+                    "{killer} sabotages {victim}'s shelter overnight.",
+                    {
+                        text: "{killer} launches explosives that wipe out {victim} and {victim2}.",
+                        victim_count: 2
+                    }
                 ],
                 inventory_events: [
                     "{person} sets a {item} and waits patiently.",
@@ -342,22 +352,31 @@
                         consumes: true,
                         events: [
                             "{person} spends the afternoon patching wounds with their {item}.",
-                            "{person} sacrifices a {item} to stabilize an ally—grateful whispers follow."
+                            "{person} sacrifices a {item} to stabilize an ally\u2014grateful whispers follow."
                         ]
                     },
                     {
                         item: "snare trap",
                         consumes: false,
                         events: [
-                            "{person} rigs a {item} near the riverbank and waits for footsteps.",
-                            "{person} repositions their {item}, tightening the perimeter.",
                             {
-                                text: "{person}'s {item} snaps shut on {victim}, ending their run.",
-                                lethal: true
+                                text: "{person} rigs a {item} near the riverbank and waits for footsteps.",
+                                consumes: false
                             },
                             {
-                                text: "{victim} never sees the {item} that {person} left behind.",
-                                lethal: true
+                                text: "{person} repositions their {item}, tightening the perimeter.",
+                                consumes: false
+                            },
+                            {
+                                text: "{person}'s {item} snaps shut on {victim}, ending their run.",
+                                lethal: true,
+                                consumes: false
+                            },
+                            {
+                                text: "{victim} and {victim2} never see the {item} that {person} left behind.",
+                                lethal: true,
+                                victim_count: 2,
+                                consumes: false
                             }
                         ]
                     },
@@ -367,11 +386,51 @@
                         events: [
                             {
                                 text: "{person} hurls a {item} straight into {victim}.",
-                                lethal: true
+                                lethal: true,
+                                consumes: true
                             },
                             {
                                 text: "{person} stalks {victim} with a {item} and doesn't miss.",
-                                lethal: true
+                                lethal: true,
+                                consumes: true
+                            },
+                            {
+                                text: "{person} fans blades so fast that {victim} and {victim2} both fall.",
+                                lethal: true,
+                                victim_count: 2,
+                                consumes: true
+                            }
+                        ]
+                    },
+                    {
+                        item: "Taco Bell Meal Deal",
+                        consumes: true,
+                        events: [
+                            "{person} eats their {item}.",
+                            {
+                                text: "{person} shares their {item} with {victim}.",
+                                consumes: false
+                            }
+                        ]
+                    },
+                    {
+                        item: "bow",
+                        consumes: false,
+                        events: [
+                            {
+                                text: "{person} tends to their {item}.",
+                                consumes: false
+                            },
+                            {
+                                text: "{person} shoots {victim} with their {item}.",
+                                lethal: true,
+                                consumes: false
+                            },
+                            {
+                                text: "{person} rains arrows until {victim} and {victim2} both drop.",
+                                lethal: true,
+                                victim_count: 2,
+                                consumes: true
                             }
                         ]
                     }
@@ -657,8 +716,17 @@
                         const event = generateEvent(actor, tributes, config, dayCounter, specialItemMap);
                         if (!event) continue;
                         events.push(event);
-                        if (event.type === "lethal" && event.meta?.victim && !fallen.includes(event.meta.victim)) {
-                            fallen.push(event.meta.victim);
+                        if (event.type === "lethal" || event.type === "item-special lethal") {
+                            const victims = Array.isArray(event.meta?.victims)
+                                ? event.meta.victims
+                                : event.meta?.victim
+                                ? [event.meta.victim]
+                                : [];
+                            victims.forEach((name) => {
+                                if (name && !fallen.includes(name)) {
+                                    fallen.push(name);
+                                }
+                            });
                         }
                         if (alive().length <= 1) break;
                     }
@@ -719,41 +787,48 @@
                     const payload = specialItemMap[item];
                     const events = payload?.events ?? [];
                     if (events.length) {
-                        if (payload?.consumes) {
-                            removeItemOnce(actor.inventory, item);
-                        }
                         const template = pickRandom(events);
-                        const requiresVictim = Boolean(
-                            template.requiresVictim ??
-                                (template.text && template.text.includes("{victim}"))
-                        );
-                        const victimChoices = living.filter((t) => t !== actor);
-                        if ((requiresVictim || template.lethal) && !victimChoices.length) {
-                            return null;
-                        }
-                        let victim = null;
-                        if ((requiresVictim || template.lethal) && victimChoices.length) {
-                            victim = pickRandom(victimChoices);
-                            if (template.lethal) {
-                                victim.alive = false;
-                                actor.kills += 1;
+                        const consumes =
+                            template.consumes ?? payload.consumes ?? false;
+                        let victims = [];
+                        if (template.victimCount) {
+                            const victimChoices = living.filter((t) => t !== actor);
+                            if (victimChoices.length < template.victimCount) {
+                                return null;
+                            }
+                            victims = pickUnique(victimChoices, template.victimCount) ?? [];
+                            if (victims.length < template.victimCount) {
+                                return null;
                             }
                         }
-                        const replacements = { person: actor.name, item };
-                        if (victim) {
-                            replacements.victim = victim.name;
+                        if (template.lethal && victims.length) {
+                            victims.forEach((target) => {
+                                target.alive = false;
+                            });
+                            actor.kills += victims.length;
                         }
+                        const replacements = { person: actor.name, item };
+                        victims.forEach((victim, index) => {
+                            const key =
+                                template.victimKeys[index] ??
+                                (index === 0 ? "victim" : `victim${index + 1}`);
+                            replacements[key] = victim.name;
+                        });
                         const text = formatTemplate(template.text, replacements);
                         const meta = {
                             person: actor.name,
                             item,
-                            consumed: Boolean(payload?.consumes)
+                            consumed: Boolean(consumes)
                         };
-                        if (victim) {
-                            meta.victim = victim.name;
+                        if (victims.length) {
+                            meta.victims = victims.map((v) => v.name);
+                            meta.victim = victims[0].name;
+                        }
+                        if (consumes) {
+                            removeItemOnce(actor.inventory, item);
                         }
                         return {
-                            type: template.lethal && victim ? "item-special lethal" : "item-special",
+                            type: template.lethal && victims.length ? "item-special lethal" : "item-special",
                             text,
                             meta
                         };
@@ -807,14 +882,34 @@
                 if (canAttemptLethal && Math.random() < lethalChance) {
                     const victimChoices = living.filter((t) => t !== actor);
                     if (victimChoices.length) {
-                        const victim = pickRandom(victimChoices);
-                        victim.alive = false;
-                        actor.kills += 1;
-                        const template = pickRandom(lethalPool);
+                        const template = normalizeLethalTemplate(pickRandom(lethalPool));
+                        const count = Math.min(
+                            Math.max(1, template.victimCount),
+                            victimChoices.length
+                        );
+                        const victims = pickUnique(victimChoices, count) ?? [];
+                        if (!victims.length) {
+                            return null;
+                        }
+                        victims.forEach((target) => {
+                            target.alive = false;
+                        });
+                        actor.kills += victims.length;
+                        const replacements = { killer: actor.name };
+                        victims.forEach((victim, index) => {
+                            const key =
+                                template.victimKeys[index] ??
+                                (index === 0 ? "victim" : `victim${index + 1}`);
+                            replacements[key] = victim.name;
+                        });
                         return {
                             type: "lethal",
-                            text: formatTemplate(template, { killer: actor.name, victim: victim.name }),
-                            meta: { killer: actor.name, victim: victim.name }
+                            text: formatTemplate(template.text, replacements),
+                            meta: {
+                                killer: actor.name,
+                                victim: victims[0].name,
+                                victims: victims.map((v) => v.name)
+                            }
                         };
                     }
                 }
@@ -823,11 +918,30 @@
                     config.non_lethal_events && config.non_lethal_events.length
                         ? config.non_lethal_events
                         : ["{person} lies low and watches the horizon."];
-                const template = pickRandom(nonLethalPool);
+                const template = normalizeNonLethalTemplate(pickRandom(nonLethalPool));
+                const replacements = { person: actor.name };
+                let companions = [];
+                if (template.extraRoles.length) {
+                    const pool = living.filter((t) => t !== actor);
+                    if (pool.length < template.extraRoles.length) {
+                        return null;
+                    }
+                    companions = pickUnique(pool, template.extraRoles.length) ?? [];
+                    if (companions.length < template.extraRoles.length) {
+                        return null;
+                    }
+                    companions.forEach((tribute, index) => {
+                        replacements[template.extraRoles[index]] = tribute.name;
+                    });
+                }
+                const meta = { person: actor.name };
+                if (companions.length) {
+                    meta.others = companions.map((t) => t.name);
+                }
                 return {
                     type: "non-lethal",
-                    text: formatTemplate(template, { person: actor.name }),
-                    meta: { person: actor.name }
+                    text: formatTemplate(template.text, replacements),
+                    meta
                 };
             }
 
@@ -849,38 +963,171 @@
                     if (!entry?.item || !(entry.events?.length)) {
                         return;
                     }
+                    const defaultConsumes = Boolean(entry.consumes);
                     const normalized = entry.events
-                        .map((evt) => {
-                            if (typeof evt === "string") {
-                                return {
-                                    text: evt,
-                                    lethal: false,
-                                    requiresVictim: evt.includes("{victim}")
-                                };
-                            }
-                            if (evt && typeof evt === "object" && "text" in evt) {
-                                const text = String(evt.text);
-                                return {
-                                    text,
-                                    lethal: Boolean(evt.lethal),
-                                    requiresVictim:
-                                        evt.requires_victim ??
-                                        evt.requiresVictim ??
-                                        text.includes("{victim}")
-                                };
-                            }
-                            return null;
-                        })
+                        .map((evt) => normalizeSpecialEvent(evt, defaultConsumes))
                         .filter(Boolean);
                     if (!normalized.length) {
                         return;
                     }
                     map[entry.item] = {
                         events: normalized,
-                        consumes: Boolean(entry.consumes)
+                        consumes: defaultConsumes
                     };
                 });
                 return map;
+            }
+
+            function extractPlaceholders(template) {
+                if (!template) return [];
+                const matches = [];
+                template.replace(PLACEHOLDER_REGEX, (_, key) => {
+                    matches.push(key);
+                    return _;
+                });
+                return matches;
+            }
+
+            function inferVictimRoles(template) {
+                return extractPlaceholders(template).filter(
+                    (key, index, arr) => key.startsWith("victim") && arr.indexOf(key) === index
+                );
+            }
+
+            function ensureVictimKeys(baseKeys, count) {
+                const keys = Array.isArray(baseKeys) ? [...baseKeys] : [];
+                const defaults = ["victim"];
+                for (let i = 2; i <= count + 5; i += 1) {
+                    defaults.push(`victim${i}`);
+                }
+                defaults.forEach((candidate) => {
+                    if (keys.length >= count) {
+                        return;
+                    }
+                    if (!keys.includes(candidate)) {
+                        keys.push(candidate);
+                    }
+                });
+                return keys.slice(0, count);
+            }
+
+            function inferExtraRoles(template, baseKeys) {
+                const reserved = new Set(baseKeys);
+                const roles = [];
+                extractPlaceholders(template).forEach((key) => {
+                    if (reserved.has(key)) return;
+                    if (!roles.includes(key)) {
+                        roles.push(key);
+                    }
+                });
+                return roles;
+            }
+
+            function normalizeSpecialEvent(entry, defaultConsumes) {
+                if (typeof entry === "string") {
+                    const victimRoles = inferVictimRoles(entry);
+                    const victimCount = victimRoles.length;
+                    return {
+                        text: entry,
+                        lethal: false,
+                        victimCount,
+                        victimKeys: ensureVictimKeys(victimRoles, victimCount),
+                        consumes: defaultConsumes
+                    };
+                }
+                if (entry && typeof entry === "object" && "text" in entry) {
+                    const text = String(entry.text);
+                    const lethal = Boolean(entry.lethal);
+                    const victimRoles = inferVictimRoles(text);
+                    const explicit = entry.victim_count ?? entry.victimCount ?? entry.victims;
+                    let victimCount = victimRoles.length;
+                    if (explicit !== undefined) {
+                        const parsed = Number(explicit);
+                        if (!Number.isNaN(parsed)) {
+                            victimCount = Math.max(0, Math.floor(parsed));
+                        }
+                    }
+                    if (lethal && victimCount === 0) {
+                        victimCount = victimRoles.length || 1;
+                    }
+                    const consumes =
+                        "consumes" in entry ? Boolean(entry.consumes) : defaultConsumes;
+                    return {
+                        text,
+                        lethal,
+                        victimCount,
+                        victimKeys: ensureVictimKeys(victimRoles, victimCount),
+                        consumes
+                    };
+                }
+                return null;
+            }
+
+            function normalizeNonLethalTemplate(entry) {
+                if (typeof entry === "string") {
+                    return {
+                        text: entry,
+                        extraRoles: inferExtraRoles(entry, ["person"])
+                    };
+                }
+                if (entry && typeof entry === "object" && "text" in entry) {
+                    const text = String(entry.text);
+                    const rolesSource = entry.extra_roles ?? entry.extraRoles;
+                    const roles = Array.isArray(rolesSource)
+                        ? rolesSource.map((role) => String(role))
+                        : inferExtraRoles(text, ["person"]);
+                    return { text, extraRoles: roles };
+                }
+                return { text: "{person} lies low and watches the horizon.", extraRoles: [] };
+            }
+
+            function normalizeLethalTemplate(entry) {
+                if (typeof entry === "string") {
+                    const victimRoles = inferVictimRoles(entry);
+                    const victimCount = victimRoles.length || 1;
+                    return {
+                        text: entry,
+                        victimCount,
+                        victimKeys: ensureVictimKeys(victimRoles, victimCount)
+                    };
+                }
+                if (entry && typeof entry === "object") {
+                    const text = String(entry.text ?? "{killer} eliminates {victim}.");
+                    const victimRoles = inferVictimRoles(text);
+                    const explicit = entry.victim_count ?? entry.victimCount ?? entry.victims;
+                    let victimCount = victimRoles.length || 1;
+                    if (explicit !== undefined) {
+                        const parsed = Number(explicit);
+                        if (!Number.isNaN(parsed) && parsed > 0) {
+                            victimCount = Math.floor(parsed);
+                        }
+                    }
+                    const resolved = Math.max(1, victimCount);
+                    return {
+                        text,
+                        victimCount: resolved,
+                        victimKeys: ensureVictimKeys(victimRoles, resolved)
+                    };
+                }
+                return {
+                    text: "{killer} eliminates {victim}.",
+                    victimCount: 1,
+                    victimKeys: ["victim"]
+                };
+            }
+
+            function pickUnique(list, count) {
+                if (count <= 0) return [];
+                if (!Array.isArray(list) || list.length < count) {
+                    return null;
+                }
+                const pool = [...list];
+                const picks = [];
+                for (let i = 0; i < count; i += 1) {
+                    const index = Math.floor(Math.random() * pool.length);
+                    picks.push(pool.splice(index, 1)[0]);
+                }
+                return picks;
             }
 
             function removeItemOnce(inventory, item) {

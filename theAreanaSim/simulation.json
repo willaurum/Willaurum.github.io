@@ -3,27 +3,21 @@
         {
             "name": "Alice",
             "alive": false,
-            "kills": 0,
-            "inventory": [
-                "snare trap"
-            ]
+            "kills": 3,
+            "inventory": []
         },
         {
             "name": "Bob",
             "alive": true,
-            "kills": 4,
-            "inventory": [
-                "ration pack",
-                "herb bundle",
-                "flare"
-            ]
+            "kills": 2,
+            "inventory": []
         },
         {
             "name": "Charlie",
             "alive": false,
             "kills": 0,
             "inventory": [
-                "camouflage cloak"
+                "herb bundle"
             ]
         },
         {
@@ -31,29 +25,30 @@
             "alive": false,
             "kills": 0,
             "inventory": [
-                "throwing knife"
+                "medkit"
             ]
         },
         {
             "name": "Evelyn",
             "alive": false,
             "kills": 0,
-            "inventory": []
+            "inventory": [
+                "camouflage cloak"
+            ]
         },
         {
             "name": "Frank",
             "alive": false,
-            "kills": 1,
-            "inventory": []
+            "kills": 0,
+            "inventory": [
+                "camouflage cloak"
+            ]
         },
         {
             "name": "George",
             "alive": false,
             "kills": 1,
-            "inventory": [
-                "snare trap",
-                "herb bundle"
-            ]
+            "inventory": []
         },
         {
             "name": "Hannah",
@@ -68,68 +63,71 @@
             "bloodbath": true,
             "events": [
                 {
-                    "type": "lethal",
-                    "text": "Hannah outmatches Alice after a tense duel.",
-                    "meta": {
-                        "killer": "Hannah",
-                        "victim": "Alice"
-                    }
-                },
-                {
-                    "type": "non-lethal",
-                    "text": "Charlie shares stories with the breeze\u2014silence answers back.",
-                    "meta": {
-                        "person": "Charlie"
-                    }
-                },
-                {
                     "type": "loot",
-                    "text": "Frank finds a pristine Taco Bell Meal Deal still warm from the sponsors.",
+                    "text": "Charlie snips a handful of herbs and wraps them carefully for later.",
                     "meta": {
-                        "person": "Frank",
-                        "item": "Taco Bell Meal Deal"
-                    }
-                },
-                {
-                    "type": "non-lethal",
-                    "text": "Charlie gathers herbs and hopes they are edible.",
-                    "meta": {
-                        "person": "Charlie"
-                    }
-                },
-                {
-                    "type": "lethal",
-                    "text": "George outmatches Evelyn after a tense duel.",
-                    "meta": {
-                        "killer": "George",
-                        "victim": "Evelyn"
+                        "person": "Charlie",
+                        "item": "herb bundle"
                     }
                 },
                 {
                     "type": "item-special",
-                    "text": "Frank eats their Taco Bell Meal Deal.",
+                    "text": "Charlie spends the afternoon patching wounds with their medkit.",
                     "meta": {
-                        "person": "Frank",
-                        "item": "Taco Bell Meal Deal",
+                        "person": "Charlie",
+                        "item": "medkit",
                         "consumed": true
                     }
                 },
                 {
                     "type": "non-lethal",
-                    "text": "George gathers herbs and hopes they are edible.",
+                    "text": "Alice stalks distant footsteps but loses the trail.",
                     "meta": {
-                        "person": "George"
+                        "person": "Alice"
+                    }
+                },
+                {
+                    "type": "lethal",
+                    "text": "George traps Charlie in a ravine.",
+                    "meta": {
+                        "killer": "George",
+                        "victim": "Charlie",
+                        "victims": [
+                            "Charlie"
+                        ]
+                    }
+                },
+                {
+                    "type": "lethal",
+                    "text": "Bob strangles Diana to death.",
+                    "meta": {
+                        "killer": "Bob",
+                        "victim": "Diana",
+                        "victims": [
+                            "Diana"
+                        ]
+                    }
+                },
+                {
+                    "type": "non-lethal",
+                    "text": "George plots quietly with Evelyn and Frank deep into the night.",
+                    "meta": {
+                        "person": "George",
+                        "others": [
+                            "Evelyn",
+                            "Frank"
+                        ]
                     }
                 }
             ],
             "fallen": [
-                "Alice",
-                "Evelyn"
+                "Charlie",
+                "Diana"
             ],
             "survivors": [
+                "Alice",
                 "Bob",
-                "Charlie",
-                "Diana",
+                "Evelyn",
                 "Frank",
                 "George",
                 "Hannah"
@@ -140,146 +138,21 @@
             "bloodbath": false,
             "events": [
                 {
-                    "type": "lethal",
-                    "text": "Bob sabotages Hannah's shelter overnight.",
+                    "type": "non-lethal",
+                    "text": "Hannah shares stories with the breeze\u2014silence answers back.",
                     "meta": {
-                        "killer": "Bob",
-                        "victim": "Hannah"
-                    }
-                },
-                {
-                    "type": "inventory",
-                    "text": "Charlie sets a camouflage cloak and waits patiently.",
-                    "meta": {
-                        "person": "Charlie",
-                        "item": "camouflage cloak"
+                        "person": "Hannah"
                     }
                 },
                 {
                     "type": "lethal",
-                    "text": "Bob outmatches Diana after a tense duel.",
+                    "text": "Hannah sabotages George's shelter overnight.",
                     "meta": {
-                        "killer": "Bob",
-                        "victim": "Diana"
-                    }
-                },
-                {
-                    "type": "non-lethal",
-                    "text": "Charlie reinforces a hidden bunker.",
-                    "meta": {
-                        "person": "Charlie"
-                    }
-                },
-                {
-                    "type": "non-lethal",
-                    "text": "Charlie shares stories with the breeze\u2014silence answers back.",
-                    "meta": {
-                        "person": "Charlie"
-                    }
-                },
-                {
-                    "type": "non-lethal",
-                    "text": "Charlie reinforces a hidden bunker.",
-                    "meta": {
-                        "person": "Charlie"
-                    }
-                }
-            ],
-            "fallen": [
-                "Hannah",
-                "Diana"
-            ],
-            "survivors": [
-                "Bob",
-                "Charlie",
-                "Frank",
-                "George"
-            ]
-        },
-        {
-            "number": 3,
-            "bloodbath": false,
-            "events": [
-                {
-                    "type": "item-special lethal",
-                    "text": "Frank hurls a throwing knife straight into Charlie.",
-                    "meta": {
-                        "person": "Frank",
-                        "item": "throwing knife",
-                        "consumed": true,
-                        "victim": "Charlie"
-                    }
-                },
-                {
-                    "type": "loot",
-                    "text": "George kneels by a patch of greenery and comes away with a fragrant herb bundle.",
-                    "meta": {
-                        "person": "George",
-                        "item": "herb bundle"
-                    }
-                },
-                {
-                    "type": "lethal",
-                    "text": "Bob traps Frank in a ravine.",
-                    "meta": {
-                        "killer": "Bob",
-                        "victim": "Frank"
-                    }
-                },
-                {
-                    "type": "loot",
-                    "text": "Bob kneels by a patch of greenery and comes away with a fragrant herb bundle.",
-                    "meta": {
-                        "person": "Bob",
-                        "item": "herb bundle"
-                    }
-                }
-            ],
-            "fallen": [
-                "Frank"
-            ],
-            "survivors": [
-                "Bob",
-                "George"
-            ]
-        },
-        {
-            "number": 4,
-            "bloodbath": false,
-            "events": [
-                {
-                    "type": "inventory",
-                    "text": "Bob flashes a ration pack to ward off pursuers.",
-                    "meta": {
-                        "person": "Bob",
-                        "item": "ration pack"
-                    }
-                },
-                {
-                    "type": "inventory",
-                    "text": "George sets a herb bundle and waits patiently.",
-                    "meta": {
-                        "person": "George",
-                        "item": "herb bundle"
-                    }
-                }
-            ],
-            "fallen": [],
-            "survivors": [
-                "Bob",
-                "George"
-            ]
-        },
-        {
-            "number": 5,
-            "bloodbath": false,
-            "events": [
-                {
-                    "type": "loot",
-                    "text": "Bob barters quietly for a flare.",
-                    "meta": {
-                        "person": "Bob",
-                        "item": "flare"
+                        "killer": "Hannah",
+                        "victim": "George",
+                        "victims": [
+                            "George"
+                        ]
                     }
                 },
                 {
@@ -288,37 +161,121 @@
                     "meta": {
                         "person": "Bob"
                     }
-                }
-            ],
-            "fallen": [],
-            "survivors": [
-                "Bob",
-                "George"
-            ]
-        },
-        {
-            "number": 6,
-            "bloodbath": false,
-            "events": [
+                },
                 {
-                    "type": "lethal",
-                    "text": "Bob ambushes George near the river.",
+                    "type": "loot",
+                    "text": "Evelyn slips a camouflage cloak into their pack unnoticed.",
                     "meta": {
-                        "killer": "Bob",
-                        "victim": "George"
+                        "person": "Evelyn",
+                        "item": "camouflage cloak"
                     }
                 },
                 {
-                    "type": "victory",
-                    "text": "Bob emerges victorious with 4 elimination(s)!",
+                    "type": "lethal",
+                    "text": "Alice launches explosives that wipe out Frank and Evelyn.",
                     "meta": {
-                        "winner": "Bob",
-                        "kills": 4
+                        "killer": "Alice",
+                        "victim": "Frank",
+                        "victims": [
+                            "Frank",
+                            "Evelyn"
+                        ]
+                    }
+                },
+                {
+                    "type": "non-lethal",
+                    "text": "Alice plots quietly with Bob and Hannah deep into the night.",
+                    "meta": {
+                        "person": "Alice",
+                        "others": [
+                            "Bob",
+                            "Hannah"
+                        ]
                     }
                 }
             ],
             "fallen": [
-                "George"
+                "George",
+                "Frank",
+                "Evelyn"
+            ],
+            "survivors": [
+                "Alice",
+                "Bob",
+                "Hannah"
+            ]
+        },
+        {
+            "number": 3,
+            "bloodbath": false,
+            "events": [
+                {
+                    "type": "non-lethal",
+                    "text": "Alice gathers herbs and hopes they are edible.",
+                    "meta": {
+                        "person": "Alice"
+                    }
+                },
+                {
+                    "type": "non-lethal",
+                    "text": "Bob gathers herbs and hopes they are edible.",
+                    "meta": {
+                        "person": "Bob"
+                    }
+                },
+                {
+                    "type": "non-lethal",
+                    "text": "Hannah shares stories with the breeze\u2014silence answers back.",
+                    "meta": {
+                        "person": "Hannah"
+                    }
+                }
+            ],
+            "fallen": [],
+            "survivors": [
+                "Alice",
+                "Bob",
+                "Hannah"
+            ]
+        },
+        {
+            "number": 4,
+            "bloodbath": false,
+            "events": [
+                {
+                    "type": "lethal",
+                    "text": "Alice sabotages Hannah's shelter overnight.",
+                    "meta": {
+                        "killer": "Alice",
+                        "victim": "Hannah",
+                        "victims": [
+                            "Hannah"
+                        ]
+                    }
+                },
+                {
+                    "type": "lethal",
+                    "text": "Bob sabotages Alice's shelter overnight.",
+                    "meta": {
+                        "killer": "Bob",
+                        "victim": "Alice",
+                        "victims": [
+                            "Alice"
+                        ]
+                    }
+                },
+                {
+                    "type": "victory",
+                    "text": "Bob emerges victorious with 2 elimination(s)!",
+                    "meta": {
+                        "winner": "Bob",
+                        "kills": 2
+                    }
+                }
+            ],
+            "fallen": [
+                "Hannah",
+                "Alice"
             ],
             "survivors": [
                 "Bob"

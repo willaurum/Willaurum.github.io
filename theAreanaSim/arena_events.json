@@ -22,14 +22,22 @@
         "{person} scouts the cornucopia from afar.",
         "{person} gathers herbs and hopes they are edible.",
         "{person} reinforces a hidden bunker.",
-        "{person} shares stories with the breeze—silence answers back.",
-        "{person} stalks distant footsteps but loses the trail."
+        "{person} shares stories with the breeze\u2014silence answers back.",
+        "{person} stalks distant footsteps but loses the trail.",
+        {
+            "text": "{person} plots quietly with {ally} and {rival} deep into the night.",
+            "extra_roles": ["ally", "rival"]
+        }
     ],
     "lethal_events": [
         "{killer} strangles {victim} to death.",
         "{killer} traps {victim} in a ravine.",
         "{killer} outmatches {victim} after a tense duel.",
-        "{killer} sabotages {victim}'s shelter overnight."
+        "{killer} sabotages {victim}'s shelter overnight.",
+        {
+            "text": "{killer} launches explosives that wipe out {victim} and {victim2}.",
+            "victim_count": 2
+        }
     ],
     "inventory_events": [
         "{person} sets a {item} and waits patiently.",
@@ -74,15 +82,24 @@
             "item": "snare trap",
             "consumes": false,
             "events": [
-                "{person} rigs a {item} near the riverbank and waits for footsteps.",
-                "{person} repositions their {item}, tightening the perimeter.",
                 {
-                    "text": "{person}'s {item} snaps shut on {victim}, ending their run.",
-                    "lethal": true
+                    "text": "{person} rigs a {item} near the riverbank and waits for footsteps.",
+                    "consumes": false
                 },
                 {
-                    "text": "{victim} never sees the {item} that {person} left behind.",
-                    "lethal": true
+                    "text": "{person} repositions their {item}, tightening the perimeter.",
+                    "consumes": false
+                },
+                {
+                    "text": "{person}'s {item} snaps shut on {victim}, ending their run.",
+                    "lethal": true,
+                    "consumes": false
+                },
+                {
+                    "text": "{victim} and {victim2} never see the {item} that {person} left behind.",
+                    "lethal": true,
+                    "victim_count": 2,
+                    "consumes": false
                 }
             ]
         },
@@ -92,11 +109,19 @@
             "events": [
                 {
                     "text": "{person} hurls a {item} straight into {victim}.",
-                    "lethal": true
+                    "lethal": true,
+                    "consumes": true
                 },
                 {
                     "text": "{person} stalks {victim} with a {item} and doesn't miss.",
-                    "lethal": true
+                    "lethal": true,
+                    "consumes": true
+                },
+                {
+                    "text": "{person} fans blades so fast that {victim} and {victim2} both fall.",
+                    "lethal": true,
+                    "victim_count": 2,
+                    "consumes": true
                 }
             ]
         },
@@ -107,18 +132,29 @@
                 "{person} eats their {item}.",
                 {
                     "text": "{person} shares their {item} with {victim}.",
-                    "lethal": false
+                    "lethal": false,
+                    "consumes": false
                 }
             ]
         },
         {
             "item": "bow",
-            "consumes": true,
+            "consumes": false,
             "events": [
-                "{person} tends to their {item}.",
+                {
+                    "text": "{person} tends to their {item}.",
+                    "consumes": false
+                },
                 {
                     "text": "{person} shoots {victim} with their {item}.",
-                    "lethal": true
+                    "lethal": true,
+                    "consumes": false
+                },
+                {
+                    "text": "{person} rains arrows until {victim} and {victim2} both drop.",
+                    "lethal": true,
+                    "victim_count": 2,
+                    "consumes": true
                 }
             ]
         }

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import random
+import re
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Sequence
@@ -19,6 +20,153 @@ CONFIG_FILE = ROOT / "arena_events.json"
 NAMES_FILE = ROOT / "tribute_names.txt"
 MAX_INVENTORY_SIZE = 4
 MAX_START_ITEMS = 1
+PLACEHOLDER_PATTERN = re.compile(r"{(\w+)}")
+
+
+def extract_placeholders(text: str) -> List[str]:
+    """Return every ``{placeholder}`` token found inside ``text``."""
+
+    if not text:
+        return []
+    return PLACEHOLDER_PATTERN.findall(text)
+
+
+def infer_additional_roles(text: str, base_keys: Sequence[str]) -> List[str]:
+    """Find placeholder names that should be filled with other tributes."""
+
+    roles: List[str] = []
+    reserved = set(base_keys)
+    for key in extract_placeholders(text):
+        if key in reserved:
+            continue
+        if key not in roles:
+            roles.append(key)
+    return roles
+
+
+def infer_victim_roles(text: str) -> List[str]:
+    """Return victim placeholder names ordered by appearance."""
+
+    roles: List[str] = []
+    for key in extract_placeholders(text):
+        if key.startswith("victim") and key not in roles:
+            roles.append(key)
+    return roles
+
+
+def ensure_victim_keys(base_keys: Sequence[str], count: int) -> List[str]:
+    """Guarantee a list of victim placeholder names of ``count`` length."""
+
+    keys = list(base_keys)
+    candidates = ["victim"] + [f"victim{i}" for i in range(2, count + 5)]
+    for candidate in candidates:
+        if len(keys) >= count:
+            break
+        if candidate not in keys:
+            keys.append(candidate)
+    return keys[:count]
+
+
+class _SafeFormatDict(dict):
+    """Gracefully leave unknown placeholders untouched."""
+
+    def __missing__(self, key: str) -> str:  # pragma: no cover - trivial
+        return "{" + key + "}"
+
+
+def format_template_text(template: str, replacements: Dict[str, str]) -> str:
+    """Fill ``template`` without KeyErrors when placeholders are missing."""
+
+    return template.format_map(_SafeFormatDict(replacements))
+
+
+def normalize_special_event(
+    event: object,
+    default_consumes: bool,
+) -> Optional[Dict[str, object]]:
+    """Convert a raw special-event entry into a structured payload."""
+
+    if isinstance(event, str):
+        text = str(event)
+        victim_roles = infer_victim_roles(text)
+        victim_count = len(victim_roles)
+        return {
+            "text": text,
+            "lethal": False,
+            "victim_keys": ensure_victim_keys(victim_roles, victim_count),
+            "victim_count": victim_count,
+            "consumes": default_consumes,
+        }
+
+    if isinstance(event, dict) and "text" in event:
+        text = str(event["text"])
+        lethal = bool(event.get("lethal", False))
+
+        explicit = event.get("victim_count", event.get("victims"))
+        victim_roles = infer_victim_roles(text)
+        victim_count: int
+        if explicit is None:
+            victim_count = len(victim_roles)
+        else:
+            try:
+                victim_count = max(0, int(explicit))
+            except (TypeError, ValueError):
+                victim_count = len(victim_roles)
+        if lethal and victim_count == 0:
+            victim_count = max(1, len(victim_roles) or 1)
+
+        consumes = event.get("consumes")
+        consumes_flag = default_consumes if consumes is None else bool(consumes)
+
+        return {
+            "text": text,
+            "lethal": lethal,
+            "victim_keys": ensure_victim_keys(victim_roles, victim_count),
+            "victim_count": victim_count,
+            "consumes": consumes_flag,
+        }
+
+    return None
+
+
+def normalize_non_lethal_entry(entry: object) -> Dict[str, object]:
+    """Return text plus extra role placeholders for a non-lethal event."""
+
+    base_keys = {"person"}
+    if isinstance(entry, dict) and "text" in entry:
+        text = str(entry["text"])
+        raw_roles = entry.get("extra_roles") or entry.get("extraRoles")
+        if isinstance(raw_roles, list):
+            roles = [str(role) for role in raw_roles if role not in base_keys]
+        else:
+            roles = infer_additional_roles(text, base_keys)
+    else:
+        text = str(entry)
+        roles = infer_additional_roles(text, base_keys)
+    return {"text": text, "roles": roles}
+
+
+def normalize_lethal_entry(entry: object) -> Dict[str, object]:
+    """Return text plus victim metadata for a lethal template."""
+
+    if isinstance(entry, dict) and "text" in entry:
+        text = str(entry["text"])
+        explicit = entry.get("victim_count", entry.get("victims"))
+        victim_roles = infer_victim_roles(text)
+        victim_count: int
+        if explicit is None:
+            victim_count = len(victim_roles) or 1
+        else:
+            try:
+                victim_count = max(1, int(explicit))
+            except (TypeError, ValueError):
+                victim_count = len(victim_roles) or 1
+    else:
+        text = str(entry)
+        victim_roles = infer_victim_roles(text)
+        victim_count = len(victim_roles) or 1
+    keys = ensure_victim_keys(victim_roles, victim_count)
+    return {"text": text, "victim_count": victim_count, "victim_keys": keys}
 
 
 @dataclass
@@ -194,32 +342,17 @@ def build_special_item_map(config: SimulationConfig) -> Dict[str, Dict[str, obje
         events = entry.get("events") or []
         if not item or not events:
             continue
+        default_consumes = bool(entry.get("consumes", False))
         parsed_events: List[Dict[str, object]] = []
         for event in events:
-            if isinstance(event, str):
-                parsed_events.append(
-                    {
-                        "text": str(event),
-                        "lethal": False,
-                        "requires_victim": "{victim}" in event,
-                    }
-                )
-            elif isinstance(event, dict) and "text" in event:
-                text = str(event["text"])
-                parsed_events.append(
-                    {
-                        "text": text,
-                        "lethal": bool(event.get("lethal", False)),
-                        "requires_victim": bool(
-                            event.get("requires_victim", "{victim}" in text)
-                        ),
-                    }
-                )
+            normalized = normalize_special_event(event, default_consumes)
+            if normalized:
+                parsed_events.append(normalized)
         if not parsed_events:
             continue
         mapping[str(item)] = {
             "events": parsed_events,
-            "consumes": bool(entry.get("consumes", False)),
+            "consumes": default_consumes,
         }
     return mapping
 
@@ -357,10 +490,17 @@ def run_simulation(
             if not event:
                 continue
             events_today.append(event)
-            if event["type"] == "lethal":
-                victim_name = event.get("meta", {}).get("victim")
-                if victim_name and victim_name not in fallen_today:
-                    fallen_today.append(victim_name)
+            if event["type"] in {"lethal", "item-special lethal"}:
+                meta = event.get("meta", {}) or {}
+                victims = meta.get("victims")
+                if isinstance(victims, list):
+                    for name in victims:
+                        if name and name not in fallen_today:
+                            fallen_today.append(name)
+                else:
+                    victim_name = meta.get("victim")
+                    if victim_name and victim_name not in fallen_today:
+                        fallen_today.append(victim_name)
             if len(alive()) <= 1:
                 break
 
@@ -411,34 +551,37 @@ def generate_event(
         templates = payload.get("events", [])
         if templates:
             template = rng.choice(templates)
-            consumes = payload.get("consumes", False)
-            if consumes:
-                actor.inventory.remove(chosen)
-            lethal_event = bool(template.get("lethal"))
-            requires_victim = bool(template.get("requires_victim"))
-            victim_obj: Optional[Tribute] = None
-            if lethal_event or requires_victim:
+            consumes = template.get("consumes")
+            consumes_flag = payload.get("consumes", False) if consumes is None else bool(consumes)
+            victim_count = int(template.get("victim_count", 0))
+            victim_keys = ensure_victim_keys(template.get("victim_keys", []), victim_count)
+            victims: List[Tribute] = []
+            if victim_count:
                 candidates = [t for t in living if t is not actor]
-                if not candidates:
+                if len(candidates) < victim_count:
                     return None
-                victim_obj = rng.choice(candidates)
-                if lethal_event:
-                    victim_obj.alive = False
-                    actor.kills += 1
+                victims = rng.sample(candidates, victim_count)
+            lethal_event = bool(template.get("lethal") and victim_count)
+            if lethal_event:
+                for target in victims:
+                    target.alive = False
+                actor.kills += len(victims)
             replacements = {"person": actor.name, "item": chosen}
-            if victim_obj:
-                replacements["victim"] = victim_obj.name
-            text = template["text"].format(**replacements)
+            if victim_count:
+                for idx, target in enumerate(victims):
+                    replacements[victim_keys[idx]] = target.name
+            text = format_template_text(template["text"], replacements)
             meta = {
                 "person": actor.name,
                 "item": chosen,
-                "consumed": consumes,
+                "consumed": consumes_flag,
             }
-            if victim_obj:
-                meta["victim"] = victim_obj.name
-            event_type = (
-                "item-special lethal" if lethal_event and victim_obj else "item-special"
-            )
+            if victims:
+                meta["victims"] = [t.name for t in victims]
+                meta["victim"] = victims[0].name
+            event_type = "item-special lethal" if lethal_event else "item-special"
+            if consumes_flag:
+                actor.inventory.remove(chosen)
             return {
                 "type": event_type,
                 "text": text,
@@ -460,7 +603,7 @@ def generate_event(
         template = rng.choice(template_pool)
         return {
             "type": "loot",
-            "text": template.format(person=actor.name, item=item),
+            "text": format_template_text(template, {"person": actor.name, "item": item}),
             "meta": {"person": actor.name, "item": item},
         }
 
@@ -470,7 +613,7 @@ def generate_event(
             template = rng.choice(config.inventory_events)
             return {
                 "type": "inventory",
-                "text": template.format(person=actor.name, item=item),
+                "text": format_template_text(template, {"person": actor.name, "item": item}),
                 "meta": {"person": actor.name, "item": item},
             }
 
@@ -480,21 +623,51 @@ def generate_event(
 
     lethal_roll = can_attempt_lethal and rng.random() < lethal_chance
     if lethal_roll and len(living) > 1:
-        victim = rng.choice([t for t in living if t is not actor])
-        victim.alive = False
-        actor.kills += 1
-        template = rng.choice(config.lethal_events)
+        template_info = normalize_lethal_entry(
+            rng.choice(config.lethal_events or ["{killer} eliminates {victim}."])
+        )
+        candidates = [t for t in living if t is not actor]
+        victim_count = min(template_info["victim_count"], len(candidates))
+        if victim_count == 0:
+            victim_count = 1
+        victims = rng.sample(candidates, victim_count)
+        for target in victims:
+            target.alive = False
+        actor.kills += len(victims)
+        replacements = {"killer": actor.name}
+        keys = template_info["victim_keys"]
+        for idx, victim in enumerate(victims):
+            replacements[keys[idx]] = victim.name
+        template_text = format_template_text(template_info["text"], replacements)
         return {
             "type": "lethal",
-            "text": template.format(killer=actor.name, victim=victim.name),
-            "meta": {"killer": actor.name, "victim": victim.name},
+            "text": template_text,
+            "meta": {
+                "killer": actor.name,
+                "victim": victims[0].name if victims else None,
+                "victims": [t.name for t in victims],
+            },
         }
 
-    template = rng.choice(config.non_lethal_events or ["{person} passes the time in silence."])
+    non_lethal_pool = config.non_lethal_events or ["{person} passes the time in silence."]
+    template_entry = normalize_non_lethal_entry(rng.choice(non_lethal_pool))
+    replacements = {"person": actor.name}
+    others: List[Tribute] = []
+    if template_entry["roles"]:
+        candidates = [t for t in living if t is not actor]
+        if len(candidates) < len(template_entry["roles"]):
+            return None
+        others = rng.sample(candidates, len(template_entry["roles"]))
+        for role, tribute in zip(template_entry["roles"], others):
+            replacements[role] = tribute.name
+    text = format_template_text(template_entry["text"], replacements)
+    meta = {"person": actor.name}
+    if others:
+        meta["others"] = [t.name for t in others]
     return {
         "type": "non-lethal",
-        "text": template.format(person=actor.name),
-        "meta": {"person": actor.name},
+        "text": text,
+        "meta": meta,
     }
 
 
