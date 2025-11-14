@@ -14,7 +14,8 @@
         "camouflage cloak",
         "ration pack",
         "throwing knife",
-        "Taco Bell Meal Deal"
+        "Taco Bell Meal Deal",
+        "herb bundle"
     ],
     "non_lethal_events": [
         "{person} scouts the cornucopia from afar.",
@@ -41,6 +42,15 @@
         "{person} barters quietly for a {item}.",
         "{person} slips a {item} into their pack unnoticed."
     ],
+    "item_loot_text": {
+        "herb bundle": [
+            "{person} kneels by a patch of greenery and comes away with a fragrant herb bundle.",
+            "{person} snips a handful of herbs and wraps them carefully for later."
+        ],
+        "Taco Bell Meal Deal": [
+            "{person} finds a pristine Taco Bell Meal Deal still warm from the sponsors."
+        ]
+    },
     "special_item_events": [
         {
             "item": "flare",
@@ -55,7 +65,7 @@
             "consumes": true,
             "events": [
                 "{person} spends the afternoon patching wounds with their {item}.",
-                "{person} sacrifices a {item} to stabilize an ally—grateful whispers follow."
+                "{person} uses their {item} heal themself."
             ]
         },
         {

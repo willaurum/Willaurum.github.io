@@ -58,6 +58,9 @@ class SimulationConfig:
     lethal_events / non_lethal_events / inventory_events / loot_events:
         Template pools. ``{person}``, ``{killer}``, ``{victim}``, and
         ``{item}`` placeholders are supported.
+    item_loot_text:
+        Optional mapping of item name -> custom loot templates for that
+        item. Falls back to ``loot_events`` when missing.
     special_item_events:
         Optional list of custom item hooks where a specific piece of
         gear unlocks custom flavor text (and can optionally be consumed)
@@ -123,6 +126,7 @@ class SimulationConfig:
             "{person} slips a {item} into their pack unnoticed.",
         ]
     )
+    item_loot_text: Dict[str, Sequence[str]] = field(default_factory=dict)
     special_item_events: Sequence[Dict[str, object]] = field(default_factory=list)
     special_item_event_chance: float = 0.4
     victory_template: str = "{name} emerges victorious with {kills} elimination(s)!"
@@ -155,6 +159,7 @@ class SimulationConfig:
             non_lethal_events=data.get("non_lethal_events", list(default.non_lethal_events)),
             inventory_events=data.get("inventory_events", list(default.inventory_events)),
             loot_events=data.get("loot_events", list(default.loot_events)),
+            item_loot_text=data.get("item_loot_text", dict(default.item_loot_text)),
             special_item_events=data.get(
                 "special_item_events", list(default.special_item_events)
             ),
@@ -448,7 +453,11 @@ def generate_event(
     if can_loot and rng.random() < config.loot_event_chance:
         item = rng.choice(config.inventory_items)
         actor.inventory.append(item)
-        template = rng.choice(config.loot_events)
+        item_templates = config.item_loot_text.get(item, [])
+        template_pool = item_templates or config.loot_events
+        if not template_pool:
+            template_pool = ["{person} quietly pockets a {item}."]
+        template = rng.choice(template_pool)
         return {
             "type": "loot",
             "text": template.format(person=actor.name, item=item),

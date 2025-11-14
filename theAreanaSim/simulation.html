@@ -292,7 +292,16 @@
                 max_events_per_day: 8,
                 bloodbath_event_range: [6, 9],
                 bloodbath_lethal_bonus: 0.25,
-                inventory_items: ["medkit", "snare trap", "flare", "camouflage cloak", "ration pack", "throwing knife"],
+                inventory_items: [
+                    "medkit",
+                    "snare trap",
+                    "flare",
+                    "camouflage cloak",
+                    "ration pack",
+                    "throwing knife",
+                    "Taco Bell Meal Deal",
+                    "herb bundle"
+                ],
                 non_lethal_events: [
                     "{person} scouts the cornucopia from afar.",
                     "{person} gathers herbs and hopes they are edible.",
@@ -318,6 +327,7 @@
                     "{person} barters quietly for a {item}.",
                     "{person} slips a {item} into their pack unnoticed."
                 ],
+                item_loot_text: {},
                 special_item_events: [
                     {
                         item: "flare",
@@ -750,16 +760,20 @@
                     }
                 }
 
-                const lootPool = config.loot_events && config.loot_events.length ? config.loot_events : null;
+                const lootPool = Array.isArray(config.loot_events) ? config.loot_events : [];
+                const inventoryPool = Array.isArray(config.inventory_items) ? config.inventory_items : [];
+                const itemLootMap = config.item_loot_text ?? {};
                 if (
-                    lootPool &&
-                    (config.inventory_items?.length ?? 0) > 0 &&
+                    inventoryPool.length &&
                     actor.inventory.length < MAX_INVENTORY_SIZE &&
                     Math.random() < (config.loot_event_chance ?? 0.25)
                 ) {
-                    const item = pickRandom(config.inventory_items);
+                    const item = pickRandom(inventoryPool);
                     actor.inventory.push(item);
-                    const template = pickRandom(lootPool);
+                    const overrides = Array.isArray(itemLootMap[item]) ? itemLootMap[item] : [];
+                    const templates = overrides.length ? overrides : lootPool;
+                    const fallback = "{person} quietly pockets a {item}.";
+                    const template = templates.length ? pickRandom(templates) : fallback;
                     return {
                         type: "loot",
                         text: formatTemplate(template, { person: actor.name, item }),

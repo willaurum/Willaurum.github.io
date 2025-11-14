@@ -5,26 +5,21 @@
             "alive": false,
             "kills": 0,
             "inventory": [
-                "snare trap",
-                "Taco Bell Meal Deal"
+                "snare trap"
             ]
         },
-        { 
+        {
             "name": "Bob",
-            "alive": false,
-            "kills": 0,
-            "inventory": []
+            "alive": true,
+            "kills": 4,
+            "inventory": [
+                "ration pack",
+                "herb bundle",
+                "flare"
+            ]
         },
         {
             "name": "Charlie",
-            "alive": false,
-            "kills": 4,
-            "inventory": [
-                "medkit"
-            ]
-        },
-        {
-            "name": "Diana",
             "alive": false,
             "kills": 0,
             "inventory": [
@@ -32,39 +27,39 @@
             ]
         },
         {
-            "name": "Evelyn",
+            "name": "Diana",
             "alive": false,
-            "kills": 1,
-            "inventory": [
-                "camouflage cloak",
-                "ration pack",
-                "ration pack"
-            ]
-        },
-        {
-            "name": "Frank",
-            "alive": true,
-            "kills": 2,
+            "kills": 0,
             "inventory": [
                 "throwing knife"
             ]
         },
         {
-            "name": "George",
+            "name": "Evelyn",
             "alive": false,
             "kills": 0,
+            "inventory": []
+        },
+        {
+            "name": "Frank",
+            "alive": false,
+            "kills": 1,
+            "inventory": []
+        },
+        {
+            "name": "George",
+            "alive": false,
+            "kills": 1,
             "inventory": [
-                "ration pack"
+                "snare trap",
+                "herb bundle"
             ]
         },
         {
             "name": "Hannah",
             "alive": false,
-            "kills": 0,
-            "inventory": [
-                "Taco Bell Meal Deal",
-                "flare"
-            ]
+            "kills": 1,
+            "inventory": []
         }
     ],
     "days": [
@@ -74,263 +69,12 @@
             "events": [
                 {
                     "type": "lethal",
-                    "text": "Charlie ambushes George near the river.",
+                    "text": "Hannah outmatches Alice after a tense duel.",
                     "meta": {
-                        "killer": "Charlie",
-                        "victim": "George"
-                    }
-                },
-                {
-                    "type": "non-lethal",
-                    "text": "Frank gathers herbs and hopes they are edible.",
-                    "meta": {
-                        "person": "Frank"
-                    }
-                },
-                {
-                    "type": "item-special",
-                    "text": "Bob eats their Taco Bell Meal Deal.",
-                    "meta": {
-                        "person": "Bob",
-                        "item": "Taco Bell Meal Deal",
-                        "consumed": true
-                    }
-                },
-                {
-                    "type": "item-special",
-                    "text": "Bob eats their Taco Bell Meal Deal.",
-                    "meta": {
-                        "person": "Bob",
-                        "item": "Taco Bell Meal Deal",
-                        "consumed": true
-                    }
-                },
-                {
-                    "type": "inventory",
-                    "text": "Diana flashes a camouflage cloak to ward off pursuers.",
-                    "meta": {
-                        "person": "Diana",
-                        "item": "camouflage cloak"
-                    }
-                },
-                {
-                    "type": "lethal",
-                    "text": "Frank traps Hannah in a ravine.",
-                    "meta": {
-                        "killer": "Frank",
-                        "victim": "Hannah"
-                    }
-                },
-                {
-                    "type": "item-special lethal",
-                    "text": "Charlie hurls a throwing knife straight into Alice.",
-                    "meta": {
-                        "person": "Charlie",
-                        "item": "throwing knife",
-                        "consumed": true,
+                        "killer": "Hannah",
                         "victim": "Alice"
                     }
-                }
-            ],
-            "fallen": [
-                "George",
-                "Hannah"
-            ],
-            "survivors": [
-                "Bob",
-                "Charlie",
-                "Diana",
-                "Evelyn",
-                "Frank"
-            ]
-        },
-        {
-            "number": 2,
-            "bloodbath": false,
-            "events": [
-                {
-                    "type": "non-lethal",
-                    "text": "Evelyn scouts the cornucopia from afar.",
-                    "meta": {
-                        "person": "Evelyn"
-                    }
                 },
-                {
-                    "type": "lethal",
-                    "text": "Evelyn traps Bob in a ravine.",
-                    "meta": {
-                        "killer": "Evelyn",
-                        "victim": "Bob"
-                    }
-                },
-                {
-                    "type": "item-special",
-                    "text": "Charlie shares their Taco Bell Meal Deal with Diana.",
-                    "meta": {
-                        "person": "Charlie",
-                        "item": "Taco Bell Meal Deal",
-                        "consumed": true,
-                        "victim": "Diana"
-                    }
-                },
-                {
-                    "type": "loot",
-                    "text": "Frank slips a throwing knife into their pack unnoticed.",
-                    "meta": {
-                        "person": "Frank",
-                        "item": "throwing knife"
-                    }
-                },
-                {
-                    "type": "non-lethal",
-                    "text": "Diana reinforces a hidden bunker.",
-                    "meta": {
-                        "person": "Diana"
-                    }
-                }
-            ],
-            "fallen": [
-                "Bob"
-            ],
-            "survivors": [
-                "Charlie",
-                "Diana",
-                "Evelyn",
-                "Frank"
-            ]
-        },
-        {
-            "number": 3,
-            "bloodbath": false,
-            "events": [
-                {
-                    "type": "loot",
-                    "text": "Evelyn scavenges a ration pack from the Cornucopia wreckage.",
-                    "meta": {
-                        "person": "Evelyn",
-                        "item": "ration pack"
-                    }
-                },
-                {
-                    "type": "item-special",
-                    "text": "Diana sacrifices a medkit to stabilize an ally\u2014grateful whispers follow.",
-                    "meta": {
-                        "person": "Diana",
-                        "item": "medkit",
-                        "consumed": true
-                    }
-                },
-                {
-                    "type": "inventory",
-                    "text": "Diana patches wounds with a trusty camouflage cloak.",
-                    "meta": {
-                        "person": "Diana",
-                        "item": "camouflage cloak"
-                    }
-                },
-                {
-                    "type": "inventory",
-                    "text": "Evelyn sets a ration pack and waits patiently.",
-                    "meta": {
-                        "person": "Evelyn",
-                        "item": "ration pack"
-                    }
-                }
-            ],
-            "fallen": [],
-            "survivors": [
-                "Charlie",
-                "Diana",
-                "Evelyn",
-                "Frank"
-            ]
-        },
-        {
-            "number": 4,
-            "bloodbath": false,
-            "events": [
-                {
-                    "type": "loot",
-                    "text": "Frank barters quietly for a medkit.",
-                    "meta": {
-                        "person": "Frank",
-                        "item": "medkit"
-                    }
-                },
-                {
-                    "type": "lethal",
-                    "text": "Charlie ambushes Diana near the river.",
-                    "meta": {
-                        "killer": "Charlie",
-                        "victim": "Diana"
-                    }
-                },
-                {
-                    "type": "inventory",
-                    "text": "Frank patches wounds with a trusty medkit.",
-                    "meta": {
-                        "person": "Frank",
-                        "item": "medkit"
-                    }
-                },
-                {
-                    "type": "non-lethal",
-                    "text": "Charlie scouts the cornucopia from afar.",
-                    "meta": {
-                        "person": "Charlie"
-                    }
-                }
-            ],
-            "fallen": [
-                "Diana"
-            ],
-            "survivors": [
-                "Charlie",
-                "Evelyn",
-                "Frank"
-            ]
-        },
-        {
-            "number": 5,
-            "bloodbath": false,
-            "events": [
-                {
-                    "type": "loot",
-                    "text": "Evelyn barters quietly for a ration pack.",
-                    "meta": {
-                        "person": "Evelyn",
-                        "item": "ration pack"
-                    }
-                },
-                {
-                    "type": "lethal",
-                    "text": "Charlie ambushes Evelyn near the river.",
-                    "meta": {
-                        "killer": "Charlie",
-                        "victim": "Evelyn"
-                    }
-                },
-                {
-                    "type": "loot",
-                    "text": "Charlie scavenges a medkit from the Cornucopia wreckage.",
-                    "meta": {
-                        "person": "Charlie",
-                        "item": "medkit"
-                    }
-                }
-            ],
-            "fallen": [
-                "Evelyn"
-            ],
-            "survivors": [
-                "Charlie",
-                "Frank"
-            ]
-        },
-        {
-            "number": 6,
-            "bloodbath": false,
-            "events": [
                 {
                     "type": "non-lethal",
                     "text": "Charlie shares stories with the breeze\u2014silence answers back.",
@@ -339,49 +83,247 @@
                     }
                 },
                 {
-                    "type": "item-special",
-                    "text": "Frank sacrifices a medkit to stabilize an ally\u2014grateful whispers follow.",
+                    "type": "loot",
+                    "text": "Frank finds a pristine Taco Bell Meal Deal still warm from the sponsors.",
                     "meta": {
                         "person": "Frank",
-                        "item": "medkit",
+                        "item": "Taco Bell Meal Deal"
+                    }
+                },
+                {
+                    "type": "non-lethal",
+                    "text": "Charlie gathers herbs and hopes they are edible.",
+                    "meta": {
+                        "person": "Charlie"
+                    }
+                },
+                {
+                    "type": "lethal",
+                    "text": "George outmatches Evelyn after a tense duel.",
+                    "meta": {
+                        "killer": "George",
+                        "victim": "Evelyn"
+                    }
+                },
+                {
+                    "type": "item-special",
+                    "text": "Frank eats their Taco Bell Meal Deal.",
+                    "meta": {
+                        "person": "Frank",
+                        "item": "Taco Bell Meal Deal",
                         "consumed": true
+                    }
+                },
+                {
+                    "type": "non-lethal",
+                    "text": "George gathers herbs and hopes they are edible.",
+                    "meta": {
+                        "person": "George"
+                    }
+                }
+            ],
+            "fallen": [
+                "Alice",
+                "Evelyn"
+            ],
+            "survivors": [
+                "Bob",
+                "Charlie",
+                "Diana",
+                "Frank",
+                "George",
+                "Hannah"
+            ]
+        },
+        {
+            "number": 2,
+            "bloodbath": false,
+            "events": [
+                {
+                    "type": "lethal",
+                    "text": "Bob sabotages Hannah's shelter overnight.",
+                    "meta": {
+                        "killer": "Bob",
+                        "victim": "Hannah"
+                    }
+                },
+                {
+                    "type": "inventory",
+                    "text": "Charlie sets a camouflage cloak and waits patiently.",
+                    "meta": {
+                        "person": "Charlie",
+                        "item": "camouflage cloak"
+                    }
+                },
+                {
+                    "type": "lethal",
+                    "text": "Bob outmatches Diana after a tense duel.",
+                    "meta": {
+                        "killer": "Bob",
+                        "victim": "Diana"
+                    }
+                },
+                {
+                    "type": "non-lethal",
+                    "text": "Charlie reinforces a hidden bunker.",
+                    "meta": {
+                        "person": "Charlie"
+                    }
+                },
+                {
+                    "type": "non-lethal",
+                    "text": "Charlie shares stories with the breeze\u2014silence answers back.",
+                    "meta": {
+                        "person": "Charlie"
+                    }
+                },
+                {
+                    "type": "non-lethal",
+                    "text": "Charlie reinforces a hidden bunker.",
+                    "meta": {
+                        "person": "Charlie"
+                    }
+                }
+            ],
+            "fallen": [
+                "Hannah",
+                "Diana"
+            ],
+            "survivors": [
+                "Bob",
+                "Charlie",
+                "Frank",
+                "George"
+            ]
+        },
+        {
+            "number": 3,
+            "bloodbath": false,
+            "events": [
+                {
+                    "type": "item-special lethal",
+                    "text": "Frank hurls a throwing knife straight into Charlie.",
+                    "meta": {
+                        "person": "Frank",
+                        "item": "throwing knife",
+                        "consumed": true,
+                        "victim": "Charlie"
+                    }
+                },
+                {
+                    "type": "loot",
+                    "text": "George kneels by a patch of greenery and comes away with a fragrant herb bundle.",
+                    "meta": {
+                        "person": "George",
+                        "item": "herb bundle"
+                    }
+                },
+                {
+                    "type": "lethal",
+                    "text": "Bob traps Frank in a ravine.",
+                    "meta": {
+                        "killer": "Bob",
+                        "victim": "Frank"
+                    }
+                },
+                {
+                    "type": "loot",
+                    "text": "Bob kneels by a patch of greenery and comes away with a fragrant herb bundle.",
+                    "meta": {
+                        "person": "Bob",
+                        "item": "herb bundle"
+                    }
+                }
+            ],
+            "fallen": [
+                "Frank"
+            ],
+            "survivors": [
+                "Bob",
+                "George"
+            ]
+        },
+        {
+            "number": 4,
+            "bloodbath": false,
+            "events": [
+                {
+                    "type": "inventory",
+                    "text": "Bob flashes a ration pack to ward off pursuers.",
+                    "meta": {
+                        "person": "Bob",
+                        "item": "ration pack"
+                    }
+                },
+                {
+                    "type": "inventory",
+                    "text": "George sets a herb bundle and waits patiently.",
+                    "meta": {
+                        "person": "George",
+                        "item": "herb bundle"
                     }
                 }
             ],
             "fallen": [],
             "survivors": [
-                "Charlie",
-                "Frank"
+                "Bob",
+                "George"
             ]
         },
         {
-            "number": 7,
+            "number": 5,
+            "bloodbath": false,
+            "events": [
+                {
+                    "type": "loot",
+                    "text": "Bob barters quietly for a flare.",
+                    "meta": {
+                        "person": "Bob",
+                        "item": "flare"
+                    }
+                },
+                {
+                    "type": "non-lethal",
+                    "text": "Bob scouts the cornucopia from afar.",
+                    "meta": {
+                        "person": "Bob"
+                    }
+                }
+            ],
+            "fallen": [],
+            "survivors": [
+                "Bob",
+                "George"
+            ]
+        },
+        {
+            "number": 6,
             "bloodbath": false,
             "events": [
                 {
                     "type": "lethal",
-                    "text": "Frank sabotages Charlie's shelter overnight.",
+                    "text": "Bob ambushes George near the river.",
                     "meta": {
-                        "killer": "Frank",
-                        "victim": "Charlie"
+                        "killer": "Bob",
+                        "victim": "George"
                     }
                 },
                 {
                     "type": "victory",
-                    "text": "Frank emerges victorious with 2 elimination(s)!",
+                    "text": "Bob emerges victorious with 4 elimination(s)!",
                     "meta": {
-                        "winner": "Frank",
-                        "kills": 2
+                        "winner": "Bob",
+                        "kills": 4
                     }
                 }
             ],
             "fallen": [
-                "Charlie"
+                "George"
             ],
             "survivors": [
-                "Frank"
+                "Bob"
             ]
         }
     ],
-    "winner": "Frank"
+    "winner": "Bob"
 }
