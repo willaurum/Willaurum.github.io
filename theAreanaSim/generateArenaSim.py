@@ -236,7 +236,9 @@ def determine_event_count(
     base = config.min_events_per_day + max(0, round(span * density))
     jitter = rng.choice([-1, 0, 0, 1]) if span else 0
     target = base + jitter
-    return max(config.min_events_per_day, min(config.max_events_per_day, target))
+    soft_cap = min(8, alive_count)
+    target = min(target, soft_cap)
+    return max(config.min_events_per_day, min(target, alive_count))
 
 
 def run_simulation(

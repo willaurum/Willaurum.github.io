@@ -1,9 +1,9 @@
 {
-    "lethal_event_chance": 0.55,
-    "inventory_event_chance": 0.35,
-    "loot_event_chance": 0.25,
-    "min_events_per_day": 2,
-    "max_events_per_day": 4,
+    "lethal_event_chance": 0.35,
+    "inventory_event_chance": 0.45,
+    "loot_event_chance": 0.20,
+    "min_events_per_day": 1,
+    "max_events_per_day": 8,
     "bloodbath_event_range": [6, 9],
     "bloodbath_lethal_bonus": 0.25,
     "inventory_items": [
