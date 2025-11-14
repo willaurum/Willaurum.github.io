@@ -258,6 +258,108 @@
             background: rgba(255, 107, 107, 0.15);
             color: #ff6b6b;
         }
+
+        #simulationScreen {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .screen-header {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .screen-header .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .instruction-text {
+            margin: 0;
+            color: var(--arena-muted);
+        }
+
+        .phase-chip {
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            background: rgba(224, 174, 62, 0.18);
+            color: var(--arena-accent);
+        }
+
+        .phase-chip.summary {
+            background: rgba(255, 137, 137, 0.18);
+            color: #ff9a9a;
+        }
+
+        .phase-chip.advance {
+            background: rgba(93, 253, 203, 0.18);
+            color: #5dfdcb;
+        }
+
+        .phase-chip.complete {
+            background: rgba(244, 244, 139, 0.2);
+            color: #f4f48b;
+        }
+
+        .events-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            min-height: 320px;
+        }
+
+        .events-list {
+            flex: 1;
+            max-height: 50vh;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .control-tray {
+            position: sticky;
+            bottom: -24px;
+            background: rgba(1, 25, 43, 0.92);
+            border-radius: 16px;
+            border: 1px solid rgba(224, 174, 62, 0.18);
+            padding: 16px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .control-tray .tray-hint {
+            margin: 0;
+            text-align: center;
+            font-size: 0.85rem;
+            color: rgba(224, 225, 221, 0.65);
+        }
+
+        @media (min-width: 768px) {
+            .events-list {
+                max-height: 55vh;
+            }
+
+            .control-tray {
+                flex-direction: row;
+                align-items: center;
+                gap: 18px;
+            }
+
+            .control-tray .tray-hint {
+                text-align: left;
+            }
+        }
     </style>
 </head>
 <body>
@@ -286,24 +388,35 @@
                 </div>
 
                 <p id="setupMessage" style="margin-bottom: 0;">
-                    Press Continue once you’re happy with the roster.
+                    Press Continue once you're happy with the roster.
                 </p>
 
                 <button type="submit" class="btn-primary">Continue</button>
             </form>
         </section>
 
-        <section id="simulationScreen" class="panel hidden">
-            <header>
-                <h2 id="dayHeading">Day 1</h2>
-                <p id="instructionText">Press Next to reveal the first day’s events.</p>
-            </header>
+                <section id="simulationScreen" class="panel hidden">
+            <div class="screen-header">
+                <div class="header-row">
+                    <div>
+                        <p class="instruction-text" style="text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.78rem; margin: 0;">
+                            Arena timeline
+                        </p>
+                        <h2 id="dayHeading">Day 1</h2>
+                    </div>
+                    <span id="phaseChip" class="phase-chip">Events</span>
+                </div>
+                <p id="instructionText" class="instruction-text">Press Next to reveal the first day's events.</p>
+            </div>
 
-            <div id="eventsList" class="events-list"></div>
-            <div id="summaryPanel" class="summary-block hidden"></div>
+            <div class="events-wrapper">
+                <div id="eventsList" class="events-list"></div>
+                <div id="summaryPanel" class="summary-block hidden"></div>
+            </div>
 
-            <div class="action-area">
+            <div class="control-tray">
                 <button id="nextButton" class="btn-primary btn-full">Next</button>
+                <p class="tray-hint">Shortcut: press Space or Enter to advance.</p>
             </div>
         </section>
     </main>
@@ -485,6 +598,7 @@
             const setupMessage = document.getElementById("setupMessage");
 
             const dayHeading = document.getElementById("dayHeading");
+            const phaseChip = document.getElementById("phaseChip");
             const instructionText = document.getElementById("instructionText");
             const eventsList = document.getElementById("eventsList");
             const summaryPanel = document.getElementById("summaryPanel");
@@ -518,6 +632,7 @@
 
                 setupForm.addEventListener("submit", handleSetupSubmit);
                 nextButton.addEventListener("click", handleNext);
+                document.addEventListener("keydown", handleGlobalKey);
             }
 
             async function fetchConfig() {
@@ -601,6 +716,20 @@
                 }
             }
 
+            function handleGlobalKey(event) {
+                if (simulationScreen.classList.contains("hidden")) return;
+                const activeTag = document.activeElement
+                    ? document.activeElement.tagName
+                    : "";
+                if (activeTag === "INPUT" || activeTag === "TEXTAREA") {
+                    return;
+                }
+                if (event.code === "Space" || event.code === "Enter") {
+                    event.preventDefault();
+                    handleNext();
+                }
+            }
+
             function prepareDay() {
                 const day = state.simulation.days[state.dayIndex];
                 if (!day) return;
@@ -608,8 +737,10 @@
                 const label = day.bloodbath ? `Day ${day.number} - Bloodbath` : `Day ${day.number}`;
                 dayHeading.textContent = label;
                 eventsList.innerHTML = "";
+                eventsList.scrollTop = 0;
                 summaryPanel.innerHTML = "";
                 summaryPanel.classList.add("hidden");
+                summaryPanel.scrollTop = 0;
                 setPhase("events");
             }
 
@@ -618,20 +749,45 @@
                 const totalDays = state.simulation.days.length;
                 const day = state.simulation.days[state.dayIndex];
                 if (!day) return;
+                const labels = {
+                    events: {
+                        chip: "Events",
+                        chipClass: "phase-chip events",
+                        button: day.bloodbath ? "Reveal bloodbath" : "Reveal events",
+                        text: day.bloodbath
+                            ? "Bloodbath! Press Next to reveal the opening chaos."
+                            : `Day ${day.number} of ${totalDays}. Press Next to reveal today's events.`
+                    },
+                    summary: {
+                        chip: "Fallen",
+                        chipClass: "phase-chip summary",
+                        button: "Show fallen tributes",
+                        text: "Press Next to view fallen tributes and survivors."
+                    },
+                    advance: {
+                        chip: "Next day",
+                        chipClass: "phase-chip advance",
+                        button: state.dayIndex + 1 < totalDays
+                            ? `Start Day ${state.simulation.days[state.dayIndex + 1].number}`
+                            : "Continue",
+                        text: `Press Next to continue to Day ${
+                            state.simulation.days[state.dayIndex + 1].number
+                        }.`
+                    },
+                    complete: {
+                        chip: "Complete",
+                        chipClass: "phase-chip complete",
+                        button: "Restart simulation",
+                        text: "The arena grows silent. Press Next to start over."
+                    }
+                };
 
-                if (phase === "events") {
-                    instructionText.textContent = day.bloodbath
-                        ? "Bloodbath! Press Next to reveal the opening chaos."
-                        : `Day ${day.number} of ${totalDays}. Press Next to reveal today's events.`;
-                } else if (phase === "summary") {
-                    instructionText.textContent = "Press Next to view fallen tributes and survivors.";
-                } else if (phase === "advance") {
-                    instructionText.textContent = `Press Next to continue to Day ${
-                        state.simulation.days[state.dayIndex + 1].number
-                    }.`;
-                } else if (phase === "complete") {
-                    instructionText.textContent = "The arena grows silent. Press Next to start over.";
-                }
+                const copy = labels[phase] || labels.events;
+                phaseChip.textContent = copy.chip;
+                phaseChip.className = copy.chipClass;
+                instructionText.textContent = copy.text;
+                nextButton.textContent = copy.button;
+                simulationScreen.dataset.phase = phase;
             }
 
             function revealEvents() {
