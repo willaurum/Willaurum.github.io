@@ -32,7 +32,11 @@
         "fire starter kit",
         "ancient coin",
         "radio transmitter",
-        "rubber chicken"
+        "rubber chicken",
+        "gun",
+        "grenade",
+        "traffic cone that makes you think you're William Shakespeare",
+        "popcorn"
     ],
     "non_lethal_events": [
         "{person} scouts the cornucopia from afar.",
@@ -57,7 +61,7 @@
     ],
     "lethal_events": [
         "{killer} strangles {victim} to death.",
-        "{killer} pushes {victim} into a lethal ravine.",
+        "{killer} pushes {victim} into a ravine.",
         "{killer} outmatches {victim} after a tense duel.",
         "{killer} overwhelms {victim} during a close-quarters fight.",
         "{killer} crushes {victim} with a boulder from above.",
@@ -65,6 +69,7 @@
         "{killer} pushes {victim} into a pit of spike traps.",
         "{killer} chloroforms {victim} with improvised chemicals.",
         "{killer} slams {victim} into a tree until the forest goes quiet.",
+        "{victim} couldn't take it anymore.",
         {
             "text": "{killer} launches explosives that wipe out {victim} and {victim2}.",
             "victim_count": 2
@@ -72,7 +77,7 @@
     ],
     "inventory_events": [
         "{person} sets a {item} and waits patiently.",
-        "{person} patches wounds with their trusty {item}.",
+        "{person} finds a way to cure their wounds with their {item}.",
         "{person} flashes a {item} to ward off pursuers.",
         "{person} retools a {item} into something even more dangerous.",
         "{person} fortifies a shelter using their {item}.",
@@ -85,7 +90,7 @@
         "{person} barters quietly for a {item}.",
         "{person} slips a {item} into their pack unnoticed.",
         "{person} opens a package from a sponser and recieves a {item}",
-        "{person} discovers a supply crate snagged in a treetop and retrieves a {item}.",
+        "{person} discovers a supply crate and retrieves a {item}.",
         "{person} lifts a {item} from a careless tribute’s camp.",
         "{person} follows a sponsor drone and steals a dropped {item}.",
         "{person} finds a waterproof box with a {item} inside."
@@ -103,6 +108,13 @@
         ],
         "poetry anthology": [
             "{person} is gifted a poetry anthology from their sponsor."
+        ],
+        "traffic cone that makes you think you're William Shakespeare": [
+            "{person} unearths a humble traffic cone, yet upon touching it, their mind is seized by the spirit of William Shakespearee himself.",
+            "{person} beholds a traffic cone lying in the dust; as they lift it, a sudden tempest of poetic genius floods their thoughts."
+        ],
+        "popcorn": [
+            "{person} recieves some popcorn from a sponsor."
         ]
     },
     "special_item_events": [
@@ -248,6 +260,14 @@
             ]
         },
         {
+            "item": "popcorn",
+            "consumes": true,
+            "lethal": false,
+            "events": [
+                "{person} stands behind a tree watching {victim} while eating {item}."
+            ]
+        },
+        {
             "item": "grappling hook",
             "consumes": false,
             "events": [
@@ -283,7 +303,71 @@
                 "lethal": true
                 }
             ]
+        },
+        {
+            "item": "gun",
+            "consumes": false,
+            "events": [
+                "{person} cleans their {item}.",
+                {
+                "text": "{person} shoots {victim}.",
+                "lethal": true,
+                "consumes": false
+                },
+                {
+                "text": "{person} shoots {victim}.",
+                "lethal": true,
+                "consumes": false
+                },
+                {
+                "text": "{person} tests their {item} and breaks it.",
+                "lethal": false,
+                "consumes": true
+                }
+            ]
+        },
+        {
+            "item": "grenade",
+            "consumes": false,
+            "events": [
+                "{person} admires their {item}.",
+                {
+                "text": "{person} throws their {item}, killing  {victim} and {victim2}.",
+                    "lethal": true,
+                    "victim_count": 2,
+                    "consumes": true
+                },
+                {
+                "text": "{person} throws their {item}, killing  {victim}.",
+                    "lethal": true,
+                    "consumes": true
+                }
+            ]
+        },
+        {
+            "item": "traffic cone that makes you think you're William Shakespeare",
+            "consumes": false,
+            "events": [
+                "{person}, now convinced they are the Bard reborn, doth place the {item} upon their head like a crown and proclaims, 'Hark! A new play begins!'",
+                "{person} wanders the arena clutching the {item}, reciting verses unknown to mortal ears.",
+                {
+                    "text": "Inspired by the {item}, {person} delivers a tragic soliloquy so profound that {victim} stands entranced—till {person} strikes them down with eloquence.",
+                    "lethal": true
+                },
+                {
+                    "text": "{person}, channeling the fury of a thousand sonnets, commands the {item} as though it were a royal scepter and smites {victim} with theatrical flourish.",
+                    "lethal": true
+                },
+                {
+                    "text": "With grand Shakespearean bravado, {person} challenges {victim} and {victim2} to a duel of words, yet ends the contest with steel instead.",
+                    "lethal": true,
+                    "consumes": true,
+                    "victim_count": 2
+                },
+                "{person} pauses mid-battle to narrate their own tale, the {item} held aloft: 'Forsooth, Act III shall not be my end!'"
+            ]
         }
+
     ],
     "victory_template": "{name} emerges victorious with {kills} elimination(s)!"
 }
