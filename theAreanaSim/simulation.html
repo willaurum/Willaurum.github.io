@@ -886,6 +886,7 @@
                 const desiredDays = determineDesiredDays(total, config);
                 const days = [];
                 let dayCounter = 0;
+                let daysWithoutDeath = 0;
                 const specialItemMap = buildSpecialItemMap(config);
 
                 const alive = () => tributes.filter((t) => t.alive);
@@ -931,6 +932,29 @@
                             });
                         }
                         if (alive().length <= 1) break;
+                    }
+
+                    if (fallen.length) {
+                        daysWithoutDeath = 0;
+                    } else {
+                        daysWithoutDeath += 1;
+                        if (daysWithoutDeath >= 3 && alive().length > 1) {
+                            const forcedEvent = forceMandatoryDeath(tributes, config);
+                            if (forcedEvent) {
+                                events.push(forcedEvent);
+                                const forcedVictims = Array.isArray(forcedEvent.meta?.victims)
+                                    ? forcedEvent.meta.victims
+                                    : forcedEvent.meta?.victim
+                                    ? [forcedEvent.meta.victim]
+                                    : [];
+                                forcedVictims.forEach((name) => {
+                                    if (name && !fallen.includes(name)) {
+                                        fallen.push(name);
+                                    }
+                                });
+                                daysWithoutDeath = 0;
+                            }
+                        }
                     }
 
                     days.push({
@@ -1153,6 +1177,49 @@
                     type: "non-lethal",
                     text: formatTemplate(template.text, replacements),
                     meta
+                };
+            }
+
+            function forceMandatoryDeath(tributes, config) {
+                const living = tributes.filter((t) => t.alive);
+                if (living.length < 2) {
+                    return null;
+                }
+                const actor = pickRandom(living);
+                const victimChoices = living.filter((t) => t !== actor);
+                if (!victimChoices.length) {
+                    return null;
+                }
+                const lethalPool =
+                    config.lethal_events && config.lethal_events.length
+                        ? config.lethal_events
+                        : ["{killer} eliminates {victim}."];
+                const template = normalizeLethalTemplate(pickRandom(lethalPool));
+                const count = Math.min(Math.max(1, template.victimCount), victimChoices.length);
+                const victims = pickUnique(victimChoices, count) ?? [];
+                if (!victims.length) {
+                    return null;
+                }
+                victims.forEach((target) => {
+                    target.alive = false;
+                });
+                actor.kills += victims.length;
+                const replacements = { killer: actor.name };
+                victims.forEach((victim, index) => {
+                    const key =
+                        template.victimKeys[index] ??
+                        (index === 0 ? "victim" : `victim${index + 1}`);
+                    replacements[key] = victim.name;
+                });
+                return {
+                    type: "lethal",
+                    text: formatTemplate(template.text, replacements),
+                    meta: {
+                        killer: actor.name,
+                        victim: victims[0].name,
+                        victims: victims.map((v) => v.name),
+                        forced: true
+                    }
                 };
             }
 
