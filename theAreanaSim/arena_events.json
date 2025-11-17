@@ -1,12 +1,12 @@
 {
-    "lethal_event_chance": 0.35,
-    "inventory_event_chance": 0.45,
-    "loot_event_chance": 0.25,
-    "special_item_event_chance": 0.45,
+    "lethal_event_chance": 0.2,
+    "inventory_event_chance": 0.2,
+    "loot_event_chance": 0.30,
+    "special_item_event_chance": 0.30,
     "min_events_per_day": 1,
     "max_events_per_day": 8,
     "bloodbath_event_range": [6, 9],
-    "bloodbath_lethal_bonus": 0.15,
+    "bloodbath_lethal_bonus": 0.25,
     "inventory_items": [
         "medkit",
         "Small First-Aid Kit",
