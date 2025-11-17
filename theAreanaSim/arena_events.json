@@ -199,6 +199,7 @@
         "{killer} chloroforms {victim} with improvised chemicals.",
         "{killer} slams {victim} into a tree until the forest goes quiet.",
         "{victim} couldn't take it anymore.",
+        "{killer}はすばやいひといきで{victim}をしとめた。",
         "{killer} drops from the trees onto {victim}, ending them instantly.",
         {
             "text": "{killer} launches explosives that wipe out {victim} and {victim2}.",
