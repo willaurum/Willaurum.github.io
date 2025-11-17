@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parent
 CONFIG_FILE = ROOT / "arena_events.json"
 NAMES_FILE = ROOT / "tribute_names.txt"
 MAX_INVENTORY_SIZE = 10
-MAX_START_ITEMS = 1
+MAX_START_ITEMS = 0
 PLACEHOLDER_PATTERN = re.compile(r"{(\w+)}")
 
 
