@@ -36,7 +36,30 @@
         "gun",
         "grenade",
         "traffic cone that makes you think you're William Shakespeare",
-        "popcorn"
+        "popcorn",
+        "rope",
+        "canteen",
+        "flashlight",
+        "sleeping bag",
+        "crowbar",
+        "binoculars",
+        "small hammer",
+        "fishing line",
+        "metal pot",
+        "compass",
+        "map fragment",
+        "bandages",
+        "mysterious key",
+        "stone axe",
+        "empty bottle",
+        "sewing kit",
+        "paracord bracelet",
+        "wooden shield",
+        "signal whistle",
+        "broken watch",
+        "bag of stale marshmallows",
+        "novelty sunglasses",
+        "fake plastic spider"
     ],
     "non_lethal_events": [
         "{person} scouts the cornucopia from afar.",
@@ -46,6 +69,26 @@
         "{person} hides beneath branches as distant screams echo.",
         "{person} drinks from a muddy stream and hopes it’s safe.",
         "{person} accidentally gives away their position and quickly relocates.",
+        "{person} quietly reinforces their camp, listening for movement in the trees.",
+        "{person} follows a trail of footprints but turns back when they suddenly vanish.",
+        "{person} climbs a tree to scout the area and nearly slips.",
+        "{person} builds a crude alarm system using sticks and stones.",
+        "{person} collects rainwater in a leaf-lined pit.",
+        "{person} studies the terrain, searching for defensible ground.",
+        "{person} hears rustling nearby and freezes until it fades.",
+        "{person} creates decoy tracks to confuse anyone following them.",
+        "{person} rests briefly, keeping their eyes on the treeline.",
+        "{person} sharpens their senses by listening to distant echoes.",
+        "{person} inspects a set of claw marks carved into a tree.",
+        "{person} marks a safe path with small piles of stones.",
+        "{person} debates with a squirrel for dominance of a log. The squirrel wins.",
+        "{person} dramatically rolls behind a rock… even though nobody is around.",
+        "{person} mistakes a bush for an enemy and apologizes to it.",
+        "{person} delivers a motivational speech to themselves and feels slightly better.",
+        "{person} waves at a sponsor drone, hoping for snacks.",
+        "{person} trips over nothing, pretends it was part of a tactical maneuver.",
+        "{person} practices battle poses in case cameras are watching.",
+        "{person} whispers threats to a tree, which remains unimpressed.",
         {
             "text": "{person} plots quietly with {ally} and {rival} deep into the night.",
             "extra_roles": ["ally", "rival"]
@@ -57,6 +100,86 @@
         {
             "text": "{person} follows {rival}.",
             "extra_roles": ["rival"]
+        },
+        {
+            "text": "{person} whispers plans with {ally}, keeping a close ear on {rival}'s movements.",
+            "extra_roles": ["ally", "rival"]
+        },
+        {
+            "text": "{person} and {ally} search for supplies together but nearly walk into {rival}.",
+            "extra_roles": ["ally", "rival"]
+        },
+        {
+            "text": "{person} shadows {rival}, only to realize {ally} has been shadowing them both.",
+            "extra_roles": ["ally", "rival"]
+        },
+        {
+            "text": "{person} forms a brief alliance with {ally}, though both side-eye {traitor} the entire time.",
+            "extra_roles": ["ally", "traitor"]
+        },
+        {
+            "text": "{person}, {ally}, and {rival} all reach for the same water source and awkwardly pretend they weren’t.",
+            "extra_roles": ["ally", "rival"]
+        },
+        {
+            "text": "{person} convinces {ally} to work together, but {rival} loudly mocks their teamwork.",
+            "extra_roles": ["ally", "rival"]
+        },
+        {
+            "text": "{person} sneaks up on {rival}, only to find {ally} also sneaking up on {rival}.",
+            "extra_roles": ["ally", "rival"]
+        },
+        {
+            "text": "{person} and {ally} discover footprints belonging to {rival}, sparking a silent chase.",
+            "extra_roles": ["ally", "rival"]
+        },
+        {
+            "text": "{person} mediates a tense argument between {ally} and {rival}.",
+            "extra_roles": ["ally", "rival"]
+        },
+        {
+            "text": "{person} tries to trick {rival}, but {ally} ruins the plan by laughing too loudly.",
+            "extra_roles": ["ally", "rival"]
+        },
+        {
+            "text": "{person} and {rival} lock eyes from across a clearing until {ally} ruins the moment by tripping.",
+            "extra_roles": ["ally", "rival"]
+        },
+        {
+            "text": "{person} walks into {ally} and {rival} arguing. They quietly walk back out.",
+            "extra_roles": ["ally", "rival"]
+        },
+        {
+            "text": "{person}, {ally}, and {rival} silently agree to not talk about the weird noise they just heard.",
+            "extra_roles": ["ally", "rival"]
+        },
+        {
+        "text": "{person}, {ally}, and {rival} stare at each other for a solid minute before all walking away in different directions.",
+        "extra_roles": ["ally", "rival"]
+        },
+        {
+            "text": "{person} waves awkwardly at {other} before hiding behind a tree.",
+            "extra_roles": ["other"]
+        },
+        {
+            "text": "{person} confidently approaches {other} to say something intimidating, but sneezes mid-sentence.",
+            "extra_roles": ["other"]
+        },
+        {
+            "text": "{person} tries to impress {other} by flexing, but pulls a muscle immediately.",
+            "extra_roles": ["other"]
+        },
+        {
+            "text": "{person} and {other} share a quiet conversation about home, finding comfort in each other's presence.",
+            "extra_roles": ["other"]
+        },
+        {
+            "text": "{person} walks beside {other} in peaceful silence, their steps naturally falling into the same rhythm.",
+            "extra_roles": ["other"]
+        },
+        {
+            "text": "{person} offers {other} a small, hand-made token of kindness, and {other} accepts it with a soft smile.",
+            "extra_roles": ["other"]
         }
     ],
     "lethal_events": [
@@ -70,8 +193,13 @@
         "{killer} chloroforms {victim} with improvised chemicals.",
         "{killer} slams {victim} into a tree until the forest goes quiet.",
         "{victim} couldn't take it anymore.",
+        "{killer} drops from the trees onto {victim}, ending them instantly.",
         {
             "text": "{killer} launches explosives that wipe out {victim} and {victim2}.",
+            "victim_count": 2
+        },
+        {
+            "text": "{killer} detonates a trap, taking out {victim} and {victim2}.",
             "victim_count": 2
         }
     ],
@@ -82,7 +210,19 @@
         "{person} retools a {item} into something even more dangerous.",
         "{person} fortifies a shelter using their {item}.",
         "{person} cleans and maintains their {item}, preparing for nightfall.",
-        "{person} decorates their shelter using their {item}."
+        "{person} decorates their shelter using their {item}.",
+        "{person} experiments with their {item}, hoping it becomes useful.",
+        "{person} sharpens their {item} on a flat stone.",
+        "{person} practices different techniques with their {item}.",
+        "{person} hides their {item} beneath leaves so no one can steal it.",
+        "{person} nearly breaks their {item} while messing around with it.",
+        "{person} taps their {item} rhythmically to stay calm.",
+        "{person} fashions a crude tool using their {item}.",
+        "{person} defends their camp by placing their {item} at the entrance.",
+        "{person} uses their {item} to test if a path is safe.",
+        "{person} plays with their {item} absent-mindedly.",
+        "{person} upgrades their {item} using scraps found nearby.",
+        "{person} meditates while holding their {item}, gathering their resolve."
     ],
     "loot_events": [
         "{person} scavenges a {item} from the Cornucopia wreckage.",
@@ -93,7 +233,8 @@
         "{person} discovers a supply crate and retrieves a {item}.",
         "{person} lifts a {item} from a careless tribute’s camp.",
         "{person} follows a sponsor drone and steals a dropped {item}.",
-        "{person} finds a waterproof box with a {item} inside."
+        "{person} finds a waterproof box with a {item} inside.",
+        "{person} finds a backpack washed up on a stream bank with a {item} inside."
     ],
     "item_loot_text": {
         "herb bundle": [
