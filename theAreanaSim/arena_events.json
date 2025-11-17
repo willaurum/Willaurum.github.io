@@ -593,7 +593,7 @@
                 "{person}, now convinced they are the Bard reborn, doth place the {item} upon their head like a crown and proclaims, 'Hark! A new play begins!'",
                 "{person} wanders the arena clutching the {item}, reciting verses unknown to mortal ears.",
                 {
-                    "text": "Inspired by the {item}, {person} delivers a tragic soliloquy so profound that {victim} stands entranced—till {person} strikes them down with eloquence.",
+                    "text": "Inspired by the {item}, {person} delivers a tragic soliloquy so profound that {victim} stands entranced - till {person} strikes them down with eloquence.",
                     "lethal": true
                 },
                 {
