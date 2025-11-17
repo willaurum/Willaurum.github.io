@@ -9,11 +9,14 @@
     "bloodbath_lethal_bonus": 0.15,
     "inventory_items": [
         "medkit",
+        "Small First-Aid Kit",
         "snare trap", 
         "flare",
         "camouflage cloak",
+        "Weatherproof Cloak",
         "ration pack",
         "throwing knife",
+        "Hunting Knife",
         "Taco Bell Meal Deal",
         "herb bundle",
         "bow",
@@ -30,6 +33,7 @@
         "hand mirror",
         "sugar cube",
         "fire starter kit",
+        "Flint & Steel",
         "ancient coin",
         "radio transmitter",
         "rubber chicken",
@@ -38,7 +42,9 @@
         "traffic cone that makes you think you're William Shakespeare",
         "popcorn",
         "rope",
+        "Coiled Rope",
         "canteen",
+        "Water Canteen",
         "flashlight",
         "sleeping bag",
         "crowbar",
@@ -256,6 +262,30 @@
         ],
         "popcorn": [
             "{person} recieves some popcorn from a sponsor."
+        ],
+        "Hunting Knife": [
+            "{person} retrieves a hunting knife from the Cornucopia floor, its blade still gleaming.",
+            "{person} digs through debris and uncovers a sturdy hunting knife."
+        ],
+        "Flint & Steel": [
+            "{person} picks up a set of flint and steel wrapped in cloth.",
+            "{person} discovers flint and steel tucked beneath a broken crate."
+        ],
+        "Water Canteen": [
+            "{person} finds a dented but usable water canteen.",
+            "{person} scoops up a metal canteen half-buried in the mud."
+        ],
+        "Small First-Aid Kit": [
+            "{person} grabs a compact first-aid kit from a sponsor drop.",
+            "{person} uncovers a dusty first-aid kit hidden under loose gravel."
+        ],
+        "Coiled Rope": [
+            "{person} slings a coil of rope over their shoulder after retrieving it from the Cornucopia.",
+            "{person} finds a length of rope tangled around tree roots."
+        ],
+        "Weatherproof Cloak": [
+            "{person} pulls on a weatherproof cloak lined with coarse fabric.",
+            "{person} retrieves a rugged cloak from a sponsor crate."
         ]
     },
     "special_item_events": [
@@ -273,6 +303,16 @@
             "events": [
                 "{person} spends the afternoon patching wounds with their {item}.",
                 "{person} uses their {item} heal themself."
+            ]
+        },
+        {
+            "item": "Small First-Aid Kit",
+            "consumes": true,
+            "events": [
+                "{person} treats their wounds with supplies from the {item}.",
+                {
+                    "text": "{person} attempts to save {victim} using the {item}, but their injuries are too severe."
+                }
             ]
         },
         {
@@ -323,6 +363,18 @@
             ]
         },
         {
+            "item": "Hunting Knife",
+            "consumes": false,
+            "events": [
+                "{person} sharpens their {item} on a flat stone.",
+                {
+                    "text": "{person} stabs {victim} with their {item}, ending the fight instantly.",
+                    "lethal": true,
+                    "consumes": false
+                }
+            ]
+        },
+        {
             "item": "Taco Bell Meal Deal",
             "consumes": true,
             "events": [
@@ -359,6 +411,18 @@
                     "text": "{person} attempts to murder {victim} with their {item} and succedes.",
                     "lethal": true,
                     "consumes": true
+                }
+            ]
+        },
+        {
+            "item": "Water Canteen",
+            "consumes": false,
+            "events": [
+                "{person} carefully refills their {item} at a stream.",
+                {
+                    "text": "Dehydrated and desperate, {victim} fights {person} for their {item}. {victim} doesn't survive the struggle.",
+                    "lethal": true,
+                    "consumes": false
                 }
             ]
         },
@@ -422,6 +486,18 @@
             ]
         },
         {
+            "item": "Coiled Rope",
+            "consumes": false,
+            "events": [
+                "{person} uses the {item} to climb a steep cliffside.",
+                {
+                    "text": "{person} sets a rope trap that snaps tight around {victim}, killing them in the struggle.",
+                    "lethal": true,
+                    "consumes": false
+                }
+            ]
+        },
+        {
             "item": "duct tape roll",
             "consumes": true,
             "events": [
@@ -435,6 +511,18 @@
             ]
         },
         {
+            "item": "Weatherproof Cloak",
+            "consumes": false,
+            "events": [
+                "{person} wraps their {item} tighter as rain pours over the arena.",
+                {
+                    "text": "{victim} attacks {person}, but the {item} absorbs the blow... {person} counterattacks and kills {victim}.",
+                    "lethal": true,
+                    "consumes": false
+                }
+            ]
+        },
+        {
             "item": "fire starter kit",
             "consumes": false,
             "events": [
@@ -442,6 +530,19 @@
                 {
                 "text": "{person} sets a trap by lighting foliage, burning {victim} alive.",
                 "lethal": true
+                }
+            ]
+        },
+        {
+            "item": "Flint & Steel",
+            "consumes": false,
+            "events": [
+                "{person} uses their {item} to start a small fire for warmth.",
+                "{person} chants ''Flint and Steel!'' in an unusually familar way.",
+                {
+                    "text": "{person} sparks dry leaves near {victim}, and the sudden blaze overwhelms them.",
+                    "lethal": true,
+                    "consumes": false
                 }
             ]
         },
