@@ -111,3 +111,7 @@ beating you with a frying pan asmr
 that guy
  - lethal
 
+make the shield less powerful
+
+display kill count next to tributes on the list 
+
