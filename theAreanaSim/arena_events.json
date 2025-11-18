@@ -6,7 +6,7 @@
     "min_events_per_day": 1,
     "max_events_per_day": 8,
     "bloodbath_event_range": [6, 9],
-    "bloodbath_lethal_bonus": 0.35,
+    "bloodbath_lethal_bonus": 0.37,
     "inventory_items": [
         "medkit",
         "Small First-Aid Kit",
