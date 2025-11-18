@@ -612,6 +612,29 @@
                 },
                 "{person} pauses mid-battle to narrate their own tale, the {item} held aloft: 'Forsooth, Act III shall not be my end!'"
             ]
+        },
+        {
+            "item": "wooden shield",
+            "consumes": false,
+            "events": [
+                "{person} braces behind the {item}, testing how much punishment it can take.",
+                {
+                    "text": "{victim} hammers {person} with a spear, but every strike glances off the {item} until {person} rushes forward and smashes {victim}.",
+                    "lethal": true,
+                    "consumes": false
+                },
+                {
+                    "text": "{person} turtles up behind the {item} while {victim} fires wildly; once the barrage fades, {person} surges through and caves {victim}'s skull.",
+                    "lethal": true,
+                    "consumes": false
+                },
+                {
+                    "text": "{person} locks the {item} in front as {victim} and {victim2} attack from both sides, then whips the shield outward and leaves them both lifeless.",
+                    "lethal": true,
+                    "victim_count": 2,
+                    "consumes": false
+                }
+            ]
         }
 
     ],
