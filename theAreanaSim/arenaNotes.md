@@ -93,4 +93,21 @@ add something that uses a badger somehow
 cosmic particle (cosmic brownie?)
  - idk bro the producers said to put it in the game im not paid enough for this T-T
 
- 
+doomscrolling??
+ - obviously lethal 
+
+2010s pop culture references
+ - not lethal
+
+2020s brainrot 
+ - kills self 
+
+something to do with philosophy
+ - clearly lethal 
+
+beating you with a frying pan asmr 
+ - it kills yourself trust frfr
+
+that guy
+ - lethal
+
