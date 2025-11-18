@@ -115,3 +115,5 @@ make the shield less powerful
 
 display kill count next to tributes on the list 
 
+67
+
