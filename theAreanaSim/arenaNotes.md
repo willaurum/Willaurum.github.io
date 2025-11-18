@@ -68,7 +68,5 @@ custom loot text
 add taco bell breakfast 
  - no lethal abilities 
 
-Add "rhymes with Grug"
-
 Add some nonlethal events for the novelty sunglasses\
 

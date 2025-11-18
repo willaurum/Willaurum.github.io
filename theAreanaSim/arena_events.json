@@ -87,6 +87,7 @@
         "{person} trips over nothing, pretends it was part of a tactical maneuver.",
         "{person} practices battle poses in case cameras are watching.",
         "{person} whispers threats to a tree, which remains unimpressed.",
+        "{person} mutters, \"rhymes with Grug,\" and nods as if it explains everything.",
         {
             "text": "{person} plots quietly with {ally} and {rival} deep into the night.",
             "extra_roles": ["ally", "rival"]
