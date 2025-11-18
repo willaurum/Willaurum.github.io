@@ -1,7 +1,7 @@
 {
-    "lethal_event_chance": 0.2,
+    "lethal_event_chance": 0.25,
     "inventory_event_chance": 0.2,
-    "loot_event_chance": 0.30,
+    "loot_event_chance": 0.25,
     "special_item_event_chance": 0.30,
     "min_events_per_day": 1,
     "max_events_per_day": 8,
