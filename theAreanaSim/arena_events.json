@@ -79,7 +79,7 @@
         "{person} dramatically rolls behind a rock… even though nobody is around.",
         "{person} mistakes a bush for an enemy and apologizes to it.",
         "{person} delivers a motivational speech to themselves and feels slightly better.",
-        "{person} waves at a sponsor drone, hoping for snacks.",
+        "{person} waves at a sponser drone, hoping for snacks.",
         "{person} trips over nothing, pretends it was part of a tactical maneuver.",
         "{person} practices battle poses in case cameras are watching.",
         "{person} whispers threats to a tree, which remains unimpressed.",
@@ -236,7 +236,7 @@
         "{person} opens a package from a sponser and recieves a {item}",
         "{person} discovers a supply crate and retrieves a {item}.",
         "{person} lifts a {item} from a careless tribute’s camp.",
-        "{person} follows a sponsor drone and steals a dropped {item}.",
+        "{person} follows a sponser drone and steals a dropped {item}.",
         "{person} finds a waterproof box with a {item} inside.",
         "{person} finds a backpack washed up on a stream bank with a {item} inside."
     ],
@@ -246,13 +246,13 @@
             "{person} snips a handful of herbs and wraps them carefully for later."
         ],
         "Taco Bell Meal Deal": [
-            "{person} finds a pristine Taco Bell Meal Deal still warm from the sponsors."
+            "{person} finds a pristine Taco Bell Meal Deal still warm from the sponsers."
         ],
         "rubber chicken": [
             "{person} finds a rubber chicken and questions their luck."
         ],
         "poetry anthology": [
-            "{person} is gifted a poetry anthology from their sponsor.",
+            "{person} is gifted a poetry anthology from their sponser.",
             "With sudden inspiration, {person} writes a beautiful poetry anthology"
         ],
         "traffic cone that makes you think you're William Shakespeare": [
@@ -260,7 +260,7 @@
             "{person} beholds a traffic cone lying in the dust; as they lift it, a sudden tempest of poetic genius floods their thoughts."
         ],
         "popcorn": [
-            "{person} recieves some popcorn from a sponsor.",
+            "{person} recieves some popcorn from a sponser.",
             "{person} finds a microwave and some unpopped popcorn"
         ],
         "Hunting Knife": [
@@ -276,7 +276,7 @@
             "{person} scoops up a metal canteen half-buried in the mud."
         ],
         "Small First-Aid Kit": [
-            "{person} grabs a compact first-aid kit from a sponsor drop.",
+            "{person} grabs a compact first-aid kit from a sponser drop.",
             "{person} uncovers a dusty first-aid kit hidden under loose gravel."
         ],
         "Coiled Rope": [
@@ -285,7 +285,7 @@
         ],
         "Weatherproof Cloak": [
             "{person} pulls on a weatherproof cloak lined with coarse fabric.",
-            "{person} retrieves a rugged cloak from a sponsor crate."
+            "{person} retrieves a rugged cloak from a sponser crate."
         ]
     },
     "special_item_events": [
