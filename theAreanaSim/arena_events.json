@@ -263,14 +263,16 @@
             "{person} finds a rubber chicken and questions their luck."
         ],
         "poetry anthology": [
-            "{person} is gifted a poetry anthology from their sponsor."
+            "{person} is gifted a poetry anthology from their sponsor.",
+            "With sudden inspiration, {person} writes a beautiful poetry anthology"
         ],
         "traffic cone that makes you think you're William Shakespeare": [
             "{person} unearths a humble traffic cone, yet upon touching it, their mind is seized by the spirit of William Shakespearee himself.",
             "{person} beholds a traffic cone lying in the dust; as they lift it, a sudden tempest of poetic genius floods their thoughts."
         ],
         "popcorn": [
-            "{person} recieves some popcorn from a sponsor."
+            "{person} recieves some popcorn from a sponsor.",
+            "{person} finds a microwave and some unpopped popcorn"
         ],
         "Hunting Knife": [
             "{person} retrieves a hunting knife from the Cornucopia floor, its blade still gleaming.",
