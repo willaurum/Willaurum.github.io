@@ -58,6 +58,7 @@
     "non_lethal_events": [
         "{person} scouts the cornucopia from afar.",
         "{person} eats dirt.",
+        "{person} takes a careless nap",
         "{person} reinforces a hidden bunker.",
         "{person} stalks distant footsteps but loses the trail.",
         "{person} hides beneath branches as distant screams echo.",
