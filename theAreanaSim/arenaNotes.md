@@ -70,3 +70,5 @@ add taco bell breakfast
 
 Add some nonlethal events for the novelty sunglasses\
 
+Make there a chance to have the muddy water kill you
+
