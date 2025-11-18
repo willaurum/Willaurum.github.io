@@ -70,3 +70,5 @@ add taco bell breakfast
 
 Add "rhymes with Grug"
 
+Add some nonlethal events for the novelty sunglasses\
+
