@@ -180,6 +180,10 @@
         {
             "text": "{person} and {other} share a sleeping bag.",
             "extra_roles": ["other"]
+        },
+        {
+            "text": "{person} asks {other} if they prayed today.",
+            "extra_roles": ["other"]
         }
     ],
     "lethal_events": [
