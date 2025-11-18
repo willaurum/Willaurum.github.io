@@ -17,6 +17,7 @@
         "ration pack",
         "throwing knife",
         "Hunting Knife",
+        "baseball bat",
         "Taco Bell Meal Deal",
         "herb bundle",
         "bow",
@@ -213,6 +214,7 @@
         "{killer} screams at {victim}. The volume vaporizes them instantly.",
         "{killer} drops a pinecone on {victim}. The pinecone explodes like a grenade.",
         "{victim} and {killer} agree to a duel, {killer} wins.",
+        "{killer} writes slam poetry so hard it slams {victim}'s soul out of their body.",
         "{killer} drops from the trees onto {victim}, ending them instantly.",
         {
             "text": "{killer} launches explosives that wipe out {victim} and {victim2}.",

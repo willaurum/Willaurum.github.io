@@ -68,7 +68,23 @@ custom loot text
 add taco bell breakfast 
  - no lethal abilities 
 
-Add some nonlethal events for the novelty sunglasses\
+Add some nonlethal events for the novelty sunglasses
 
 Make there a chance to have the muddy water kill you
+
+Chopsticks
+ - some lethal some non lethal, lethal consumes
+
+team of navy seals
+ - lethal event
+
+ramen
+ - nonlethal consumes 
+
+Recieving an item from Temu instead of a sponsor 
+
+reinforcing a shelter event can also collapse and kill the player 
+
+add "Wii Sports (Nintendo Wii, 2007) New Game Factory Sealed in Cardboard Sleeve" to the game 
+ - lethal non consuming, more monlethal flavor text than lethal texts
 
