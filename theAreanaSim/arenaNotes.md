@@ -60,3 +60,13 @@ custom loot text
   }
   ```
   Even if the item’s default `consumes` flag is false, you can override consumption per event while also defining how many victims it targets.
+
+
+
+### TO - DO
+
+add taco bell breakfast 
+ - no lethal abilities 
+
+Add "rhymes with Grug"
+
