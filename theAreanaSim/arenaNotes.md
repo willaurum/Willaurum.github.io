@@ -88,3 +88,9 @@ reinforcing a shelter event can also collapse and kill the player
 add "Wii Sports (Nintendo Wii, 2007) New Game Factory Sealed in Cardboard Sleeve" to the game 
  - lethal non consuming, more monlethal flavor text than lethal texts
 
+add something that uses a badger somehow 
+
+cosmic particle (cosmic brownie?)
+ - idk bro the producers said to put it in the game im not paid enough for this T-T
+
+ 
