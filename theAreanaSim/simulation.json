@@ -15,17 +15,18 @@
         {
             "name": "Charlie",
             "alive": false,
-            "kills": 0,
+            "kills": 2,
             "inventory": [
-                "throwing knife"
+                "Water Canteen"
             ]
         },
         {
             "name": "Diana",
             "alive": false,
-            "kills": 3,
+            "kills": 1,
             "inventory": [
-                "snare trap"
+                "crowbar",
+                "herb bundle"
             ]
         },
         {
@@ -33,32 +34,30 @@
             "alive": false,
             "kills": 0,
             "inventory": [
-                "camouflage cloak"
+                "Steel bar"
             ]
         },
         {
             "name": "Frank",
-            "alive": false,
-            "kills": 2,
+            "alive": true,
+            "kills": 3,
             "inventory": [
-                "bow"
+                "fire starter kit",
+                "snare trap"
             ]
         },
         {
             "name": "George",
-            "alive": true,
-            "kills": 2,
-            "inventory": [
-                "ration pack"
-            ]
+            "alive": false,
+            "kills": 1,
+            "inventory": []
         },
         {
             "name": "Hannah",
             "alive": false,
             "kills": 0,
             "inventory": [
-                "flare",
-                "camouflage cloak"
+                "Taco Bell Meal Deal"
             ]
         }
     ],
@@ -68,66 +67,76 @@
             "bloodbath": true,
             "events": [
                 {
-                    "type": "loot",
-                    "text": "Evelyn scavenges a camouflage cloak from the Cornucopia wreckage.",
+                    "type": "non-lethal",
+                    "text": "Frank sharpens their senses by listening to distant echoes.",
                     "meta": {
-                        "person": "Evelyn",
-                        "item": "camouflage cloak"
-                    }
-                },
-                {
-                    "type": "inventory",
-                    "text": "Diana sets a snare trap and waits patiently.",
-                    "meta": {
-                        "person": "Diana",
-                        "item": "snare trap"
+                        "person": "Frank"
                     }
                 },
                 {
                     "type": "non-lethal",
-                    "text": "Evelyn scouts the cornucopia from afar.",
-                    "meta": {
-                        "person": "Evelyn"
-                    }
-                },
-                {
-                    "type": "loot",
-                    "text": "Hannah scavenges a camouflage cloak from the Cornucopia wreckage.",
+                    "text": "Hannah whispers plans with Bob, keeping a close ear on Charlie's movements.",
                     "meta": {
                         "person": "Hannah",
-                        "item": "camouflage cloak"
-                    }
-                },
-                {
-                    "type": "non-lethal",
-                    "text": "Charlie plots quietly with Diana and Evelyn deep into the night.",
-                    "meta": {
-                        "person": "Charlie",
                         "others": [
-                            "Diana",
-                            "Evelyn"
+                            "Bob",
+                            "Charlie"
                         ]
                     }
                 },
                 {
-                    "type": "non-lethal",
-                    "text": "Alice reinforces a hidden bunker.",
+                    "type": "loot",
+                    "text": "Diana opens a package from a sponser and recieves a crowbar",
                     "meta": {
-                        "person": "Alice"
+                        "person": "Diana",
+                        "item": "crowbar"
                     }
                 },
                 {
                     "type": "non-lethal",
-                    "text": "Diana reinforces a hidden bunker.",
+                    "text": "Charlie sneaks up on Hannah, only to find Bob also sneaking up on Hannah.",
                     "meta": {
-                        "person": "Diana"
+                        "person": "Charlie",
+                        "others": [
+                            "Bob",
+                            "Hannah"
+                        ]
+                    }
+                },
+                {
+                    "type": "loot",
+                    "text": "Frank follows a sponsor drone and steals a dropped fire starter kit.",
+                    "meta": {
+                        "person": "Frank",
+                        "item": "fire starter kit"
                     }
                 },
                 {
                     "type": "non-lethal",
-                    "text": "Diana gathers herbs and hopes they are edible.",
+                    "text": "Charlie whispers plans with Alice, keeping a close ear on Frank's movements.",
                     "meta": {
-                        "person": "Diana"
+                        "person": "Charlie",
+                        "others": [
+                            "Alice",
+                            "Frank"
+                        ]
+                    }
+                },
+                {
+                    "type": "item-special",
+                    "text": "Frank starts a controlled fire with the fire starter kit.",
+                    "meta": {
+                        "person": "Frank",
+                        "item": "fire starter kit",
+                        "consumed": false
+                    }
+                },
+                {
+                    "type": "loot",
+                    "text": "Frank finds a waterproof box with a snare trap inside.",
+                    "meta": {
+                        "person": "Frank",
+                        "item": "snare trap"
                     }
                 }
             ],
@@ -148,18 +157,45 @@
             "bloodbath": false,
             "events": [
                 {
-                    "type": "loot",
-                    "text": "Charlie finds a pristine Taco Bell Meal Deal still warm from the sponsors.",
+                    "type": "item-special",
+                    "text": "Frank repositions their snare trap, tightening the perimeter.",
                     "meta": {
-                        "person": "Charlie",
+                        "person": "Frank",
+                        "item": "snare trap",
+                        "consumed": false
+                    }
+                },
+                {
+                    "type": "loot",
+                    "text": "Hannah finds a pristine Taco Bell Meal Deal still warm from the sponsors.",
+                    "meta": {
+                        "person": "Hannah",
                         "item": "Taco Bell Meal Deal"
                     }
                 },
                 {
-                    "type": "lethal",
-                    "text": "Frank overwhelms Hannah during a close-quarters fight.",
+                    "type": "non-lethal",
+                    "text": "Alice collects rainwater in a leaf-lined pit.",
                     "meta": {
-                        "killer": "Frank",
+                        "person": "Alice"
+                    }
+                },
+                {
+                    "type": "lethal",
+                    "text": "Alice couldn't take it anymore.",
+                    "meta": {
+                        "killer": "Charlie",
+                        "victim": "Alice",
+                        "victims": [
+                            "Alice"
+                        ]
+                    }
+                },
+                {
+                    "type": "lethal",
+                    "text": "George unleashes a swarm of tracker jackers on Hannah, killing them.",
+                    "meta": {
+                        "killer": "George",
                         "victim": "Hannah",
                         "victims": [
                             "Hannah"
@@ -167,65 +203,32 @@
                     }
                 },
                 {
-                    "type": "item-special",
-                    "text": "Charlie eats their Taco Bell Meal Deal.",
+                    "type": "non-lethal",
+                    "text": "George builds a crude alarm system using sticks and stones.",
                     "meta": {
-                        "person": "Charlie",
-                        "item": "Taco Bell Meal Deal",
-                        "consumed": true
-                    }
-                },
-                {
-                    "type": "inventory",
-                    "text": "George patches wounds with their trusty ration pack.",
-                    "meta": {
-                        "person": "George",
-                        "item": "ration pack"
+                        "person": "George"
                     }
                 },
                 {
                     "type": "non-lethal",
-                    "text": "George plots quietly with Alice and Bob deep into the night.",
+                    "text": "Diana reinforces a hidden bunker.",
                     "meta": {
-                        "person": "George",
-                        "others": [
-                            "Alice",
-                            "Bob"
-                        ]
+                        "person": "Diana"
                     }
                 },
                 {
                     "type": "non-lethal",
-                    "text": "Charlie shares stories with the breeze\u2014silence answers back.",
+                    "text": "George quietly reinforces their camp, listening for movement in the trees.",
                     "meta": {
-                        "person": "Charlie"
-                    }
-                },
-                {
-                    "type": "non-lethal",
-                    "text": "Charlie plots quietly with Alice and Bob deep into the night.",
-                    "meta": {
-                        "person": "Charlie",
-                        "others": [
-                            "Alice",
-                            "Bob"
-                        ]
-                    }
-                },
-                {
-                    "type": "loot",
-                    "text": "George is gifted a poetry anthology from their sponsor.",
-                    "meta": {
-                        "person": "George",
-                        "item": "poetry anthology"
+                        "person": "George"
                     }
                 }
             ],
             "fallen": [
+                "Alice",
                 "Hannah"
             ],
             "survivors": [
-                "Alice",
                 "Bob",
                 "Charlie",
                 "Diana",
@@ -239,72 +242,68 @@
             "bloodbath": false,
             "events": [
                 {
-                    "type": "loot",
-                    "text": "Diana barters quietly for a throwing knife.",
+                    "type": "non-lethal",
+                    "text": "Diana tries to trick Frank, but George ruins the plan by laughing too loudly.",
                     "meta": {
                         "person": "Diana",
-                        "item": "throwing knife"
-                    }
-                },
-                {
-                    "type": "inventory",
-                    "text": "George retools a ration pack into something even more dangerous.",
-                    "meta": {
-                        "person": "George",
-                        "item": "ration pack"
+                        "others": [
+                            "George",
+                            "Frank"
+                        ]
                     }
                 },
                 {
                     "type": "non-lethal",
-                    "text": "Frank gathers herbs and hopes they are edible.",
+                    "text": "George forms a brief alliance with Diana, though both side-eye Bob the entire time.",
+                    "meta": {
+                        "person": "George",
+                        "others": [
+                            "Diana",
+                            "Bob"
+                        ]
+                    }
+                },
+                {
+                    "type": "loot",
+                    "text": "Diana snips a handful of herbs and wraps them carefully for later.",
+                    "meta": {
+                        "person": "Diana",
+                        "item": "herb bundle"
+                    }
+                },
+                {
+                    "type": "loot",
+                    "text": "Evelyn scavenges a Steel bar from the Cornucopia wreckage.",
+                    "meta": {
+                        "person": "Evelyn",
+                        "item": "Steel bar"
+                    }
+                },
+                {
+                    "type": "non-lethal",
+                    "text": "Frank practices battle poses in case cameras are watching.",
                     "meta": {
                         "person": "Frank"
                     }
                 },
                 {
-                    "type": "item-special lethal",
-                    "text": "Diana's snare trap snaps shut on Bob, ending their run.",
+                    "type": "non-lethal",
+                    "text": "Charlie, Diana, and Frank silently agree to not talk about the weird noise they just heard.",
                     "meta": {
-                        "person": "Diana",
-                        "item": "snare trap",
-                        "consumed": false,
-                        "victims": [
-                            "Bob"
-                        ],
-                        "victim": "Bob"
-                    }
-                },
-                {
-                    "type": "inventory",
-                    "text": "Diana flashes a throwing knife to ward off pursuers.",
-                    "meta": {
-                        "person": "Diana",
-                        "item": "throwing knife"
-                    }
-                },
-                {
-                    "type": "item-special lethal",
-                    "text": "Diana fans blades so fast that Alice and Evelyn both fall.",
-                    "meta": {
-                        "person": "Diana",
-                        "item": "throwing knife",
-                        "consumed": true,
-                        "victims": [
-                            "Alice",
-                            "Evelyn"
-                        ],
-                        "victim": "Alice"
+                        "person": "Charlie",
+                        "others": [
+                            "Diana",
+                            "Frank"
+                        ]
                     }
                 }
             ],
-            "fallen": [
-                "Bob",
-                "Alice",
-                "Evelyn"
-            ],
+            "fallen": [],
             "survivors": [
+                "Bob",
                 "Charlie",
                 "Diana",
+                "Evelyn",
                 "Frank",
                 "George"
             ]
@@ -315,43 +314,58 @@
             "events": [
                 {
                     "type": "non-lethal",
-                    "text": "Diana shares stories with the breeze\u2014silence answers back.",
+                    "text": "Bob, Evelyn, and George silently agree to not talk about the weird noise they just heard.",
                     "meta": {
-                        "person": "Diana"
+                        "person": "Bob",
+                        "others": [
+                            "Evelyn",
+                            "George"
+                        ]
                     }
                 },
                 {
-                    "type": "lethal",
-                    "text": "Frank unleashes a swarm of tracker jackers on Charlie, killing them.",
+                    "type": "inventory",
+                    "text": "Evelyn nearly breaks their Steel bar while messing around with it.",
                     "meta": {
-                        "killer": "Frank",
-                        "victim": "Charlie",
-                        "victims": [
-                            "Charlie"
+                        "person": "Evelyn",
+                        "item": "Steel bar"
+                    }
+                },
+                {
+                    "type": "non-lethal",
+                    "text": "Charlie sneaks up on Diana, only to find Bob also sneaking up on Diana.",
+                    "meta": {
+                        "person": "Charlie",
+                        "others": [
+                            "Bob",
+                            "Diana"
                         ]
                     }
                 },
                 {
                     "type": "non-lethal",
-                    "text": "Frank gathers herbs and hopes they are edible.",
+                    "text": "Evelyn dramatically rolls behind a rock\u2026 even though nobody is around.",
                     "meta": {
-                        "person": "Frank"
+                        "person": "Evelyn"
                     }
                 },
                 {
-                    "type": "inventory",
-                    "text": "Diana patches wounds with their trusty snare trap.",
+                    "type": "non-lethal",
+                    "text": "Bob follows Charlie.",
                     "meta": {
-                        "person": "Diana",
-                        "item": "snare trap"
+                        "person": "Bob",
+                        "others": [
+                            "Charlie"
+                        ]
                     }
                 }
             ],
-            "fallen": [
-                "Charlie"
-            ],
+            "fallen": [],
             "survivors": [
+                "Bob",
+                "Charlie",
                 "Diana",
+                "Evelyn",
                 "Frank",
                 "George"
             ]
@@ -361,37 +375,70 @@
             "bloodbath": false,
             "events": [
                 {
-                    "type": "non-lethal",
-                    "text": "Frank gathers herbs and hopes they are edible.",
+                    "type": "lethal",
+                    "text": "George couldn't take it anymore.",
                     "meta": {
-                        "person": "Frank"
-                    }
-                },
-                {
-                    "type": "non-lethal",
-                    "text": "Diana plots quietly with Frank and George deep into the night.",
-                    "meta": {
-                        "person": "Diana",
-                        "others": [
-                            "Frank",
+                        "killer": "Diana",
+                        "victim": "George",
+                        "victims": [
                             "George"
                         ]
                     }
                 },
                 {
-                    "type": "inventory",
-                    "text": "George patches wounds with their trusty poetry anthology.",
+                    "type": "loot",
+                    "text": "Charlie finds a dented but usable water canteen.",
                     "meta": {
-                        "person": "George",
-                        "item": "poetry anthology"
+                        "person": "Charlie",
+                        "item": "Water Canteen"
+                    }
+                },
+                {
+                    "type": "non-lethal",
+                    "text": "Frank walks beside Charlie in peaceful silence, their steps naturally falling into the same rhythm.",
+                    "meta": {
+                        "person": "Frank",
+                        "others": [
+                            "Charlie"
+                        ]
+                    }
+                },
+                {
+                    "type": "item-special",
+                    "text": "Charlie carefully refills their Water Canteen at a stream.",
+                    "meta": {
+                        "person": "Charlie",
+                        "item": "Water Canteen",
+                        "consumed": false
+                    }
+                },
+                {
+                    "type": "non-lethal",
+                    "text": "Bob confidently approaches Frank to say something intimidating, but sneezes mid-sentence.",
+                    "meta": {
+                        "person": "Bob",
+                        "others": [
+                            "Frank"
+                        ]
+                    }
+                },
+                {
+                    "type": "non-lethal",
+                    "text": "Bob dramatically rolls behind a rock\u2026 even though nobody is around.",
+                    "meta": {
+                        "person": "Bob"
                     }
                 }
             ],
-            "fallen": [],
-            "survivors": [
-                "Diana",
-                "Frank",
+            "fallen": [
                 "George"
+            ],
+            "survivors": [
+                "Bob",
+                "Charlie",
+                "Diana",
+                "Evelyn",
+                "Frank"
             ]
         },
         {
@@ -399,34 +446,67 @@
             "bloodbath": false,
             "events": [
                 {
-                    "type": "item-special",
-                    "text": "Diana repositions their snare trap, tightening the perimeter.",
+                    "type": "lethal",
+                    "text": "Frank dropkicks Diana into a tree with unbelievable force.",
                     "meta": {
-                        "person": "Diana",
-                        "item": "snare trap",
-                        "consumed": false
+                        "killer": "Frank",
+                        "victim": "Diana",
+                        "victims": [
+                            "Diana"
+                        ]
                     }
                 },
                 {
                     "type": "non-lethal",
-                    "text": "Frank stalks distant footsteps but loses the trail.",
+                    "text": "Bob shadows Evelyn, only to realize Frank has been shadowing them both.",
+                    "meta": {
+                        "person": "Bob",
+                        "others": [
+                            "Frank",
+                            "Evelyn"
+                        ]
+                    }
+                },
+                {
+                    "type": "non-lethal",
+                    "text": "Frank accidentally gives away their position and quickly relocates.",
                     "meta": {
                         "person": "Frank"
                     }
                 },
                 {
-                    "type": "non-lethal",
-                    "text": "Frank gathers herbs and hopes they are edible.",
+                    "type": "lethal",
+                    "text": "Frank chloroforms Bob with improvised chemicals.",
                     "meta": {
-                        "person": "Frank"
+                        "killer": "Frank",
+                        "victim": "Bob",
+                        "victims": [
+                            "Bob"
+                        ]
+                    }
+                },
+                {
+                    "type": "item-special lethal",
+                    "text": "Dehydrated and desperate, Evelyn fights Charlie for their Water Canteen. Evelyn doesn't survive the struggle.",
+                    "meta": {
+                        "person": "Charlie",
+                        "item": "Water Canteen",
+                        "consumed": false,
+                        "victims": [
+                            "Evelyn"
+                        ],
+                        "victim": "Evelyn"
                     }
                 }
             ],
-            "fallen": [],
-            "survivors": [
+            "fallen": [
                 "Diana",
-                "Frank",
-                "George"
+                "Bob",
+                "Evelyn"
+            ],
+            "survivors": [
+                "Charlie",
+                "Frank"
             ]
         },
         {
@@ -434,33 +514,25 @@
             "bloodbath": false,
             "events": [
                 {
-                    "type": "non-lethal",
-                    "text": "Diana scouts the cornucopia from afar.",
-                    "meta": {
-                        "person": "Diana"
-                    }
-                },
-                {
-                    "type": "non-lethal",
-                    "text": "George gathers herbs and hopes they are edible.",
-                    "meta": {
-                        "person": "George"
-                    }
-                },
-                {
                     "type": "loot",
-                    "text": "Frank opens a package from a sponser and recieves a bow",
+                    "text": "Charlie opens a package from a sponser and recieves a flare",
                     "meta": {
-                        "person": "Frank",
-                        "item": "bow"
+                        "person": "Charlie",
+                        "item": "flare"
+                    }
+                },
+                {
+                    "type": "non-lethal",
+                    "text": "Frank follows a trail of footprints but turns back when they suddenly vanish.",
+                    "meta": {
+                        "person": "Frank"
                     }
                 }
             ],
             "fallen": [],
             "survivors": [
-                "Diana",
-                "Frank",
-                "George"
+                "Charlie",
+                "Frank"
             ]
         },
         {
@@ -468,38 +540,18 @@
             "bloodbath": false,
             "events": [
                 {
-                    "type": "non-lethal",
-                    "text": "Diana shares stories with the breeze\u2014silence answers back.",
-                    "meta": {
-                        "person": "Diana"
-                    }
-                },
-                {
                     "type": "inventory",
-                    "text": "Frank sets a bow and waits patiently.",
+                    "text": "Frank decorates their shelter using their snare trap.",
                     "meta": {
                         "person": "Frank",
-                        "item": "bow"
-                    }
-                },
-                {
-                    "type": "lethal",
-                    "text": "George crushes Frank with a boulder from above.",
-                    "meta": {
-                        "killer": "George",
-                        "victim": "Frank",
-                        "victims": [
-                            "Frank"
-                        ]
+                        "item": "snare trap"
                     }
                 }
             ],
-            "fallen": [
-                "Frank"
-            ],
+            "fallen": [],
             "survivors": [
-                "Diana",
-                "George"
+                "Charlie",
+                "Frank"
             ]
         },
         {
@@ -507,34 +559,78 @@
             "bloodbath": false,
             "events": [
                 {
-                    "type": "item-special lethal",
-                    "text": "George overwhelms Diana with the power of poetry, killing them.",
+                    "type": "item-special",
+                    "text": "Charlie fires a flare, flooding the sky with light and drawing watchers.",
                     "meta": {
-                        "person": "George",
-                        "item": "poetry anthology",
-                        "consumed": true,
+                        "person": "Charlie",
+                        "item": "flare",
+                        "consumed": true
+                    }
+                },
+                {
+                    "type": "inventory",
+                    "text": "Charlie retools a Water Canteen into something even more dangerous.",
+                    "meta": {
+                        "person": "Charlie",
+                        "item": "Water Canteen"
+                    }
+                }
+            ],
+            "fallen": [],
+            "survivors": [
+                "Charlie",
+                "Frank"
+            ]
+        },
+        {
+            "number": 10,
+            "bloodbath": false,
+            "events": [
+                {
+                    "type": "non-lethal",
+                    "text": "Charlie delivers a motivational speech to themselves and feels slightly better.",
+                    "meta": {
+                        "person": "Charlie"
+                    }
+                }
+            ],
+            "fallen": [],
+            "survivors": [
+                "Charlie",
+                "Frank"
+            ]
+        },
+        {
+            "number": 11,
+            "bloodbath": false,
+            "events": [
+                {
+                    "type": "lethal",
+                    "text": "Frank suplexes Charlie so hard the arena briefly loses gravity.",
+                    "meta": {
+                        "killer": "Frank",
+                        "victim": "Charlie",
                         "victims": [
-                            "Diana"
-                        ],
-                        "victim": "Diana"
+                            "Charlie"
+                        ]
                     }
                 },
                 {
                     "type": "victory",
-                    "text": "George emerges victorious with 2 elimination(s)!",
+                    "text": "Frank emerges victorious with 3 elimination(s)!",
                     "meta": {
-                        "winner": "George",
-                        "kills": 2
+                        "winner": "Frank",
+                        "kills": 3
                     }
                 }
             ],
             "fallen": [
-                "Diana"
+                "Charlie"
             ],
             "survivors": [
-                "George"
+                "Frank"
             ]
         }
     ],
-    "winner": "George"
+    "winner": "Frank"
 }
